@@ -1,0 +1,72 @@
+<!--
+  Template for: site/src/content/case-studies/<slug>.md
+  Substitute the {{double-brace}} tokens.
+  Leave <<< FILL IN: ... >>> placeholders for the user to resolve.
+-->
+---
+title: "{{TITLE}}"
+description: "{{ONE_SENTENCE_DEK}}"
+client: "{{CLIENT_NAME_OR_ANONYMIZED_LABEL}}"
+clientUrl: "{{CLIENT_URL_OR_OMIT}}"
+industry: "{{INDUSTRY}}"
+pubDate: {{YYYY-MM-DD}}
+role: "{{Build partner | Founder & engineer | Collaborator}}"
+variant: "{{A | B | C}}"
+color: "{{blue | red | yellow}}"
+duration: "{{e.g. 8 weeks | omit if unknown}}"
+tags: [{{tag1, tag2, tag3}}]
+heroQuote: "{{Optional pull quote. Used by variant B.}}"
+heroQuoteAttribution: "{{Name, role | omit}}"
+metrics:
+  - value: "{{e.g. 70%}}"
+    label: "{{e.g. reduction in email triage}}"
+  - value: "{{e.g. <2s}}"
+    label: "{{e.g. routing latency at p95}}"
+  - value: "{{e.g. 100%}}"
+    label: "{{e.g. decisions audit-logged}}"
+stack: [{{language, framework, key-sdk, deploy-target}}]
+draft: true
+---
+
+## The brief
+
+<<< FILL IN: One paragraph describing the operational problem in the client's own words (or your honest framing if self-built). What was the world like before this project? Who was hurting? What was being faked with spreadsheets / manual work / a tool that didn't fit? >>>
+
+Seed from repo (delete after rewriting): the README states the project's purpose as **{{README_PURPOSE_ONE_LINER}}**. The stack and structure suggest the team needed {{INFERRED_NEED}}.
+
+## The thesis
+
+> {{THESIS_SENTENCE}}
+
+<<< FILL IN: 2–3 sentences expanding on the thesis. Why this approach, not the obvious one? What would a less rigorous shop have done instead — and why would it have failed in production? >>>
+
+## How we built it
+
+<<< FILL IN: Tell the build story in 3–5 short paragraphs. Lean on the spine files and architecture extracted in the research sidecar — but translate into business language. The reader is a buyer, not a code reviewer. >>>
+
+**Stack at the surface.** {{STACK_SUMMARY}}. {{ONE_NON_OBVIOUS_CHOICE}} — chosen because {{REASON}}.
+
+**Where the work was.** <<< FILL IN: the hard part. Most projects have one decision that the rest of the project orbits around. What was yours? >>>
+
+**What the integrations had to survive.** <<< FILL IN: name the external systems the project depends on (Stripe, OpenAI, HubSpot, etc., from the integration scan). For each, one sentence on why it was the right call and what could have gone wrong. >>>
+
+## What it shipped
+
+<<< FILL IN: A short ordered list — 3 to 6 items the project delivers in production. Specific. Operational. Verb-led. Examples: "Predicts finishing odds for every horse in every race, updated as scratch data comes in." "Routes every inbound email by intent before a human touches it." Strip features that don't actually matter to the buyer. >>>
+
+## What it changed
+
+<<< FILL IN: The before/after. This is the section your buyer is reading. If you have shareable numbers, use them with honest framing ("Recent automation work for an adjacent client showed…"). If you don't, use qualitative beats: a team's daily routine, an executive's calendar, a customer's expectation. >>>
+
+## What we'd still tell you
+
+<<< FILL IN: One short paragraph. The honest caveat. What's the limit of what was built, what would a v2 do differently, what's the next milestone? This is the trust signal — the brand does not sell vaporware. Most shops omit this section; do not. >>>
+
+---
+
+<!-- ============================================================
+     PLACEHOLDER CHECKLIST
+     Before publishing, verify each <<< FILL IN >>> above is replaced.
+     Then flip frontmatter `draft: true` → `draft: false`
+     and move this file to: site/src/content/case-studies/<slug>.md
+     ============================================================ -->
