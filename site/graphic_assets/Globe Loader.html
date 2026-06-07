@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Globe Loader</title>
+<style>
+  :root {
+    --ink: #141414;
+    --paper: #FAF9F4;
+  }
+  html, body {
+    margin: 0;
+    height: 100%;
+  }
+  body {
+    background: var(--paper);
+    display: grid;
+    place-items: center;
+  }
+  /* The loader: a self-contained 200×200 unit. Transparent so it can drop
+     onto any surface; shown here centered on warm paper. */
+  .loader {
+    width: 200px;
+    height: 200px;
+    display: block;
+  }
+</style>
+</head>
+<body>
+  <canvas class="loader" id="loader" width="200" height="200" role="img" aria-label="Loading"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+  <script>
+  (function () {
+    const INK = '#141414';
+    const SIZE = 200;
+    const CX = SIZE / 2;
+    const CY = SIZE / 2;
+    const R = 66;                 // globe radius
+    const TILT = -18;             // globe latitude tilt (degrees)
+
+    const canvas = document.getElementById('loader');
+    const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+    canvas.width = SIZE * dpr;
+    canvas.height = SIZE * dpr;
+    const ctx = canvas.getContext('2d');
+
+    // ---- Globe projection (orthographic, back hemisphere clipped) ----
+    const projection = d3.geoOrthographic()
+      .scale(R)
+      .translate([CX, CY])
+      .clipAngle(90);
+    const path = d3.geoPath(projection, ctx);
+    const graticule = d3.geoGraticule().step([24, 24])();
+
+    let land = null;      // filled country geometry
+    let borders = null;   // shared country boundaries
+
+    // ---- Orbit geometry for the jet (tilted 3D ring) ----
+    const ORBIT_R = 88;                       // ring radius in its own plane
+    const ORBIT_TILT = 30 * Math.PI / 180;    // tilt toward viewer
+    const cosT = Math.cos(ORBIT_TILT);
+    const sinT = Math.sin(ORBIT_TILT);
+
+    // angle -> screen position + depth (z>0 = in front of globe)
+    function orbitPos(a) {
+      const X = ORBIT_R * Math.cos(a);
+      const Y = ORBIT_R * Math.sin(a);
+      return {
+        x: CX + X,
+        y: CY - Y * cosT,
+        z: Y * sinT
+      };
+    }
+
+    // ---- Vintage 1950s swept jet, top-down silhouette (nose at +x) ----
+    function drawJet(p, heading, alpha) {
+      const s = 0.62; // scale
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(heading);
+      ctx.scale(s, s);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = INK;
+
+      // main swept wings
+      ctx.beginPath();
+      ctx.moveTo(4, -1.4);
+      ctx.lineTo(-11, -15.5);
+      ctx.lineTo(-14.5, -14.2);
+      ctx.lineTo(-5, -1.4);
+      ctx.closePath();
+      ctx.moveTo(4, 1.4);
+      ctx.lineTo(-11, 15.5);
+      ctx.lineTo(-14.5, 14.2);
+      ctx.lineTo(-5, 1.4);
+      ctx.closePath();
+      ctx.fill();
+
+      // tailplane
+      ctx.beginPath();
+      ctx.moveTo(-10, -1);
+      ctx.lineTo(-17, -7.6);
+      ctx.lineTo(-18.6, -6.7);
+      ctx.lineTo(-13, -1);
+      ctx.closePath();
+      ctx.moveTo(-10, 1);
+      ctx.lineTo(-17, 7.6);
+      ctx.lineTo(-18.6, 6.7);
+      ctx.lineTo(-13, 1);
+      ctx.closePath();
+      ctx.fill();
+
+      // fuselage — long tapered body with a pointed nose
+      ctx.beginPath();
+      ctx.moveTo(17, 0);
+      ctx.bezierCurveTo(11, -2.7, -10, -3.1, -18.5, -1.5);
+      ctx.lineTo(-18.5, 1.5);
+      ctx.bezierCurveTo(-10, 3.1, 11, 2.7, 17, 0);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function jetHeading(a, dir) {
+      // forward sample point along the direction of travel
+      const p0 = orbitPos(a);
+      const p1 = orbitPos(a + dir * 0.02);
+      return Math.atan2(p1.y - p0.y, p1.x - p0.x);
+    }
+
+    // ---- Globe rendering ----
+    function drawGlobe(lambda) {
+      projection.rotate([lambda, TILT, 0]);
+
+      // disc — paper fill occludes whatever passes behind the globe
+      ctx.beginPath();
+      path({ type: 'Sphere' });
+      ctx.fillStyle = '#FAF9F4';
+      ctx.fill();
+
+      // faint graticule grid (Bauhaus precision)
+      ctx.beginPath();
+      path(graticule);
+      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = 'rgba(20,20,20,0.16)';
+      ctx.stroke();
+
+      // land fill — subtle monochrome tint
+      if (land) {
+        ctx.beginPath();
+        path(land);
+        ctx.fillStyle = 'rgba(20,20,20,0.10)';
+        ctx.fill();
+      }
+      // country borders + coastlines
+      if (borders) {
+        ctx.beginPath();
+        path(borders);
+        ctx.lineWidth = 0.7;
+        ctx.strokeStyle = 'rgba(20,20,20,0.78)';
+        ctx.stroke();
+      }
+
+      // crisp sphere outline
+      ctx.beginPath();
+      ctx.arc(CX, CY, R, 0, Math.PI * 2);
+      ctx.lineWidth = 1.6;
+      ctx.strokeStyle = INK;
+      ctx.stroke();
+    }
+
+    // faint dotted flight path; split so the far arc sits behind the globe
+    function drawOrbitArc(front) {
+      const N = 96;
+      ctx.fillStyle = 'rgba(20,20,20,0.22)';
+      for (let i = 0; i < N; i++) {
+        const a = (i / N) * Math.PI * 2;
+        const p = orbitPos(a);
+        if ((p.z > 0) !== front) continue;
+        // hide the bit of the back arc that the disc would cover
+        if (!front) {
+          const d = Math.hypot(p.x - CX, p.y - CY);
+          if (d < R - 0.5) continue;
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 0.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // ---- Animation loop ----
+    const GLOBE_SPEED = 26;   // deg/sec, globe spins east
+    const JET_DIR = -1;       // jet orbits opposite to the spin
+    const JET_SPEED = 2.0;    // rad/sec
+    let start = null;
+
+    function frame(now) {
+      if (now == null) now = performance.now();
+      if (start === null) start = now;
+      const t = (now - start) / 1000;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, SIZE, SIZE);
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+
+      const lambda = (t * GLOBE_SPEED) % 360;
+      const a = JET_DIR * t * JET_SPEED;
+      const jp = orbitPos(a);
+      const heading = jetHeading(a, JET_DIR);
+      const inFront = jp.z > 0;
+
+      // back half of the flight path
+      drawOrbitArc(false);
+      // jet when behind the globe (drawn first, then occluded by the disc)
+      if (!inFront) drawJet(jp, heading, 0.4);
+
+      drawGlobe(lambda);
+
+      // front half of the flight path
+      drawOrbitArc(true);
+      // jet when in front
+      if (inFront) drawJet(jp, heading, 1);
+
+      requestAnimationFrame(frame);
+    }
+
+    // ---- Load real country outlines (globe spins immediately either way) ----
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json')
+      .then(r => r.json())
+      .then(world => {
+        land = topojson.merge(world, world.objects.countries.geometries);
+        borders = topojson.mesh(world, world.objects.countries);
+      })
+      .catch(() => { /* fall back to graticule-only globe */ });
+
+    frame();                              // immediate first paint
+    requestAnimationFrame(frame);         // smooth animation while visible
+    setInterval(frame, 120);              // keep-alive so it never stalls
+  })();
+  </script>
+</body>
+</html>
