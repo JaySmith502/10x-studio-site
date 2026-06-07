@@ -1,20 +1,283 @@
 ---
 import Base from '../../layouts/Base.astro';
 ---
-<Base title="We're on it — 10x Studio" description="Brief received. We'll be in touch within one business day." active="contact">
-  <section class="hero">
-    <div class="hero-inner" style="grid-template-columns:1fr; max-width:720px;">
-      <div>
+<Base title="We're on it - 10x Studio" description="Brief received. We'll be in touch within one business day." active="contact">
+  <section class="hero thanks-hero">
+    <div class="hero-inner thanks-inner">
+
+      <!-- Globe loader (signals work-in-flight; doubles as visual interest) -->
+      <div class="thanks-loader-frame" aria-hidden="false">
+        <canvas
+          class="thanks-loader"
+          id="thanks-globe"
+          width="200"
+          height="200"
+          role="img"
+          aria-label="Routing your brief"
+        ></canvas>
+      </div>
+
+      <div class="thanks-copy">
         <div class="mk-eyebrow" style="margin-bottom:18px;">
           <span class="mk-badge mk-badge--blue">Received</span>
+          <span style="margin-left:10px;"><b>//</b> Brief in flight</span>
         </div>
         <h1 class="mk-h1">We're <span class="accent">on it.</span></h1>
-        <p>Thanks for the brief. An engineer (the one who would actually build it) will reach out within one business day to set up a working session.</p>
+        <p>Thanks for the brief. We'll match your case with our specialized engineers and get back to you within one business day.</p>
+
+        <ul class="thanks-next">
+          <li><b>1.</b> We read the brief end-to-end before we reply.</li>
+          <li><b>2.</b> You'll get a calendar link with a 30-minute working slot.</li>
+          <li><b>3.</b> On the call we sketch scope, risks, and what a first slice looks like.</li>
+        </ul>
+
         <div class="hero-ctas">
-          <a href="/services/" class="mk-btn mk-btn--primary mk-btn--lg">See What We Build</a>
+          <a href="/case-studies/" class="mk-btn mk-btn--primary mk-btn--lg">See What We've Shipped</a>
           <a href="/" class="mk-btn mk-btn--outline mk-btn--lg">Back home</a>
         </div>
       </div>
+
     </div>
   </section>
+
+  <style>
+    .thanks-hero { padding-block: 56px 96px; }
+    .thanks-inner {
+      grid-template-columns: 1fr;
+      max-width: 760px;
+      margin-inline: auto;
+      text-align: center;
+      gap: 28px;
+    }
+    .thanks-loader-frame {
+      width: 232px;
+      height: 232px;
+      margin: 0 auto 4px;
+      background: var(--paper);
+      border: 2px solid var(--ink-900);
+      border-radius: 6px;
+      box-shadow: 6px 6px 0 var(--ink-900);
+      display: grid;
+      place-items: center;
+    }
+    .thanks-loader { width: 200px; height: 200px; display: block; }
+    .thanks-copy { display: flex; flex-direction: column; align-items: center; }
+    .thanks-copy .mk-h1 { margin-top: 6px; }
+    .thanks-copy p { max-width: 56ch; margin-inline: auto; }
+    .thanks-next {
+      list-style: none;
+      padding: 18px 22px;
+      margin: 28px auto 0;
+      max-width: 560px;
+      text-align: left;
+      border: 2px solid var(--ink-900);
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 4px 4px 0 var(--ink-900);
+      font-family: 'Archivo', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+    .thanks-next li { padding: 4px 0; }
+    .thanks-next b {
+      color: var(--blue-500);
+      font-family: 'JetBrains Mono', monospace;
+      margin-right: 8px;
+    }
+    .hero.thanks-hero .hero-ctas { justify-content: center; margin-top: 30px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      /* Script halts its own animation loop when this media query matches. */
+      .thanks-loader-frame { box-shadow: 4px 4px 0 var(--ink-900); }
+    }
+  </style>
+
+  <!-- Globe loader: d3 + topojson, scoped to this page only -->
+  <script is:inline src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+  <script is:inline>
+    (function () {
+      const INK = '#141414';
+      const PAPER = '#FAF9F4';
+      const SIZE = 200;
+      const CX = SIZE / 2;
+      const CY = SIZE / 2;
+      const R = 66;
+      const TILT = -18;
+
+      const canvas = document.getElementById('thanks-globe');
+      if (!canvas || typeof d3 === 'undefined') return;
+      const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      canvas.width = SIZE * dpr;
+      canvas.height = SIZE * dpr;
+      const ctx = canvas.getContext('2d');
+
+      const projection = d3.geoOrthographic()
+        .scale(R)
+        .translate([CX, CY])
+        .clipAngle(90);
+      const path = d3.geoPath(projection, ctx);
+      const graticule = d3.geoGraticule().step([24, 24])();
+
+      let land = null;
+      let borders = null;
+
+      const ORBIT_R = 88;
+      const ORBIT_TILT = 30 * Math.PI / 180;
+      const cosT = Math.cos(ORBIT_TILT);
+      const sinT = Math.sin(ORBIT_TILT);
+
+      function orbitPos(a) {
+        const X = ORBIT_R * Math.cos(a);
+        const Y = ORBIT_R * Math.sin(a);
+        return { x: CX + X, y: CY - Y * cosT, z: Y * sinT };
+      }
+
+      function drawJet(p, heading, alpha) {
+        const s = 0.62;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(heading);
+        ctx.scale(s, s);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = INK;
+
+        ctx.beginPath();
+        ctx.moveTo(4, -1.4);
+        ctx.lineTo(-11, -15.5);
+        ctx.lineTo(-14.5, -14.2);
+        ctx.lineTo(-5, -1.4);
+        ctx.closePath();
+        ctx.moveTo(4, 1.4);
+        ctx.lineTo(-11, 15.5);
+        ctx.lineTo(-14.5, 14.2);
+        ctx.lineTo(-5, 1.4);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(-10, -1);
+        ctx.lineTo(-17, -7.6);
+        ctx.lineTo(-18.6, -6.7);
+        ctx.lineTo(-13, -1);
+        ctx.closePath();
+        ctx.moveTo(-10, 1);
+        ctx.lineTo(-17, 7.6);
+        ctx.lineTo(-18.6, 6.7);
+        ctx.lineTo(-13, 1);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(17, 0);
+        ctx.bezierCurveTo(11, -2.7, -10, -3.1, -18.5, -1.5);
+        ctx.lineTo(-18.5, 1.5);
+        ctx.bezierCurveTo(-10, 3.1, 11, 2.7, 17, 0);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      function jetHeading(a, dir) {
+        const p0 = orbitPos(a);
+        const p1 = orbitPos(a + dir * 0.02);
+        return Math.atan2(p1.y - p0.y, p1.x - p0.x);
+      }
+
+      function drawGlobe(lambda) {
+        projection.rotate([lambda, TILT, 0]);
+
+        ctx.beginPath();
+        path({ type: 'Sphere' });
+        ctx.fillStyle = PAPER;
+        ctx.fill();
+
+        ctx.beginPath();
+        path(graticule);
+        ctx.lineWidth = 0.6;
+        ctx.strokeStyle = 'rgba(20,20,20,0.16)';
+        ctx.stroke();
+
+        if (land) {
+          ctx.beginPath();
+          path(land);
+          ctx.fillStyle = 'rgba(20,20,20,0.10)';
+          ctx.fill();
+        }
+        if (borders) {
+          ctx.beginPath();
+          path(borders);
+          ctx.lineWidth = 0.7;
+          ctx.strokeStyle = 'rgba(20,20,20,0.78)';
+          ctx.stroke();
+        }
+
+        ctx.beginPath();
+        ctx.arc(CX, CY, R, 0, Math.PI * 2);
+        ctx.lineWidth = 1.6;
+        ctx.strokeStyle = INK;
+        ctx.stroke();
+      }
+
+      function drawOrbitArc(front) {
+        const N = 96;
+        ctx.fillStyle = 'rgba(20,20,20,0.22)';
+        for (let i = 0; i < N; i++) {
+          const a = (i / N) * Math.PI * 2;
+          const p = orbitPos(a);
+          if ((p.z > 0) !== front) continue;
+          if (!front) {
+            const d = Math.hypot(p.x - CX, p.y - CY);
+            if (d < R - 0.5) continue;
+          }
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 0.7, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const GLOBE_SPEED = 26;
+      const JET_DIR = -1;
+      const JET_SPEED = 2.0;
+      let start = null;
+
+      function frame(now) {
+        if (now == null) now = performance.now();
+        if (start === null) start = now;
+        const t = (now - start) / 1000;
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, SIZE, SIZE);
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        const lambda = (t * GLOBE_SPEED) % 360;
+        const a = JET_DIR * t * JET_SPEED;
+        const jp = orbitPos(a);
+        const heading = jetHeading(a, JET_DIR);
+        const inFront = jp.z > 0;
+
+        drawOrbitArc(false);
+        if (!inFront) drawJet(jp, heading, 0.4);
+        drawGlobe(lambda);
+        drawOrbitArc(true);
+        if (inFront) drawJet(jp, heading, 1);
+
+        if (!reduceMotion) requestAnimationFrame(frame);
+      }
+
+      fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json')
+        .then(r => r.json())
+        .then(world => {
+          land = topojson.merge(world, world.objects.countries.geometries);
+          borders = topojson.mesh(world, world.objects.countries);
+        })
+        .catch(() => { /* graticule-only fallback */ });
+
+      frame();
+      if (!reduceMotion) requestAnimationFrame(frame);
+    })();
+  </script>
 </Base>
