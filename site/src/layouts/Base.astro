@@ -8,11 +8,22 @@ import '../styles/case-studies.css';
 interface Props {
   title: string;
   description?: string;
-  active?: 'home' | 'services' | 'about' | 'blog' | 'contact';
+  active?: 'home' | 'services' | 'about' | 'case-studies' | 'blog' | 'contact';
+  /** Optional Open Graph type override; defaults to "website". Articles use "article". */
+  ogType?: 'website' | 'article';
+  /** Optional absolute or root-relative URL of a preview image (1200x630 ideal). */
+  ogImage?: string;
 }
 
-const { title, description, active = 'home' } = Astro.props;
+const { title, description, active = 'home', ogType = 'website', ogImage } = Astro.props;
 const defaultDesc = 'AI-native web platforms, ecommerce systems and custom software for businesses with real operational complexity.';
+const desc = description ?? defaultDesc;
+
+// Canonical URL: prefer Astro.site (configured to https://10xstudio.dev) + current pathname.
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://10xstudio.dev').toString();
+const ogImageAbs = ogImage
+  ? new URL(ogImage, Astro.site ?? 'https://10xstudio.dev').toString()
+  : undefined;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +31,29 @@ const defaultDesc = 'AI-native web platforms, ecommerce systems and custom softw
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
-  <meta name="description" content={description ?? defaultDesc} />
+  <meta name="description" content={desc} />
+
+  <!-- Canonical -->
+  <link rel="canonical" href={canonical} />
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="10x Studio" />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={desc} />
+  <meta property="og:url" content={canonical} />
+  {ogImageAbs && <meta property="og:image" content={ogImageAbs} />}
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content={ogImageAbs ? 'summary_large_image' : 'summary'} />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={desc} />
+  {ogImageAbs && <meta name="twitter:image" content={ogImageAbs} />}
+
+  <!-- Preconnects for Google Fonts (used by tokens/fonts.css) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <link rel="sitemap" href="/sitemap-index.xml" />
 </head>
@@ -30,9 +63,5 @@ const defaultDesc = 'AI-native web platforms, ecommerce systems and custom softw
     <slot />
   </main>
   <Footer />
-  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" is:inline></script>
-  <script is:inline>
-    if (window.lucide) window.lucide.createIcons();
-  </script>
 </body>
 </html>

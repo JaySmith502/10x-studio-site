@@ -10,6 +10,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month:
 const setForColor: Record<string, 'web' | 'ecom' | 'ops' | 'ai' | 'auto'> = {
   blue: 'auto', red: 'ai', yellow: 'ecom',
 };
+import Icon from '../../components/Icon.astro';
 ---
 <Base title="Case studies - 10x Studio" description="Work we've shipped, written honestly." active="home">
 
@@ -48,11 +49,11 @@ const setForColor: Record<string, 'web' | 'ecom' | 'ops' | 'ai' | 'auto'> = {
               </div>
               <h2 class="mk-h2 cs-card-title">{s.data.title}</h2>
               <span class="cs-card-cta">
-                Read case study <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+                Read case study <Icon name="arrow-right" size={14} />
               </span>
               <div class="cs-card-art">
                 {s.data.heroImage ? (
-                  <img src={s.data.heroImage} alt={`${s.data.client} illustration`} loading="lazy" />
+                  <img src={s.data.heroImage} alt={`${s.data.client} illustration`} width="1254" height="1254" loading="lazy" />
                 ) : (
                   <WellTile set={setForColor[s.data.color]} size={120} />
                 )}

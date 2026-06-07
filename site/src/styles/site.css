@@ -800,3 +800,25 @@ a { color: inherit; }
   .blog-card { grid-template-columns: 1fr; gap: 16px; padding: 28px 0; }
   .blog-card-arrow { display: none; }
 }
+
+/* ============================================================
+   FOCUS-VISIBLE — keyboard-only focus rings, brand-aware.
+   ============================================================ */
+:focus { outline: none; }
+:focus-visible {
+  outline: 3px solid var(--blue-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.mk-btn:focus-visible { outline-offset: 3px; }
+a:focus-visible { outline-offset: 4px; }
+.cs-card:focus-visible {
+  outline-offset: 4px;
+  outline-color: var(--ink-900);
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  /* Form controls already get a brand focus ring via box-shadow in their own styles */
+}

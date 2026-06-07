@@ -31,6 +31,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month:
 
 // Pick a well-tile set roughly matched to the colorway for the hero motif
 const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' : 'auto';
+import Icon from '../../components/Icon.astro';
 ---
 <Base
   title={`${data.title} — 10x Studio`}
@@ -143,7 +144,7 @@ const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' :
             <div class="cs-aside-lbl">// Start a build like this</div>
             <p class="cs-aside-text">If this is your shape of problem, the next step is a 30-minute working session.</p>
             <a href="/contact/" class="mk-btn mk-btn--primary">
-              Start a Project Conversation <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+              Start a Project Conversation <Icon name="arrow-right" size={16} />
             </a>
           </div>
         </aside>
@@ -204,7 +205,7 @@ const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' :
         </h2>
         <div class="cs-cta-links">
           <a href="/contact/" class={data.color === 'yellow' ? 'mk-btn mk-btn--solid mk-btn--lg' : 'mk-btn mk-btn--yellow mk-btn--lg'}>
-            Start a Project Conversation <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+            Start a Project Conversation <Icon name="arrow-right" size={18} />
           </a>
           <a href="/case-studies/" class="mk-btn mk-btn--outline mk-btn--lg" style={data.color !== 'yellow' ? 'color:#fff;border-color:#fff;' : ''}>
             All case studies

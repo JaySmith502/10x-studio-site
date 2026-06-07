@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 ---
 <Base title="About - 10x Studio" description="A senior builder with cybersecurity and Fortune 500 software experience, an operator's eye for broken workflows, and a strategist's instinct for where software creates leverage." active="about">
 
@@ -15,7 +16,7 @@ import Base from '../layouts/Base.astro';
         <p>10x Studio is run by an engineer with cybersecurity and Fortune 500 software experience - and a long history of building the operational systems that make companies actually work. You'll talk to the person who would build it, not a sales engineer.</p>
         <div class="hero-ctas">
           <a href="/contact/" class="mk-btn mk-btn--primary mk-btn--lg">
-            Start a Project Conversation <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+            Start a Project Conversation <Icon name="arrow-right" size={18} />
           </a>
           <a href="/services/" class="mk-btn mk-btn--outline mk-btn--lg">See What We Build</a>
         </div>
@@ -94,7 +95,7 @@ import Base from '../layouts/Base.astro';
     <div class="cta-band-inner">
       <h2 class="mk-h2" style="color:#fff;">Talk to the<br>person who'd build it.</h2>
       <a href="/contact/" class="mk-btn mk-btn--yellow mk-btn--lg">
-        Start a Project Conversation <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+        Start a Project Conversation <Icon name="arrow-right" size={18} />
       </a>
     </div>
   </section>

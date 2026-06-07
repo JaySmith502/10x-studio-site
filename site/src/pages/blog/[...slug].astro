@@ -15,6 +15,7 @@ const { post } = Astro.props;
 const { Content } = await post.render();
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const kindLabel: Record<string, string> = { essay: 'Essay', 'case-study': 'Case study', note: 'Note' };
+import Icon from '../../components/Icon.astro';
 ---
 <Base title={`${post.data.title} — 10x Studio Journal`} description={post.data.description} active="blog">
 
@@ -53,7 +54,7 @@ const kindLabel: Record<string, string> = { essay: 'Essay', 'case-study': 'Case 
           <div class="aside-lbl">// Got a project?</div>
           <p class="aside-text">If the workflow in this post sounds like one of yours, the next step is a 30-minute call to see if it's worth building.</p>
           <a href="/contact/" class="mk-btn mk-btn--primary">
-            Start a Project Conversation <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            Start a Project Conversation <Icon name="arrow-right" size={16} />
           </a>
         </div>
       </aside>
@@ -64,7 +65,7 @@ const kindLabel: Record<string, string> = { essay: 'Essay', 'case-study': 'Case 
       <div class="cta-band-inner">
         <h2 class="mk-h2">More notes,<br>same brand.</h2>
         <a href="/blog/" class="mk-btn mk-btn--yellow mk-btn--lg">
-          Back to the Journal <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+          Back to the Journal <Icon name="arrow-right" size={18} />
         </a>
       </div>
     </section>

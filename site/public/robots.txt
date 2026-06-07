@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /_lab/
+
+Sitemap: https://10xstudio.dev/sitemap-index.xml

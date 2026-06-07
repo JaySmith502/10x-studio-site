@@ -1,8 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
 import WellTile from '../components/WellTile.astro';
+import Icon from '../components/Icon.astro';
 ---
 <Base title="10x Studio - AI-native software for businesses with real complexity" active="home">
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "10x Studio",
+    "url": "https://10xstudio.dev",
+    "logo": "https://10xstudio.dev/assets/logo-mark.svg",
+    "description": "AI-native web platforms, ecommerce systems and custom software for businesses with real operational complexity.",
+    "email": "hello@10xstudio.dev",
+    "areaServed": "US",
+    "knowsAbout": ["AI engineering", "Custom web platforms", "Ecommerce", "Internal tools", "Workflow automation", "Cybersecurity"]
+  })} />
 
   <!-- HERO -->
   <section class="hero">
@@ -16,7 +29,7 @@ import WellTile from '../components/WellTile.astro';
         <p>We design and build web platforms, ecommerce systems, dashboards and custom software with AI and automation engineered in from day one - led by a senior partner who has shipped enterprise software for Fortune 500 and cybersecurity teams.</p>
         <div class="hero-ctas">
           <a href="/contact/" class="mk-btn mk-btn--primary mk-btn--lg">
-            Start a Project Conversation <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+            Start a Project Conversation <Icon name="arrow-right" size={18} />
           </a>
           <a href="/services/" class="mk-btn mk-btn--outline mk-btn--lg">See What We Build</a>
         </div>
@@ -58,7 +71,7 @@ import WellTile from '../components/WellTile.astro';
           <h2 class="mk-h2">Platforms that move work,<br>not just pixels.</h2>
         </div>
         <a href="/services/" class="mk-btn mk-btn--outline">
-          All services <i data-lucide="arrow-up-right" style="width:16px;height:16px;"></i>
+          All services <Icon name="arrow-up-right" size={16} />
         </a>
       </div>
 
@@ -67,31 +80,31 @@ import WellTile from '../components/WellTile.astro';
           <WellTile set="web" />
           <h3 class="mk-h3">Custom Web Platforms</h3>
           <p>Marketing sites with real workflows behind them - portals, intake systems, dashboards, role-based access, the parts that actually run the business.</p>
-          <span class="arrow">Read more <i data-lucide="arrow-right" style="width:12px;height:12px;"></i></span>
+          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
         </a>
         <a href="/services/#ecom" class="svc-card">
           <WellTile set="ecom" />
           <h3 class="mk-h3">Ecommerce &amp; Product Platforms</h3>
           <p>Catalogs, configurable products, checkout, customer accounts, fulfillment logic - selling online as an operating system, not just a cart.</p>
-          <span class="arrow">Read more <i data-lucide="arrow-right" style="width:12px;height:12px;"></i></span>
+          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
         </a>
         <a href="/services/#ops" class="svc-card">
           <WellTile set="ops" />
           <h3 class="mk-h3">Internal Business Tools</h3>
           <p>When spreadsheets become load-bearing infrastructure. Admin dashboards, approval flows, job tracking, reporting - built for the people who use them daily.</p>
-          <span class="arrow">Read more <i data-lucide="arrow-right" style="width:12px;height:12px;"></i></span>
+          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
         </a>
         <a href="/services/#ai" class="svc-card">
           <WellTile set="ai" />
           <h3 class="mk-h3">AI-Enabled Workflow Tools</h3>
           <p>Intake triage, document summarization, RAG over your knowledge, customer support copilots. AI where it actually reduces friction - never as decoration.</p>
-          <span class="arrow">Read more <i data-lucide="arrow-right" style="width:12px;height:12px;"></i></span>
+          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
         </a>
         <a href="/services/#auto" class="svc-card">
           <WellTile set="auto" />
           <h3 class="mk-h3">Integrations &amp; Automation</h3>
           <p>CRM, payments, notifications, data sync. Your stack should feel like a team - not a group project where nobody read the instructions.</p>
-          <span class="arrow">Read more <i data-lucide="arrow-right" style="width:12px;height:12px;"></i></span>
+          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
         </a>
       </div>
     </div>
@@ -127,7 +140,7 @@ import WellTile from '../components/WellTile.astro';
     <div class="cta-band-inner">
       <h2 class="mk-h2">Stop duct-taping.<br>Start building.</h2>
       <a href="/contact/" class="mk-btn mk-btn--yellow mk-btn--lg">
-        Start a Project Conversation <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+        Start a Project Conversation <Icon name="arrow-right" size={18} />
       </a>
     </div>
   </section>

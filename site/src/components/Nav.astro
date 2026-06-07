@@ -3,11 +3,12 @@ interface Props {
   active?: 'home' | 'services' | 'about' | 'case-studies' | 'blog' | 'contact';
 }
 const { active = 'home' } = Astro.props;
+import Icon from './Icon.astro';
 ---
 <header class="mk-nav">
   <div class="mk-wrap mk-nav-inner">
     <a href="/" class="mk-logo">
-      <img src="/assets/logo-mark.svg" alt="10x Studio" />
+      <img src="/assets/logo-mark.svg" alt="10x Studio" width="36" height="36" />
       <span class="mk-logo-text">
         <span class="top">10x</span>
         <span class="bottom">Studio</span>
@@ -22,7 +23,7 @@ const { active = 'home' } = Astro.props;
       <a href="/contact/" class={active === 'contact' ? 'active' : ''}>Contact</a>
     </nav>
     <a href="/contact/" class="mk-btn mk-btn--solid mk-btn--sm">
-      Start a project <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+      Start a project <Icon name="arrow-right" size={16} />
     </a>
   </div>
 </header>

@@ -8,6 +8,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const kindLabel: Record<string, string> = { essay: 'Essay', 'case-study': 'Case study', note: 'Note' };
+import Icon from '../../components/Icon.astro';
 ---
 <Base title="Journal — 10x Studio" description="Field notes on building software for businesses with real operational complexity. Engineering, AI, and the workflows underneath." active="blog">
 
@@ -39,7 +40,7 @@ const kindLabel: Record<string, string> = { essay: 'Essay', 'case-study': 'Case 
                 {post.data.tags.map((t) => <span class="tag">#{t}</span>)}
               </div>
             </div>
-            <span class="blog-card-arrow"><i data-lucide="arrow-up-right" style="width:22px;height:22px;"></i></span>
+            <span class="blog-card-arrow"><Icon name="arrow-up-right" size={22} /></span>
           </a>
         ))}
       </div>

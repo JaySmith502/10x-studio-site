@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 ---
 <Base title="Start a Project — 10x Studio" description="Tell us what you're trying to build. One working session, no sales theatre." active="contact">
 
@@ -14,19 +15,19 @@ import Base from '../layouts/Base.astro';
 
         <div class="contact-meta">
           <div class="row">
-            <span class="ico"><i data-lucide="mail" style="width:18px;height:18px;"></i></span>
+            <span class="ico"><Icon name="mail" size={18} /></span>
             <span>hello@10xstudio.dev</span>
           </div>
           <div class="row">
-            <span class="ico"><i data-lucide="clock" style="width:18px;height:18px;"></i></span>
+            <span class="ico"><Icon name="clock" size={18} /></span>
             <span>Reply within 1 business day</span>
           </div>
           <div class="row">
-            <span class="ico"><i data-lucide="shield-check" style="width:18px;height:18px;"></i></span>
+            <span class="ico"><Icon name="shield-check" size={18} /></span>
             <span>Cybersecurity &amp; Fortune 500 background</span>
           </div>
           <div class="row">
-            <span class="ico"><i data-lucide="map-pin" style="width:18px;height:18px;"></i></span>
+            <span class="ico"><Icon name="map-pin" size={18} /></span>
             <span>Remote-first · US hours</span>
           </div>
         </div>
@@ -103,7 +104,7 @@ import Base from '../layouts/Base.astro';
 
           <div class="submit-row">
             <button type="submit" class="mk-btn mk-btn--primary mk-btn--lg">
-              Send brief <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+              Send brief <Icon name="arrow-right" size={18} />
             </button>
             <span class="note">// We reply within 1 business day</span>
           </div>

@@ -94,6 +94,7 @@ const services = [
     outcome: 'Your stack stops behaving like a group project. Tools share data, work routes itself, leadership sees the truth in one place.',
   },
 ] as const;
+import Icon from '../components/Icon.astro';
 ---
 <Base title="Services - 10x Studio" description="Custom web platforms, ecommerce systems, internal tools, AI-enabled workflows and integrations - engineered by a senior partner." active="services">
 
@@ -143,7 +144,7 @@ const services = [
     <div class="cta-band-inner">
       <h2 class="mk-h2" style="color:#fff; font-size:46px;">Not sure where to start?</h2>
       <a href="/contact/" class="mk-btn mk-btn--yellow mk-btn--lg">
-        Talk Through Your Build <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+        Talk Through Your Build <Icon name="arrow-right" size={18} />
       </a>
     </div>
   </section>
