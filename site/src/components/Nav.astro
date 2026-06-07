@@ -1,0 +1,27 @@
+---
+interface Props {
+  active?: 'home' | 'services' | 'about' | 'blog' | 'contact';
+}
+const { active = 'home' } = Astro.props;
+---
+<header class="mk-nav">
+  <div class="mk-wrap mk-nav-inner">
+    <a href="/" class="mk-logo">
+      <img src="/assets/logo-mark.svg" alt="10x Studio" />
+      <span class="mk-logo-text">
+        <span class="top">10x</span>
+        <span class="bottom">Studio</span>
+      </span>
+    </a>
+    <nav class="mk-nav-links">
+      <a href="/" class={active === 'home' ? 'active' : ''}>Home</a>
+      <a href="/services/" class={active === 'services' ? 'active' : ''}>Services</a>
+      <a href="/about/" class={active === 'about' ? 'active' : ''}>About</a>
+      <a href="/blog/" class={active === 'blog' ? 'active' : ''}>Journal</a>
+      <a href="/contact/" class={active === 'contact' ? 'active' : ''}>Contact</a>
+    </nav>
+    <a href="/contact/" class="mk-btn mk-btn--solid mk-btn--sm">
+      Start a project <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+    </a>
+  </div>
+</header>

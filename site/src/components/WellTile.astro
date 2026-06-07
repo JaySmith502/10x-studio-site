@@ -1,0 +1,24 @@
+---
+// Reusable WellTile — the 4-cell color-block motif from /10x-design.
+// Each cell is [cellBg, dotBg]. Five presets cover the 5 service lines.
+type Cell = [string, string];
+interface Props {
+  set?: 'web' | 'ecom' | 'ops' | 'ai' | 'auto';
+  size?: number;
+}
+const { set = 'web', size = 56 } = Astro.props;
+
+const SETS: Record<string, Cell[]> = {
+  web:  [['var(--blue-500)','var(--yellow-500)'],['var(--yellow-500)','var(--red-500)'],['var(--red-500)','var(--blue-500)'],['var(--ink-900)','var(--yellow-500)']],
+  ecom: [['var(--yellow-500)','var(--blue-500)'],['var(--blue-500)','var(--yellow-500)'],['var(--ink-900)','var(--red-500)'],['var(--red-500)','var(--yellow-500)']],
+  ops:  [['var(--blue-500)','var(--red-500)'],['var(--yellow-500)','var(--ink-900)'],['var(--red-500)','var(--yellow-500)'],['var(--ink-900)','var(--blue-500)']],
+  ai:   [['var(--red-500)','var(--yellow-500)'],['var(--ink-900)','var(--blue-500)'],['var(--yellow-500)','var(--blue-500)'],['var(--blue-500)','var(--yellow-500)']],
+  auto: [['var(--ink-900)','var(--yellow-500)'],['var(--blue-500)','var(--red-500)'],['var(--yellow-500)','var(--blue-500)'],['var(--red-500)','var(--ink-900)']],
+};
+const cells = SETS[set];
+---
+<span class="mk-tile" style={`width:${size}px;height:${size}px;`}>
+  {cells.map((c) => (
+    <span style={`background:${c[0]};`}><i style={`background:${c[1]};`}></i></span>
+  ))}
+</span>

@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import WellTile from '../../components/WellTile.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const kindLabel: Record<string, string> = { essay: 'Essay', 'case-study': 'Case study', note: 'Note' };
+---
+<Base title={`${post.data.title} — 10x Studio Journal`} description={post.data.description} active="blog">
+
+  <article class="article">
+
+    <!-- Article hero -->
+    <header class="article-hero">
+      <div class="mk-wrap article-hero-inner">
+        <div class="article-meta">
+          <span class="kind-badge">{kindLabel[post.data.kind]}</span>
+          <span>{fmt(post.data.pubDate)}</span>
+          <span>·</span>
+          <span>{post.data.author}</span>
+        </div>
+        <h1 class="mk-h1 article-title">{post.data.title}</h1>
+        <p class="article-lede">{post.data.description}</p>
+      </div>
+      <div class="article-hero-art">
+        <WellTile set={post.data.heroSet} size={120} />
+      </div>
+    </header>
+
+    <!-- Body -->
+    <div class="mk-wrap article-body-wrap">
+      <div class="article-body">
+        <Content />
+      </div>
+      <aside class="article-aside">
+        <div class="aside-block">
+          <div class="aside-lbl">// Tags</div>
+          <div class="aside-tags">
+            {post.data.tags.map((t) => <span class="tag">#{t}</span>)}
+          </div>
+        </div>
+        <div class="aside-block">
+          <div class="aside-lbl">// Got a project?</div>
+          <p class="aside-text">If the workflow in this post sounds like one of yours, the next step is a 30-minute call to see if it's worth building.</p>
+          <a href="/contact/" class="mk-btn mk-btn--primary">
+            Start a Project Conversation <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+          </a>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Footer CTA -->
+    <section class="cta-band">
+      <div class="cta-band-inner">
+        <h2 class="mk-h2">More notes,<br>same brand.</h2>
+        <a href="/blog/" class="mk-btn mk-btn--yellow mk-btn--lg">
+          Back to the Journal <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+        </a>
+      </div>
+    </section>
+
+  </article>
+
+</Base>

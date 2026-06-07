@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="Well grid pattern">
+  
+  <defs>
+    <g id="cell-bl"><rect width="60" height="60" fill="#1B81CE"></rect><circle cx="30" cy="30" r="16" fill="#FFC400"></circle></g>
+    <g id="cell-yr"><rect width="60" height="60" fill="#FFC400"></rect><circle cx="30" cy="30" r="16" fill="#ED3B2F"></circle></g>
+    <g id="cell-rb"><rect width="60" height="60" fill="#ED3B2F"></rect><circle cx="30" cy="30" r="16" fill="#1B81CE"></circle></g>
+    <g id="cell-ky"><rect width="60" height="60" fill="#141414"></rect><circle cx="30" cy="30" r="16" fill="#FFC400"></circle></g>
+  </defs>
+  <use href="#cell-bl" x="0" y="0"></use>
+  <use href="#cell-yr" x="60" y="0"></use>
+  <use href="#cell-rb" x="120" y="0"></use>
+  <use href="#cell-ky" x="180" y="0"></use>
+  <use href="#cell-yr" x="0" y="60"></use>
+  <use href="#cell-ky" x="60" y="60"></use>
+  <use href="#cell-bl" x="120" y="60"></use>
+  <use href="#cell-rb" x="180" y="60"></use>
+  <use href="#cell-rb" x="0" y="120"></use>
+  <use href="#cell-bl" x="60" y="120"></use>
+  <use href="#cell-ky" x="120" y="120"></use>
+  <use href="#cell-yr" x="180" y="120"></use>
+  <use href="#cell-ky" x="0" y="180"></use>
+  <use href="#cell-rb" x="60" y="180"></use>
+  <use href="#cell-yr" x="120" y="180"></use>
+  <use href="#cell-bl" x="180" y="180"></use>
+</svg>

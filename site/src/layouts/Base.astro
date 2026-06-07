@@ -1,0 +1,37 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/styles.css';
+import '../styles/site.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  active?: 'home' | 'services' | 'about' | 'blog' | 'contact';
+}
+
+const { title, description, active = 'home' } = Astro.props;
+const defaultDesc = 'AI-native web platforms, ecommerce systems and custom software for businesses with real operational complexity.';
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description ?? defaultDesc} />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+</head>
+<body class="mk">
+  <Nav active={active} />
+  <main>
+    <slot />
+  </main>
+  <Footer />
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" is:inline></script>
+  <script is:inline>
+    if (window.lucide) window.lucide.createIcons();
+  </script>
+</body>
+</html>

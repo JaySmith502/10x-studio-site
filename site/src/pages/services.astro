@@ -1,0 +1,151 @@
+---
+import Base from '../layouts/Base.astro';
+import WellTile from '../components/WellTile.astro';
+
+const services = [
+  {
+    id: 'web',
+    set: 'web',
+    num: '01',
+    cat: 'Web Platforms',
+    title: 'Custom Web Platforms',
+    who: 'For businesses that need more than a brochure site — companies whose website is supposed to capture leads, route requests, gate access, or run a multi-location operation.',
+    features: [
+      'Custom pages & layouts',
+      'User accounts & role-based access',
+      'Admin dashboards',
+      'Forms & intake flows',
+      'CRM & payment integrations',
+      'Notifications & automations',
+    ],
+    dot: 'var(--blue-500)',
+    outcome: 'A platform that reflects how the business actually operates — not a template padded out with marketing copy.',
+  },
+  {
+    id: 'ecom',
+    set: 'ecom',
+    num: '02',
+    cat: 'Ecommerce',
+    title: 'Ecommerce & Product Platforms',
+    who: 'For brands that need to sell online with more sophistication than a basic storefront — configurable products, multi-location inventory, subscription billing, custom checkout.',
+    features: [
+      'Product catalogs & configurators',
+      'Cart & checkout experiences',
+      'Customer accounts & order history',
+      'Subscription & membership',
+      'Payment & shipping integrations',
+      'Franchise / location-aware logic',
+    ],
+    dot: 'var(--yellow-600)',
+    outcome: 'Online selling that does not make customers (or your fulfillment team) want to throw a laptop into a river.',
+  },
+  {
+    id: 'ops',
+    set: 'ops',
+    num: '03',
+    cat: 'Internal Tools',
+    title: 'Internal Business Tools',
+    who: 'For teams whose business is currently held together by spreadsheets, shared inboxes, and a Slack channel where people copy-paste data between four apps.',
+    features: [
+      'Admin dashboards',
+      'Approval workflows',
+      'Job & inventory tracking',
+      'Reporting & analytics',
+      'Vendor / client management',
+      'Document intake & routing',
+    ],
+    dot: 'var(--red-500)',
+    outcome: 'The system the business has been trying to fake with spreadsheets — finally built.',
+  },
+  {
+    id: 'ai',
+    set: 'ai',
+    num: '04',
+    cat: 'AI Workflows',
+    title: 'AI-Enabled Workflow Tools',
+    who: 'For companies that want practical AI embedded into operations — not a chatbot bolted onto a homepage.',
+    features: [
+      'AI customer support assistants',
+      'Intake triage & routing',
+      'Document summarization',
+      'RAG over company knowledge',
+      'Lead qualification',
+      'Internal decision support',
+    ],
+    dot: 'var(--ink-900)',
+    outcome: 'AI that reduces friction, speeds work, and earns its keep — with guardrails an enterprise security team would actually approve.',
+  },
+  {
+    id: 'auto',
+    set: 'auto',
+    num: '05',
+    cat: 'Integrations',
+    title: 'Integrations & Automation',
+    who: 'For companies whose software tools refuse to talk to each other — CRM, forms, payments, notifications, reporting, all living in disconnected silos.',
+    features: [
+      'CRM integrations (HubSpot, Salesforce)',
+      'API connections & data sync',
+      'n8n / Make / Zapier workflows',
+      'Form-to-database automation',
+      'Email / SMS notification systems',
+      'Reporting pipelines',
+    ],
+    dot: 'var(--blue-600)',
+    outcome: 'Your stack stops behaving like a group project. Tools share data, work routes itself, leadership sees the truth in one place.',
+  },
+] as const;
+---
+<Base title="Services — 10x Studio" description="Custom web platforms, ecommerce systems, internal tools, AI-enabled workflows and integrations — engineered by a senior partner." active="services">
+
+  <section class="svc-hero">
+    <div class="svc-hero-inner">
+      <div class="mk-eyebrow" style="margin-bottom:18px;"><b>//</b> What we build</div>
+      <h1 class="mk-h1">Five things we do <span class="accent">well.</span></h1>
+      <p>Custom web platforms, ecommerce, internal tools, AI workflows and integrations — engineered as one system, not five disconnected line items. Pick the one closest to your problem; we usually end up building two of these together.</p>
+    </div>
+  </section>
+
+  <section style="background:var(--paper);">
+    <div class="mk-wrap svc-list">
+      {services.map((s) => (
+        <article id={s.id} class="svc-row">
+          <WellTile set={s.set as any} size={72} />
+          <div>
+            <div class="cat">{s.num} · {s.cat}</div>
+            <h2 class="mk-h2">{s.title}</h2>
+            <p class="who">{s.who}</p>
+          </div>
+          <div class="features">
+            {s.features.map((f) => (
+              <div><span class="dot" style={`background:${s.dot};`}></span>{f}</div>
+            ))}
+          </div>
+          <div class="outcome">
+            <span class="lbl">Outcome</span>
+            <span class="txt">{s.outcome}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="svc-also">
+    <div class="svc-also-inner">
+      <span class="svc-also-eyebrow">// Also offered</span>
+      <div class="svc-also-items">
+        <span><b>SEO-Ready Architecture</b> — site structure built so search engines (and AI agents) can read it.</span>
+        <span><b>Support &amp; Optimization</b> — post-launch retainers for monitoring, iteration and feature work.</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--ink-900);">
+    <div class="cta-band-inner">
+      <h2 class="mk-h2" style="color:#fff; font-size:46px;">Not sure where to start?</h2>
+      <a href="/contact/" class="mk-btn mk-btn--yellow mk-btn--lg">
+        Talk Through Your Build <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+      </a>
+    </div>
+  </section>
+
+</Base>

@@ -1,0 +1,116 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Start a Project — 10x Studio" description="Tell us what you're trying to build. One working session, no sales theatre." active="contact">
+
+  <section class="contact-section">
+    <div class="contact-inner">
+
+      <!-- PITCH -->
+      <div class="contact-pitch">
+        <div class="mk-eyebrow" style="margin-bottom:18px;"><b>//</b> Start a project</div>
+        <h1 class="mk-h1">Tell us what<br>you're <span class="accent">building.</span></h1>
+        <p>One working session, no sales theatre. You'll talk to the engineer who would actually build it — same person on the call as on the keyboard.</p>
+
+        <div class="contact-meta">
+          <div class="row">
+            <span class="ico"><i data-lucide="mail" style="width:18px;height:18px;"></i></span>
+            <span>hello@10xstudio.dev</span>
+          </div>
+          <div class="row">
+            <span class="ico"><i data-lucide="clock" style="width:18px;height:18px;"></i></span>
+            <span>Reply within 1 business day</span>
+          </div>
+          <div class="row">
+            <span class="ico"><i data-lucide="shield-check" style="width:18px;height:18px;"></i></span>
+            <span>Cybersecurity &amp; Fortune 500 background</span>
+          </div>
+          <div class="row">
+            <span class="ico"><i data-lucide="map-pin" style="width:18px;height:18px;"></i></span>
+            <span>Remote-first · US hours</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM (Netlify Forms — POST to current URL, handled by build) -->
+      <div class="contact-form-col">
+        <form
+          class="contact-form"
+          name="project-inquiry"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          action="/contact/thanks/"
+        >
+          <input type="hidden" name="form-name" value="project-inquiry" />
+          <p style="display:none;">
+            <label>Don't fill this out: <input name="bot-field" /></label>
+          </p>
+
+          <div class="row-2">
+            <label class="field">
+              <span class="lbl">Name</span>
+              <input type="text" name="name" placeholder="Jordan Reyes" required />
+            </label>
+            <label class="field">
+              <span class="lbl">Work email</span>
+              <input type="email" name="email" placeholder="you@company.com" required />
+            </label>
+          </div>
+
+          <label class="field">
+            <span class="lbl">Company</span>
+            <input type="text" name="company" placeholder="Acme Corp" />
+          </label>
+
+          <label class="field">
+            <span class="lbl">What are you trying to build, and why?</span>
+            <textarea name="brief" placeholder="We're replatforming our customer portal because intake is buried in spreadsheets and three apps. We want AI handling first-pass document review and routing…"></textarea>
+            <span class="hint">A few sentences is plenty. We'll dig in on the call.</span>
+          </label>
+
+          <div class="row-2">
+            <label class="field">
+              <span class="lbl">Desired timeline</span>
+              <select name="timeline" required>
+                <option value="" disabled selected>Select…</option>
+                <option>ASAP</option>
+                <option>Next 1–3 months</option>
+                <option>Next 3–6 months</option>
+                <option>6+ months out</option>
+                <option>Just exploring</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="lbl">Budget range</span>
+              <select name="budget" required>
+                <option value="" disabled selected>Select…</option>
+                <option>Under $25K</option>
+                <option>$25K – $50K</option>
+                <option>$50K – $100K</option>
+                <option>$100K – $250K</option>
+                <option>$250K+</option>
+                <option>Not sure yet</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="field">
+            <span class="lbl">Systems it needs to integrate with</span>
+            <input type="text" name="integrations" placeholder="HubSpot, Stripe, Shopify, internal API, etc." />
+            <span class="hint">Optional.</span>
+          </label>
+
+          <div class="submit-row">
+            <button type="submit" class="mk-btn mk-btn--primary mk-btn--lg">
+              Send brief <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+            </button>
+            <span class="note">// We reply within 1 business day</span>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+</Base>

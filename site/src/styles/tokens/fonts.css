@@ -1,0 +1,15 @@
+/* ============================================================
+   10x Web Development — Webfonts
+   ------------------------------------------------------------
+   DISPLAY: JOST — a free, Futura-inspired geometric grotesque
+   (variable to weight 900). Chosen as the closest loadable
+   match to the requested Glacial Indifference / Basenji / Codec
+   direction (none of which are CDN-hosted): geometric, circular,
+   confident, and far less overused than Archivo.
+
+   BODY: ARCHIVO (variable to 900) — neutral grotesque for
+   running text & UI. MONO: JetBrains Mono for technical accents.
+   Swap any of these for licensed brand fonts when available.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Archivo:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,400..800;1,400..800&display=swap');
