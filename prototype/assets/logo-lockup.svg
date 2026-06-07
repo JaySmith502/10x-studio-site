@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 100" width="520" height="100" role="img" aria-label="10x Web Development">
+  
+  <g>
+    <rect x="0" y="0" width="48" height="48" fill="#1B81CE"></rect>
+    <circle cx="24" cy="24" r="13" fill="#FFC400"></circle>
+    <rect x="52" y="0" width="48" height="48" fill="#ED3B2F"></rect>
+    <circle cx="76" cy="24" r="13" fill="#1B81CE"></circle>
+    <rect x="0" y="52" width="48" height="48" fill="#FFC400"></rect>
+    <circle cx="24" cy="76" r="13" fill="#ED3B2F"></circle>
+    <rect x="52" y="52" width="48" height="48" fill="#141414"></rect>
+    <circle cx="76" cy="76" r="13" fill="#FFC400"></circle>
+  </g>
+  
+  <text x="124" y="58" font-family="Archivo, Arial, sans-serif" font-weight="900" font-size="62" letter-spacing="-3" fill="#141414">10x</text>
+  <text x="126" y="86" font-family="&#39;JetBrains Mono&#39;, monospace" font-weight="700" font-size="15" letter-spacing="6" fill="#525252">WEB DEVELOPMENT</text>
+</svg>

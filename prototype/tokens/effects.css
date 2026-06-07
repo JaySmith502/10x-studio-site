@@ -1,0 +1,44 @@
+/* ============================================================
+   10x Web Development — Effects Tokens
+   Radii, borders, shadows. The brand is hard-edged and
+   precise: tight radii, confident hairline-to-heavy borders,
+   crisp low-blur shadows. No soft glows.
+   ============================================================ */
+
+:root {
+  /* ---- Radii (mostly square — Bauhaus precision) ---- */
+  --radius-0:   0px;      /* default: sharp corners       */
+  --radius-sm:  3px;
+  --radius-md:  6px;
+  --radius-lg:  10px;
+  --radius-xl:  16px;
+  --radius-pill: 999px;   /* circles / pills (the wells)  */
+
+  /* ---- Border widths ---- */
+  --bw-hair:   1px;
+  --bw:        1.5px;
+  --bw-bold:   2px;
+  --bw-heavy:  3px;       /* signature heavy outline      */
+
+  /* ---- Shadows (crisp, low blur, slight offset) ---- */
+  --shadow-xs:  0 1px 0 rgba(20,20,20,0.06);
+  --shadow-sm:  0 1px 2px rgba(20,20,20,0.10);
+  --shadow-md:  0 4px 10px rgba(20,20,20,0.10);
+  --shadow-lg:  0 12px 28px rgba(20,20,20,0.14);
+
+  /* ---- Signature "hard" shadow — offset block, no blur ---- */
+  --shadow-block:    4px 4px 0 var(--ink-900);
+  --shadow-block-sm: 3px 3px 0 var(--ink-900);
+  --shadow-block-blue: 4px 4px 0 var(--blue-500);
+
+  /* ---- Focus ---- */
+  --focus-width: 3px; /* @kind other */
+  --focus-offset: 2px; /* @kind spacing */
+
+  /* ---- Motion ---- */
+  --ease-out:   cubic-bezier(0.2, 0.7, 0.2, 1); /* @kind other */
+  --ease-in-out: cubic-bezier(0.6, 0, 0.2, 1); /* @kind other */
+  --dur-fast:   120ms; /* @kind other */
+  --dur:        200ms; /* @kind other */
+  --dur-slow:   360ms; /* @kind other */
+}

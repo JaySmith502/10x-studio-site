@@ -3,6 +3,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Unneeded artifacts
+data_www_yslingshot_com_part_1.md
+data_10xvelocity_ai_part_1.md
+
 # C extensions
 *.so
 

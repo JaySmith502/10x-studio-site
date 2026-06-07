@@ -1,0 +1,88 @@
+/* ============================================================
+   10x Web Development — Color Tokens
+   Bauhaus primary palette drawn from MEEDEN packaging:
+   golden yellow, vermillion red, cobalt blue, ink, paper.
+   ============================================================ */
+
+:root {
+  /* ---- Brand primaries (the three blocks) ---- */
+  --blue-500:   #1B81CE;   /* primary action / brand blue   */
+  --blue-600:   #1467AA;
+  --blue-700:   #0F5189;
+  --blue-300:   #6FB2E4;
+  --blue-100:   #D6EAF8;
+  --blue-50:    #EDF6FC;
+
+  --red-500:    #ED3B2F;   /* vermillion — emphasis / alert */
+  --red-600:    #CF2B20;
+  --red-700:    #A81F16;
+  --red-300:    #F58A82;
+  --red-100:    #FBD8D5;
+  --red-50:     #FDECEA;
+
+  --yellow-500: #FFC400;   /* golden yellow — highlight     */
+  --yellow-600: #E0A800;
+  --yellow-700: #B88800;
+  --yellow-300: #FFDC5E;
+  --yellow-100: #FFF1C2;
+  --yellow-50:  #FFF9E6;
+
+  /* ---- Ink / neutral ramp (warm-cool charcoal) ---- */
+  --ink-900:  #141414;   /* near-black headline ink */
+  --ink-800:  #232323;
+  --ink-700:  #353535;
+  --ink-600:  #525252;
+  --ink-500:  #6E6E6E;
+  --ink-400:  #909090;
+  --ink-300:  #BFBFBF;
+  --ink-200:  #DDDCD7;
+  --ink-150:  #E7E6E0;
+  --ink-100:  #EFEEE8;
+  --ink-50:   #F6F5F0;
+
+  /* ---- Paper / white ---- */
+  --white:    #FFFFFF;
+  --paper:    #FAF9F4;   /* warm off-white panel    */
+  --paper-2:  #F2F1EA;
+
+  /* ============================================================
+     Semantic aliases — reference these in product CSS
+     ============================================================ */
+
+  /* Text */
+  --text-strong:    var(--ink-900);
+  --text-body:      var(--ink-700);
+  --text-muted:     var(--ink-500);
+  --text-faint:     var(--ink-400);
+  --text-on-color:  var(--white);
+  --text-on-yellow: var(--ink-900);
+  --text-link:      var(--blue-600);
+
+  /* Surfaces */
+  --surface-page:    var(--paper);
+  --surface-card:    var(--white);
+  --surface-sunken:  var(--paper-2);
+  --surface-inverse: var(--ink-900);
+
+  /* Accents */
+  --accent:          var(--blue-500);
+  --accent-strong:   var(--blue-600);
+  --accent-press:    var(--blue-700);
+  --accent-soft:     var(--blue-50);
+  --emphasis:        var(--red-500);
+  --emphasis-soft:   var(--red-50);
+  --highlight:       var(--yellow-500);
+  --highlight-soft:  var(--yellow-50);
+
+  /* Borders / lines */
+  --border:        var(--ink-200);
+  --border-strong: var(--ink-900);
+  --border-soft:   var(--ink-150);
+  --divider:       var(--ink-150);
+
+  /* States */
+  --focus-ring:    var(--blue-500);
+  --success:       #1F9D55;
+  --warning:       var(--yellow-600);
+  --danger:        var(--red-500);
+}
