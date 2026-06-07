@@ -21,9 +21,9 @@ const desc = description ?? defaultDesc;
 
 // Canonical URL: prefer Astro.site (configured to https://10xstudio.dev) + current pathname.
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://10xstudio.dev').toString();
-const ogImageAbs = ogImage
-  ? new URL(ogImage, Astro.site ?? 'https://10xstudio.dev').toString()
-  : undefined;
+// Default share image: brand hero crop (1200x630) lives at /assets/og-image.png.
+// Pass `ogImage` per page to override (e.g. case-study illustrations once they're sized correctly).
+const ogImageAbs = new URL(ogImage ?? '/assets/og-image.png', Astro.site ?? 'https://10xstudio.dev').toString();
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -42,13 +42,17 @@ const ogImageAbs = ogImage
   <meta property="og:title" content={title} />
   <meta property="og:description" content={desc} />
   <meta property="og:url" content={canonical} />
-  {ogImageAbs && <meta property="og:image" content={ogImageAbs} />}
+  <meta property="og:image" content={ogImageAbs} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="10x Studio — software that does the work your business needs." />
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content={ogImageAbs ? 'summary_large_image' : 'summary'} />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={desc} />
-  {ogImageAbs && <meta name="twitter:image" content={ogImageAbs} />}
+  <meta name="twitter:image" content={ogImageAbs} />
+  <meta name="twitter:image:alt" content="10x Studio — software that does the work your business needs." />
 
   <!-- Preconnects for Google Fonts (used by tokens/fonts.css) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
