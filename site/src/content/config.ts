@@ -15,4 +15,29 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const caseStudies = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    client: z.string(),
+    clientUrl: z.string().url().optional(),
+    industry: z.string(),
+    pubDate: z.coerce.date(),
+    role: z.string().default('Build partner'),
+    variant: z.enum(['A', 'B', 'C']).default('B'),
+    color: z.enum(['blue', 'red', 'yellow']).default('blue'),
+    duration: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    heroQuote: z.string().optional(),
+    heroQuoteAttribution: z.string().optional(),
+    metrics: z.array(z.object({
+      value: z.string(),
+      label: z.string(),
+    })).default([]),
+    stack: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, 'case-studies': caseStudies };
