@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import WellTile from '../../components/WellTile.astro';
+import { getCollection } from 'astro:content';
+
+const studies = (await getCollection('case-studies', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+const setForColor: Record<string, 'web' | 'ecom' | 'ops' | 'ai' | 'auto'> = {
+  blue: 'auto', red: 'ai', yellow: 'ecom',
+};
+---
+<Base title="Case studies — 10x Studio" description="Work we've shipped, written honestly." active="home">
+
+  <section class="svc-hero">
+    <div class="svc-hero-inner">
+      <div class="mk-eyebrow" style="margin-bottom:18px;"><b>//</b> Case studies</div>
+      <h1 class="mk-h1">What we've <span class="accent">shipped.</span></h1>
+      <p>Honest write-ups of projects we built, what they actually changed, and what we'd still tell you about them.</p>
+    </div>
+  </section>
+
+  <section class="mk-section">
+    <div class="mk-wrap">
+      {studies.length === 0 && (
+        <div class="cs-empty">
+          <div class="mk-eyebrow" style="margin-bottom:14px;"><b>//</b> Empty for now</div>
+          <h2 class="mk-h2" style="font-size:36px;">First case studies land soon.</h2>
+          <p style="margin-top:14px; max-width:520px; color:var(--ink-700);">In the meantime, the <a href="/blog/">Journal</a> has field notes on the kind of work we do.</p>
+        </div>
+      )}
+
+      <div class="cs-index-list">
+        {studies.map((s) => (
+          <a href={`/case-studies/${s.slug}/`} class="cs-index-card">
+            <div class="cs-index-art" style={`background:var(--${s.data.color}-500); color:${s.data.color === 'yellow' ? 'var(--ink-900)' : '#fff'};`}>
+              <WellTile set={setForColor[s.data.color]} size={88} />
+            </div>
+            <div class="cs-index-body">
+              <div class="cs-index-meta">
+                <span class="cs-index-client">{s.data.client}</span>
+                <span class="dot-sep">·</span>
+                <span>{s.data.industry}</span>
+                <span class="dot-sep">·</span>
+                <span>{fmt(s.data.pubDate)}</span>
+              </div>
+              <h2 class="mk-h3 cs-index-title">{s.data.title}</h2>
+              <p class="cs-index-desc">{s.data.description}</p>
+              {s.data.metrics && s.data.metrics.length > 0 && (
+                <div class="cs-index-metrics">
+                  {s.data.metrics.slice(0, 3).map((m) => (
+                    <div class="cs-index-metric">
+                      <span class="n">{m.value}</span>
+                      <span class="l">{m.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <span class="cs-index-arrow"><i data-lucide="arrow-up-right" style="width:22px;height:22px;"></i></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Base>

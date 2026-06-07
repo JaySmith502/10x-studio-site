@@ -1,0 +1,168 @@
+---
+import Base from '../../layouts/Base.astro';
+import WellTile from '../../components/WellTile.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const studies = await getCollection('case-studies', ({ data }) => !data.draft);
+  return studies.map((study) => ({
+    params: { slug: study.slug },
+    props: { study },
+  }));
+}
+
+const { study } = Astro.props;
+const { Content } = await study.render();
+const { data } = study;
+
+// Colorway → CSS color var + on-color text
+const colorVar = {
+  blue:   'var(--blue-500)',
+  red:    'var(--red-500)',
+  yellow: 'var(--yellow-500)',
+}[data.color];
+const onColor = data.color === 'yellow' ? 'var(--ink-900)' : '#fff';
+
+// Variant currently always renders Variant B (thesis-as-hero).
+// Variants A and C will be added when their content lands.
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+
+// Pick a well-tile set roughly matched to the colorway for the hero motif
+const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' : 'auto';
+---
+<Base
+  title={`${data.title} — 10x Studio`}
+  description={data.description}
+  active="home"
+>
+  <article class={`cs cs--variant-${data.variant} cs--${data.color}`}>
+
+    <!-- HERO BAND — solid colored, big white headline -->
+    <section class="cs-hero" style={`background:${colorVar}; color:${onColor};`}>
+      <div class="mk-wrap cs-hero-inner">
+        <div class="cs-hero-eyebrow" style={`color:${onColor}; opacity:.78;`}>
+          // Case study
+        </div>
+        <h1 class="mk-h1 cs-hero-title" style={`color:${onColor};`}>{data.title}</h1>
+        <p class="cs-hero-lede" style={`color:${onColor}; opacity:.92;`}>{data.description}</p>
+      </div>
+    </section>
+
+    <!-- META STRIP — black band with metadata -->
+    <section class="cs-meta">
+      <div class="mk-wrap cs-meta-inner">
+        <div class="cs-meta-cell">
+          <div class="cs-meta-lbl">Client</div>
+          <div class="cs-meta-val">
+            {data.clientUrl
+              ? <a href={data.clientUrl} target="_blank" rel="noopener">{data.client}</a>
+              : data.client}
+          </div>
+        </div>
+        <div class="cs-meta-cell">
+          <div class="cs-meta-lbl">Industry</div>
+          <div class="cs-meta-val">{data.industry}</div>
+        </div>
+        <div class="cs-meta-cell">
+          <div class="cs-meta-lbl">Role</div>
+          <div class="cs-meta-val">{data.role}</div>
+        </div>
+        {data.duration && (
+          <div class="cs-meta-cell">
+            <div class="cs-meta-lbl">Duration</div>
+            <div class="cs-meta-val">{data.duration}</div>
+          </div>
+        )}
+        <div class="cs-meta-cell">
+          <div class="cs-meta-lbl">Shipped</div>
+          <div class="cs-meta-val">{fmt(data.pubDate)}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NARRATIVE + MOTIF SPLIT -->
+    <section class="cs-narrative">
+      <div class="mk-wrap cs-narrative-inner">
+        <div class="cs-narrative-body">
+          <Content />
+        </div>
+        <aside class="cs-narrative-aside">
+          <div class="cs-aside-art">
+            <WellTile set={tileSet as any} size={160} />
+          </div>
+          {data.stack && data.stack.length > 0 && (
+            <div class="cs-aside-block">
+              <div class="cs-aside-lbl">// Stack</div>
+              <div class="cs-aside-stack">
+                {data.stack.map((s) => <span class="cs-stack-pill">{s}</span>)}
+              </div>
+            </div>
+          )}
+          {data.tags && data.tags.length > 0 && (
+            <div class="cs-aside-block">
+              <div class="cs-aside-lbl">// Tags</div>
+              <div class="cs-aside-tags">
+                {data.tags.map((t) => <span class="tag">#{t}</span>)}
+              </div>
+            </div>
+          )}
+          <div class="cs-aside-block">
+            <div class="cs-aside-lbl">// Start a build like this</div>
+            <p class="cs-aside-text">If this is your shape of problem, the next step is a 30-minute working session.</p>
+            <a href="/contact/" class="mk-btn mk-btn--primary">
+              Start a Project Conversation <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- METRICS BAND (only if metrics exist) -->
+    {data.metrics && data.metrics.length > 0 && (
+      <section class="cs-metrics" style={`background:${colorVar}; color:${onColor};`}>
+        <div class="mk-wrap cs-metrics-inner">
+          <div class="cs-metrics-eyebrow" style={`color:${onColor}; opacity:.78;`}>// What it shipped</div>
+          <div class="cs-metrics-grid">
+            {data.metrics.map((m) => (
+              <div class="cs-metric">
+                <div class="cs-metric-n" style={`color:${onColor};`}>{m.value}</div>
+                <div class="cs-metric-l" style={`color:${onColor}; opacity:.82;`}>{m.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- PRINCIPLE QUOTE BAND (only if heroQuote exists) -->
+    {data.heroQuote && (
+      <section class="cs-quote-band">
+        <div class="mk-wrap cs-quote-inner">
+          <div class="cs-quote-eyebrow">// Principle</div>
+          <blockquote class="cs-quote">"{data.heroQuote}"</blockquote>
+          {data.heroQuoteAttribution && (
+            <div class="cs-quote-attr">— {data.heroQuoteAttribution}</div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- CTA BAND -->
+    <section class="cs-cta" style={`background:${colorVar}; color:${onColor};`}>
+      <div class="mk-wrap cs-cta-inner">
+        <h2 class="mk-h2 cs-cta-title" style={`color:${onColor};`}>
+          More like this?<br/>Tell us what you're building.
+        </h2>
+        <div class="cs-cta-links">
+          <a href="/contact/" class={data.color === 'yellow' ? 'mk-btn mk-btn--solid mk-btn--lg' : 'mk-btn mk-btn--yellow mk-btn--lg'}>
+            Start a Project Conversation <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+          </a>
+          <a href="/case-studies/" class="mk-btn mk-btn--outline mk-btn--lg" style={data.color !== 'yellow' ? 'color:#fff;border-color:#fff;' : ''}>
+            All case studies
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </article>
+</Base>

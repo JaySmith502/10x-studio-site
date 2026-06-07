@@ -1,6 +1,6 @@
 ---
 interface Props {
-  active?: 'home' | 'services' | 'about' | 'blog' | 'contact';
+  active?: 'home' | 'services' | 'about' | 'case-studies' | 'blog' | 'contact';
 }
 const { active = 'home' } = Astro.props;
 ---
@@ -16,6 +16,7 @@ const { active = 'home' } = Astro.props;
     <nav class="mk-nav-links">
       <a href="/" class={active === 'home' ? 'active' : ''}>Home</a>
       <a href="/services/" class={active === 'services' ? 'active' : ''}>Services</a>
+      <a href="/case-studies/" class={active === 'case-studies' ? 'active' : ''}>Work</a>
       <a href="/about/" class={active === 'about' ? 'active' : ''}>About</a>
       <a href="/blog/" class={active === 'blog' ? 'active' : ''}>Journal</a>
       <a href="/contact/" class={active === 'contact' ? 'active' : ''}>Contact</a>
