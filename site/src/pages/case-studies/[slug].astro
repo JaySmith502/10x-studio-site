@@ -23,8 +23,10 @@ const colorVar = {
 }[data.color];
 const onColor = data.color === 'yellow' ? 'var(--ink-900)' : '#fff';
 
-// Variant currently always renders Variant B (thesis-as-hero).
-// Variants A and C will be added when their content lands.
+// Variant A and B share the body+aside+CTA chrome; they diverge on hero + stats band.
+// Variant C falls through to B for now (TODO when first C case study lands).
+const isA = data.variant === 'A';
+
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
 
 // Pick a well-tile set roughly matched to the colorway for the hero motif
@@ -37,18 +39,49 @@ const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' :
 >
   <article class={`cs cs--variant-${data.variant} cs--${data.color}`}>
 
-    <!-- HERO BAND — solid colored, big white headline -->
-    <section class="cs-hero" style={`background:${colorVar}; color:${onColor};`}>
-      <div class="mk-wrap cs-hero-inner">
-        <div class="cs-hero-eyebrow" style={`color:${onColor}; opacity:.78;`}>
-          // Case study
+    {isA ? (
+      <!-- VARIANT A — STORY ARC HERO (paper bg, motif art right) -->
+      <section class="cs-hero-a">
+        <div class="mk-wrap cs-hero-a-inner">
+          <div>
+            <div class="mk-eyebrow" style="margin-bottom:24px;">
+              <span class="mk-badge mk-badge--blue">Case study</span>
+              {data.duration && <span>{data.duration}</span>}
+            </div>
+            <h1 class="mk-h1 cs-hero-a-title">{data.title}</h1>
+            <p class="cs-hero-a-lede">{data.description}</p>
+          </div>
+          <!-- 2x2 color-block hero composition, tinted by colorway -->
+          <div class="hero-art">
+            <div class="cell" style={`background:${colorVar}; align-items:flex-end; justify-content:flex-start;`}>
+              <span class="cell-label" style={`color:${onColor};`}>Before</span>
+            </div>
+            <div class="cell" style="background:var(--yellow-500);">
+              <span class="circle" style={`background:${colorVar};`}></span>
+            </div>
+            <div class="cell" style="background:var(--ink-900);">
+              <span class="circle" style="background:var(--yellow-500);"></span>
+            </div>
+            <div class="cell" style={`background:${colorVar}; align-items:flex-end; justify-content:flex-end;`}>
+              <span class="cell-label" style={`color:${onColor}; text-align:right;`}>After</span>
+            </div>
+          </div>
         </div>
-        <h1 class="mk-h1 cs-hero-title" style={`color:${onColor};`}>{data.title}</h1>
-        <p class="cs-hero-lede" style={`color:${onColor}; opacity:.92;`}>{data.description}</p>
-      </div>
-    </section>
+      </section>
+    ) : (
+      <!-- VARIANT B — THESIS-AS-HERO (solid color band) -->
+      <section class="cs-hero" style={`background:${colorVar}; color:${onColor};`}>
+        <div class="mk-wrap cs-hero-inner">
+          <div class="cs-hero-eyebrow" style={`color:${onColor}; opacity:.78;`}>
+            // Case study
+          </div>
+          <h1 class="mk-h1 cs-hero-title" style={`color:${onColor};`}>{data.title}</h1>
+          <p class="cs-hero-lede" style={`color:${onColor}; opacity:.92;`}>{data.description}</p>
+        </div>
+      </section>
+    )}
 
-    <!-- META STRIP — black band with metadata -->
+    <!-- META STRIP — shared by both variants -->
     <section class="cs-meta">
       <div class="mk-wrap cs-meta-inner">
         <div class="cs-meta-cell">
@@ -80,7 +113,7 @@ const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' :
       </div>
     </section>
 
-    <!-- NARRATIVE + MOTIF SPLIT -->
+    <!-- NARRATIVE + ASIDE — shared -->
     <section class="cs-narrative">
       <div class="mk-wrap cs-narrative-inner">
         <div class="cs-narrative-body">
@@ -117,24 +150,40 @@ const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' :
       </div>
     </section>
 
-    <!-- METRICS BAND (only if metrics exist) -->
+    <!-- METRICS BAND — Variant A: dark/ink. Variant B: colored. -->
     {data.metrics && data.metrics.length > 0 && (
-      <section class="cs-metrics" style={`background:${colorVar}; color:${onColor};`}>
-        <div class="mk-wrap cs-metrics-inner">
-          <div class="cs-metrics-eyebrow" style={`color:${onColor}; opacity:.78;`}>// What it shipped</div>
-          <div class="cs-metrics-grid">
-            {data.metrics.map((m) => (
-              <div class="cs-metric">
-                <div class="cs-metric-n" style={`color:${onColor};`}>{m.value}</div>
-                <div class="cs-metric-l" style={`color:${onColor}; opacity:.82;`}>{m.label}</div>
-              </div>
-            ))}
+      isA ? (
+        <section class="cs-metrics cs-metrics--dark">
+          <div class="mk-wrap cs-metrics-inner">
+            <div class="cs-metrics-eyebrow" style="color:var(--yellow-500);">// By the numbers</div>
+            <div class="cs-metrics-grid">
+              {data.metrics.map((m, i) => (
+                <div class="cs-metric">
+                  <div class="cs-metric-n" style={`color:${i % 2 === 1 ? 'var(--yellow-500)' : '#fff'};`}>{m.value}</div>
+                  <div class="cs-metric-l" style="color:rgba(255,255,255,.7);">{m.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section class="cs-metrics" style={`background:${colorVar}; color:${onColor};`}>
+          <div class="mk-wrap cs-metrics-inner">
+            <div class="cs-metrics-eyebrow" style={`color:${onColor}; opacity:.78;`}>// What it shipped</div>
+            <div class="cs-metrics-grid">
+              {data.metrics.map((m) => (
+                <div class="cs-metric">
+                  <div class="cs-metric-n" style={`color:${onColor};`}>{m.value}</div>
+                  <div class="cs-metric-l" style={`color:${onColor}; opacity:.82;`}>{m.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
     )}
 
-    <!-- PRINCIPLE QUOTE BAND (only if heroQuote exists) -->
+    <!-- PRINCIPLE QUOTE BAND — shared, conditional -->
     {data.heroQuote && (
       <section class="cs-quote-band">
         <div class="mk-wrap cs-quote-inner">
@@ -147,7 +196,7 @@ const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' :
       </section>
     )}
 
-    <!-- CTA BAND -->
+    <!-- CTA BAND — shared, colored -->
     <section class="cs-cta" style={`background:${colorVar}; color:${onColor};`}>
       <div class="mk-wrap cs-cta-inner">
         <h2 class="mk-h2 cs-cta-title" style={`color:${onColor};`}>

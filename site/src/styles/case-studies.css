@@ -2,8 +2,137 @@
    CASE STUDIES — INDEX + VARIANT B (thesis-as-hero)
    ============================================================ */
 
-/* ---- Index list ---- */
+/* ---- Brand motif strip (used as ribbon at top of hero + each card) ---- */
+.cs-strip {
+  height: 14px;
+  background: url('/assets/motif-grid.svg');
+  background-size: 84px;
+  border-bottom: 2px solid var(--ink-900);
+}
+
+/* Hero ribbon — sits at the top of svc-hero, full-bleed */
+.svc-hero > .cs-strip { border-bottom: 2px solid var(--ink-900); }
+
+/* ---- New 2-column square card grid ---- */
 .cs-empty { padding: 32px 0 16px; }
+.cs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  padding: 8px 0;
+}
+.cs-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  aspect-ratio: 1 / 1;
+  padding: 40px 40px 36px;
+  text-decoration: none;
+  color: var(--ink-900);
+  border: 2px solid var(--ink-900);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 6px 6px 0 var(--ink-900);
+  transition: transform .14s var(--ease-out), box-shadow .14s var(--ease-out);
+}
+.cs-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--ink-900);
+}
+.cs-card:active { transform: translate(0,0); box-shadow: 3px 3px 0 var(--ink-900); }
+
+/* ---- Card colorways ---- */
+.cs-card--blue   { background: var(--blue-500); color: #fff; }
+.cs-card--red    { background: var(--red-500); color: #fff; }
+.cs-card--yellow { background: var(--yellow-500); color: var(--ink-900); }
+.cs-card--white  { background: #fff; color: var(--ink-900); }
+
+/* Inner content positioning */
+.cs-card-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.cs-card-meta .cs-card-client { font-weight: 700; }
+.cs-card-meta .dot-sep { opacity: .45; }
+
+/* Light cards (yellow / white) — meta in subtle ink. Colored cards — meta in soft on-color. */
+.cs-card--yellow .cs-card-meta,
+.cs-card--white  .cs-card-meta { color: var(--ink-600); }
+.cs-card--yellow .cs-card-meta .cs-card-client,
+.cs-card--white  .cs-card-meta .cs-card-client { color: var(--blue-600); }
+.cs-card--blue   .cs-card-meta,
+.cs-card--red    .cs-card-meta { color: rgba(255,255,255,.78); }
+.cs-card--blue   .cs-card-meta .cs-card-client,
+.cs-card--red    .cs-card-meta .cs-card-client { color: #fff; }
+
+.cs-card-title {
+  font-size: 34px;
+  line-height: 1.04;
+  letter-spacing: -.025em;
+  margin-top: 22px;
+  text-align: left;
+  max-width: 88%;
+  color: inherit;
+  align-self: start;
+}
+
+.cs-card-cta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: end;
+  justify-self: start;
+  z-index: 2;
+}
+.cs-card--yellow .cs-card-cta,
+.cs-card--white  .cs-card-cta { color: var(--blue-600); }
+.cs-card--blue   .cs-card-cta,
+.cs-card--red    .cs-card-cta { color: var(--yellow-500); }
+.cs-card:hover .cs-card-cta { text-decoration: underline; text-underline-offset: 4px; }
+
+/* Illustration — paper sub-tile floating in the bottom-right of the card.
+   White image background multiplies out against the paper tile;
+   brand-color flats stay true to the original artwork. */
+.cs-card-art {
+  position: absolute;
+  right: 32px;
+  bottom: 78px;
+  width: 168px;
+  height: 168px;
+  background: var(--paper);
+  border: 2px solid var(--ink-900);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 var(--ink-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  z-index: 1;
+}
+.cs-card-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.cs-card:hover .cs-card-art {
+  transform: rotate(-1.5deg);
+  transition: transform .14s var(--ease-out);
+}
+
+/* Legacy index-list styles preserved below for fallback */
 .cs-index-list { display: flex; flex-direction: column; gap: 0; }
 .cs-index-card {
   display: grid;
@@ -63,6 +192,42 @@
 }
 .cs-index-arrow { display: flex; align-items: center; justify-content: center; color: var(--ink-700); }
 .cs-index-card:hover .cs-index-arrow { color: var(--blue-600); }
+
+/* ---- Variant A — story-arc hero (paper bg, 2x2 motif right) ---- */
+.cs-hero-a {
+  background: var(--paper-2);
+  border-bottom: 2px solid var(--ink-900);
+}
+.cs-hero-a-inner {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 48px;
+  align-items: center;
+  padding: 80px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.cs-hero-a-title {
+  font-size: 64px;
+  line-height: .98;
+  max-width: 640px;
+}
+.cs-hero-a-lede {
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--ink-700);
+  max-width: 560px;
+  margin-top: 24px;
+}
+
+/* ---- Variant A dark metrics band ---- */
+.cs-metrics--dark { background: var(--ink-900); color: #fff; }
+
+@media (max-width: 1000px) {
+  .cs-hero-a-inner { grid-template-columns: 1fr; gap: 36px; padding: 56px 24px; }
+  .cs-hero-a-title { font-size: 42px; }
+  .cs-hero-a-lede { font-size: 17px; }
+}
 
 /* ---- Variant B — hero band ---- */
 .cs-hero { border-bottom: 2px solid var(--ink-900); }
@@ -314,4 +479,10 @@
   .cs-index-card { grid-template-columns: 1fr; gap: 18px; padding: 28px 0; }
   .cs-index-art { width: 100%; height: 140px; }
   .cs-index-arrow { display: none; }
+
+  /* 2-col card grid collapses to single column on mobile */
+  .cs-grid { grid-template-columns: 1fr; gap: 20px; }
+  .cs-card { padding: 32px 28px 28px; aspect-ratio: auto; min-height: 360px; }
+  .cs-card-title { font-size: 28px; max-width: 100%; }
+  .cs-card-art { width: 132px; height: 132px; right: 24px; bottom: 64px; padding: 10px; }
 }

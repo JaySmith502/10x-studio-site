@@ -36,6 +36,7 @@ const caseStudies = defineCollection({
       label: z.string(),
     })).default([]),
     stack: z.array(z.string()).default([]),
+    heroImage: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });
