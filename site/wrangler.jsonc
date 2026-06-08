@@ -6,7 +6,7 @@
     "enabled": true
   },
   "assets": {
-    "directory": "site/dist"
+    "directory": "dist"
   },
   "compatibility_flags": [
     "nodejs_compat"
