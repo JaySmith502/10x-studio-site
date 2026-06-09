@@ -16,8 +16,41 @@ const { Content } = await post.render();
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const kindLabel: Record<string, string> = { essay: 'Essay', 'case-study': 'Case study', note: 'Note' };
 import Icon from '../../components/Icon.astro';
+
+// --- AEO structured data -------------------------------------------------
+const postUrl = new URL(`/blog/${post.slug}/`, Astro.site ?? 'https://10xstudio.dev').toString();
+const blogSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.data.title,
+  "description": post.data.description,
+  "datePublished": post.data.pubDate.toISOString(),
+  ...(post.data.updatedDate ? { "dateModified": post.data.updatedDate.toISOString() } : {}),
+  "author": { "@type": "Person", "name": post.data.author },
+  "publisher": { "@id": "https://10xstudio.dev/#org" },
+  "isPartOf": { "@id": "https://10xstudio.dev/#website" },
+  "mainEntityOfPage": postUrl,
+  "keywords": (post.data.tags ?? []).join(", "),
+};
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://10xstudio.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "Journal", "item": "https://10xstudio.dev/blog/" },
+    { "@type": "ListItem", "position": 3, "name": post.data.title, "item": postUrl },
+  ],
+};
 ---
-<Base title={`${post.data.title} — 10x Studio Journal`} description={post.data.description} active="blog">
+<Base
+  title={`${post.data.title} — 10x Studio Journal`}
+  description={post.data.description}
+  active="blog"
+  ogType="article"
+  datePublished={post.data.pubDate.toISOString()}
+  dateModified={post.data.updatedDate?.toISOString()}
+  jsonLd={[blogSchema, breadcrumbSchema]}
+>
 
   <article class="article">
 

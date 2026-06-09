@@ -439,6 +439,54 @@ a { color: inherit; }
 .svc-also-items span b { color: var(--ink-900); font-weight: 700; }
 
 /* ----------------------------------------------------
+   SERVICES FAQ  (buyer-intent, AEO answer blocks)
+   ---------------------------------------------------- */
+.svc-faq { background: var(--paper); padding: 72px 0; border-top: 2px solid var(--ink-900); }
+.svc-faq-list { margin-top: 36px; display: flex; flex-direction: column; gap: 16px; }
+.svc-faq-item {
+  border: 2px solid var(--ink-900);
+  background: #fff;
+  padding: 0;
+  transition: box-shadow .12s var(--ease-out), transform .12s var(--ease-out);
+}
+.svc-faq-item[open] { box-shadow: 5px 5px 0 var(--blue-500); transform: translate(-2px,-2px); }
+.svc-faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px;
+}
+.svc-faq-item summary::-webkit-details-marker { display: none; }
+.svc-faq-item summary h3 { margin: 0; font-size: 19px; }
+.svc-faq-mark {
+  flex: none;
+  position: relative;
+  width: 18px;
+  height: 18px;
+}
+.svc-faq-mark::before,
+.svc-faq-mark::after {
+  content: "";
+  position: absolute;
+  background: var(--ink-900);
+  transition: opacity .12s, transform .12s;
+}
+.svc-faq-mark::before { top: 8px; left: 0; width: 18px; height: 2px; }
+.svc-faq-mark::after  { top: 0; left: 8px; width: 2px; height: 18px; }
+.svc-faq-item[open] .svc-faq-mark::after { opacity: 0; transform: rotate(90deg); }
+.svc-faq-item > p {
+  margin: 0;
+  padding: 0 24px 24px;
+  max-width: 70ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-700);
+}
+
+/* ----------------------------------------------------
    CONTACT PAGE
    ---------------------------------------------------- */
 
