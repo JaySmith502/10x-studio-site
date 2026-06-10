@@ -13,7 +13,11 @@ custom web platforms, ecommerce, internal tools, AI-enabled workflows, and
 integrations to mid-market clients. The site is positioned as a **senior
 build partner** — AI-native, opinionated, no vaporware.
 
+<<<<<<< HEAD
 Domain: **`10xstudio.dev`** — live, pointed at the Cloudflare deploy.
+=======
+Domain: **`10xstudio.dev`** (live — served by a Cloudflare Worker; `www` 301s to the apex).
+>>>>>>> 7338490613464281059351df5735a52e14e13e4e
 Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 **not** visually coupled — different domains, different positioning.
 
@@ -24,6 +28,7 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 - **Framework:** Astro 5 (static-first, zero JS shipped per page by default)
 - **Content:** Astro content collections (`blog`, `case-studies`)
 - **Styling:** plain CSS, design tokens imported from the `/10x-design` skill
+<<<<<<< HEAD
 - **Hosting:** **Cloudflare Workers** (live at `10xstudio.dev`). Config is
   `wrangler.jsonc` at the **repo root** — it builds `site/` (`npm ci && npm run
   build`) and serves `site/dist`. Deploys on push to GitHub `main`. (A stale
@@ -35,6 +40,13 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
   operator's inbox via Cloudflare email routing (tested June 2026). The leftover
   `data-netlify="true"` attribute is inert (a Netlify holdover) and can be removed
   on the next `contact.astro` edit, but it does no harm.
+=======
+- **Hosting:** Cloudflare Workers (static assets), config at `site/wrangler.jsonc`.
+  The old `site/netlify.toml` is legacy — the Netlify deploy was retired 2026-06.
+- **Forms:** the contact form POSTs to `/api/contact`, handled by
+  `site/worker/index.js`, which emails the submission via Cloudflare Email
+  Routing's `send_email` binding (no third-party form service)
+>>>>>>> 7338490613464281059351df5735a52e14e13e4e
 - **Icons:** inline-SVG `<Icon>` component (6 icons). **Do not** add the Lucide
   CDN script back — it was removed for Lighthouse perf. Add new icons by
   pasting Lucide path data into `site/src/components/Icon.astro`.
@@ -57,8 +69,10 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 │       └── <slug>.research.md        ← audit-trail sidecar
 ├── site/                             ← THE LIVE SITE (Astro project)
 │   ├── astro.config.mjs              ← site URL, MDX + sitemap integrations
-│   ├── netlify.toml                  ← Netlify build config (publish dist)
-│   ├── package.json                  ← deps: astro, @astrojs/mdx, @astrojs/sitemap
+│   ├── wrangler.jsonc                ← Cloudflare Worker config (assets, send_email, vars)
+│   ├── worker/index.js               ← Worker: serves dist/, handles POST /api/contact
+│   ├── netlify.toml                  ← legacy (Netlify deploy retired)
+│   ├── package.json                  ← deps: astro, @astrojs/mdx, @astrojs/sitemap, mimetext
 │   ├── public/                       ← static assets served at /
 │   │   ├── assets/                   ← logo-mark, logo-lockup, motif-grid, favicon
 │   │   ├── case-studies/             ← case-study illustration PNGs
@@ -225,6 +239,7 @@ Lower cadence, simpler than case studies.
 
 ## Workflow: deploy
 
+<<<<<<< HEAD
 The site is **live** at `10xstudio.dev` on **Cloudflare Workers**, deployed
 continuously from GitHub `main`.
 
@@ -244,6 +259,33 @@ continuously from GitHub `main`.
   checkout can choke on platform-specific `node_modules` binaries (rollup/esbuild)
   and an immutable `.vite` cache — do a clean `npm ci` if a local build fails for
   those reasons.
+=======
+The site is live on **Cloudflare Workers** (migrated from Netlify 2026-06).
+A single Worker (`10x-studio-site`) serves the static `dist/` build and
+handles the contact-form POST at `/api/contact`.
+
+To ship changes:
+
+```
+cd site
+npm run build
+npx wrangler deploy
+```
+
+Setup already in place (don't redo):
+
+- `site/wrangler.jsonc` — assets dir `./dist`, `run_worker_first: ["/api/*"]`,
+  `nodejs_compat` flag (required by mimetext), `send_email` binding
+  `CONTACT_EMAIL`, vars `SENDER_ADDRESS` / `DESTINATION_ADDRESS`.
+- Custom domain `10xstudio.dev` attached to the Worker; `www` is a proxied
+  CNAME + Redirect Rule (301 → apex); Always Use HTTPS enabled.
+- Email Routing enabled on the zone; form submissions are emailed to the
+  verified destination address with Reply-To set to the submitter.
+
+Form pipeline: contact form → `POST /api/contact` → `site/worker/index.js`
+(honeypot check, validation) → Email Routing → operator inbox → browser
+redirected to `/contact/thanks/`.
+>>>>>>> 7338490613464281059351df5735a52e14e13e4e
 
 ---
 
@@ -349,8 +391,14 @@ to ink, CTA button to solid ink. Visual review confirmed on-brand.
 - **Don't remove `width`/`height` attrs from `<img>` tags.** They prevent CLS.
 - **Don't restructure `public/` paths without updating every `heroImage`
   reference in `src/content/case-studies/*.md`.**
+<<<<<<< HEAD
 - **Contact form works via Cloudflare email routing** (tested). The leftover
   `data-netlify="true"` attr is inert — safe to remove but don't rely on it.
+=======
+- **Don't change the contact form's `action="/api/contact"` or the field
+  `name`s** — `site/worker/index.js` reads those exact names, and the hidden
+  `bot-field` input is the spam honeypot.
+>>>>>>> 7338490613464281059351df5735a52e14e13e4e
 - **Don't overwrite the existing case studies' `data.color`** to "balance"
   the index palette. The card grid cycles colors by index independently.
 - **Don't fix typos in the upstream Mac source referenced by ClickyWin**
@@ -368,6 +416,7 @@ These are intentional gaps the operator is aware of. Don't surprise-fix them.
   `src/assets/` and switching to Astro's `<Image>` component.
 - **`og:image` per page** is not set. Needs proper 1200×630 PNG/JPEG assets;
   the existing 1254×1254 illustrations are wrong aspect ratio.
+<<<<<<< HEAD
 - **Structured data — DONE (June 2026).** Home now emits `ProfessionalService`
   (with Louisville/KY address + `OfferCatalog`) and `WebSite`; Services emits
   `Service` `ItemList` + `FAQPage` (with a visible buyer-intent FAQ incl. pricing);
@@ -376,6 +425,13 @@ These are intentional gaps the operator is aware of. Don't surprise-fix them.
   `Base.astro`. See `seo/SEO-AEO-Strategy.md` for the full plan.
 - **Privacy / Terms** footer links go nowhere — the site is live, so write these soon.
 - **`hello@10xstudio.dev`** has no mail forwarding configured yet.
+=======
+- **Per-case-study `Article` JSON-LD** is not added (only Organization on home).
+  Low effort, useful for Google rich results.
+- **Privacy / Terms** footer links go nowhere — write before launch.
+- **Contact form end-to-end test** — the Worker email path is deployed but a
+  live submission hasn't been confirmed landing in the inbox yet.
+>>>>>>> 7338490613464281059351df5735a52e14e13e4e
 - **About page principle quote** (*"If you can't explain why the software did
   something, you don't have a product — you have a liability."*) is borrowed
   from the 10x Web Development brand voice guide. Swap for an original when

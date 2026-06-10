@@ -10,8 +10,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.0.0",
     "@astrojs/mdx": "^4.0.0",
-    "@astrojs/sitemap": "^3.2.0"
+    "@astrojs/sitemap": "^3.2.0",
+    "astro": "^5.0.0",
+    "mimetext": "^3.0.28"
+  },
+  "devDependencies": {
+    "wrangler": "^4.99.0"
   }
 }
