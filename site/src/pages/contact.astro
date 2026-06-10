@@ -33,17 +33,14 @@ import Icon from '../components/Icon.astro';
         </div>
       </div>
 
-      <!-- FORM (Netlify Forms — POST to current URL, handled by build) -->
+      <!-- FORM (POSTs to the Cloudflare Worker at /api/contact, which emails via Email Routing) -->
       <div class="contact-form-col">
         <form
           class="contact-form"
           name="project-inquiry"
           method="POST"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
-          action="/contact/thanks/"
+          action="/api/contact"
         >
-          <input type="hidden" name="form-name" value="project-inquiry" />
           <p style="display:none;">
             <label>Don't fill this out: <input name="bot-field" /></label>
           </p>

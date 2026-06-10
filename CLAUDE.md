@@ -13,7 +13,7 @@ custom web platforms, ecommerce, internal tools, AI-enabled workflows, and
 integrations to mid-market clients. The site is positioned as a **senior
 build partner** — AI-native, opinionated, no vaporware.
 
-Domain: **`10xstudio.dev`** (secured but not yet pointed at the deploy).
+Domain: **`10xstudio.dev`** (live — served by a Cloudflare Worker; `www` 301s to the apex).
 Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 **not** visually coupled — different domains, different positioning.
 
@@ -24,8 +24,11 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 - **Framework:** Astro 5 (static-first, zero JS shipped per page by default)
 - **Content:** Astro content collections (`blog`, `case-studies`)
 - **Styling:** plain CSS, design tokens imported from the `/10x-design` skill
-- **Hosting target:** Netlify, with `netlify.toml` at `site/netlify.toml`
-- **Forms:** Netlify Forms (the contact form has `data-netlify="true"`)
+- **Hosting:** Cloudflare Workers (static assets), config at `site/wrangler.jsonc`.
+  The old `site/netlify.toml` is legacy — the Netlify deploy was retired 2026-06.
+- **Forms:** the contact form POSTs to `/api/contact`, handled by
+  `site/worker/index.js`, which emails the submission via Cloudflare Email
+  Routing's `send_email` binding (no third-party form service)
 - **Icons:** inline-SVG `<Icon>` component (6 icons). **Do not** add the Lucide
   CDN script back — it was removed for Lighthouse perf. Add new icons by
   pasting Lucide path data into `site/src/components/Icon.astro`.
@@ -48,8 +51,10 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 │       └── <slug>.research.md        ← audit-trail sidecar
 ├── site/                             ← THE LIVE SITE (Astro project)
 │   ├── astro.config.mjs              ← site URL, MDX + sitemap integrations
-│   ├── netlify.toml                  ← Netlify build config (publish dist)
-│   ├── package.json                  ← deps: astro, @astrojs/mdx, @astrojs/sitemap
+│   ├── wrangler.jsonc                ← Cloudflare Worker config (assets, send_email, vars)
+│   ├── worker/index.js               ← Worker: serves dist/, handles POST /api/contact
+│   ├── netlify.toml                  ← legacy (Netlify deploy retired)
+│   ├── package.json                  ← deps: astro, @astrojs/mdx, @astrojs/sitemap, mimetext
 │   ├── public/                       ← static assets served at /
 │   │   ├── assets/                   ← logo-mark, logo-lockup, motif-grid, favicon
 │   │   ├── case-studies/             ← case-study illustration PNGs
@@ -216,18 +221,31 @@ Lower cadence, simpler than case studies.
 
 ## Workflow: deploy
 
-The site has never been deployed. First-time setup:
+The site is live on **Cloudflare Workers** (migrated from Netlify 2026-06).
+A single Worker (`10x-studio-site`) serves the static `dist/` build and
+handles the contact-form POST at `/api/contact`.
 
-1. Push the repo to GitHub.
-2. Connect repo to Netlify with **base directory = `site`**. This is
-   critical — `netlify.toml` lives at `site/netlify.toml`, not at repo
-   root. Without the base directory set, Netlify won't find the build
-   config and the deploy will fail (this exact failure mode has bitten
-   before).
-3. Point `10xstudio.dev` DNS at Netlify (Add custom domain → DNS records).
-   Netlify provisions TLS automatically.
-4. Form notifications: Site configuration → Forms → Form notifications →
-   add `hello@10xstudio.dev`.
+To ship changes:
+
+```
+cd site
+npm run build
+npx wrangler deploy
+```
+
+Setup already in place (don't redo):
+
+- `site/wrangler.jsonc` — assets dir `./dist`, `run_worker_first: ["/api/*"]`,
+  `nodejs_compat` flag (required by mimetext), `send_email` binding
+  `CONTACT_EMAIL`, vars `SENDER_ADDRESS` / `DESTINATION_ADDRESS`.
+- Custom domain `10xstudio.dev` attached to the Worker; `www` is a proxied
+  CNAME + Redirect Rule (301 → apex); Always Use HTTPS enabled.
+- Email Routing enabled on the zone; form submissions are emailed to the
+  verified destination address with Reply-To set to the submitter.
+
+Form pipeline: contact form → `POST /api/contact` → `site/worker/index.js`
+(honeypot check, validation) → Email Routing → operator inbox → browser
+redirected to `/contact/thanks/`.
 
 ---
 
@@ -333,8 +351,9 @@ to ink, CTA button to solid ink. Visual review confirmed on-brand.
 - **Don't remove `width`/`height` attrs from `<img>` tags.** They prevent CLS.
 - **Don't restructure `public/` paths without updating every `heroImage`
   reference in `src/content/case-studies/*.md`.**
-- **Don't change the Netlify Forms `name="form-name"` hidden field or the
-  `data-netlify="true"` attr** — Netlify needs these to detect the form.
+- **Don't change the contact form's `action="/api/contact"` or the field
+  `name`s** — `site/worker/index.js` reads those exact names, and the hidden
+  `bot-field` input is the spam honeypot.
 - **Don't overwrite the existing case studies' `data.color`** to "balance"
   the index palette. The card grid cycles colors by index independently.
 - **Don't fix typos in the upstream Mac source referenced by ClickyWin**
@@ -355,9 +374,8 @@ These are intentional gaps the operator is aware of. Don't surprise-fix them.
 - **Per-case-study `Article` JSON-LD** is not added (only Organization on home).
   Low effort, useful for Google rich results.
 - **Privacy / Terms** footer links go nowhere — write before launch.
-- **`hello@10xstudio.dev`** has no mail forwarding configured yet.
-- **Site has never been deployed.** Build is green locally; the deploy
-  wiring (base directory, DNS) is documented above but unexecuted.
+- **Contact form end-to-end test** — the Worker email path is deployed but a
+  live submission hasn't been confirmed landing in the inbox yet.
 - **About page principle quote** (*"If you can't explain why the software did
   something, you don't have a product — you have a liability."*) is borrowed
   from the 10x Web Development brand voice guide. Swap for an original when

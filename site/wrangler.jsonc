@@ -1,0 +1,24 @@
+{
+  "name": "10x-studio-site",
+  "main": "./worker/index.js",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "send_email": [
+    {
+      "name": "CONTACT_EMAIL",
+      "destination_address": "rootofpi.jay@gmail.com"
+    }
+  ],
+  "vars": {
+    "SENDER_ADDRESS": "contact@10xstudio.dev",
+    "DESTINATION_ADDRESS": "rootofpi.jay@gmail.com"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
