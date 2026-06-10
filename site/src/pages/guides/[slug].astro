@@ -1,0 +1,133 @@
+---
+import Base from '../../layouts/Base.astro';
+import WellTile from '../../components/WellTile.astro';
+import Icon from '../../components/Icon.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides', ({ data }) => !data.draft);
+  return guides.map((guide) => ({
+    params: { slug: guide.slug },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+const { Content } = await guide.render();
+const { data } = guide;
+
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const pageUrl = new URL(`/guides/${guide.slug}/`, Astro.site ?? 'https://10xstudio.dev').toString();
+
+// --- AEO structured data: Article + FAQPage + BreadcrumbList ---------------
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": data.title,
+  "description": data.description,
+  "datePublished": data.pubDate.toISOString(),
+  ...(data.updatedDate ? { "dateModified": data.updatedDate.toISOString() } : {}),
+  "author": { "@type": "Person", "name": data.author },
+  "publisher": { "@id": "https://10xstudio.dev/#org" },
+  "isPartOf": { "@id": "https://10xstudio.dev/#website" },
+  "mainEntityOfPage": pageUrl,
+  "keywords": (data.tags ?? []).join(", "),
+};
+
+const faqSchema = data.faqs.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": data.faqs.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a },
+  })),
+} : null;
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://10xstudio.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "Guides", "item": "https://10xstudio.dev/guides/" },
+    { "@type": "ListItem", "position": 3, "name": data.title, "item": pageUrl },
+  ],
+};
+
+const jsonLd = [articleSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [])];
+---
+<Base
+  title={`${data.title} — 10x Studio`}
+  description={data.description}
+  active="guides"
+  ogType="article"
+  datePublished={data.pubDate.toISOString()}
+  dateModified={data.updatedDate?.toISOString()}
+  jsonLd={jsonLd}
+>
+  <article class="article">
+
+    <header class="article-hero">
+      <div class="mk-wrap article-hero-inner">
+        <div class="article-meta">
+          <span class="kind-badge">Guide</span>
+          <span>Updated {fmt(data.updatedDate ?? data.pubDate)}</span>
+        </div>
+        <h1 class="mk-h1 article-title">{data.title}</h1>
+        <p class="article-lede">{data.description}</p>
+      </div>
+      <div class="article-hero-art">
+        <WellTile set={data.heroSet} size={120} />
+      </div>
+    </header>
+
+    <div class="mk-wrap article-body-wrap">
+      <div class="article-body">
+        <!-- AEO answer block: lifted verbatim by answer engines. -->
+        <div class="guide-answer">
+          <div class="guide-answer-lbl">// Short answer</div>
+          <p>{data.answer}</p>
+        </div>
+
+        <!-- Each FAQ renders as a standalone H2 section (mirrors FAQPage schema). -->
+        {data.faqs.map((f) => (
+          <section class="guide-qa">
+            <h2 class="mk-h3" style="font-size:26px;">{f.q}</h2>
+            <p>{f.a}</p>
+          </section>
+        ))}
+
+        <!-- Optional long-form context from the markdown body. -->
+        <Content />
+      </div>
+
+      <aside class="article-aside">
+        {data.tags && data.tags.length > 0 && (
+          <div class="aside-block">
+            <div class="aside-lbl">// Tags</div>
+            <div class="aside-tags">
+              {data.tags.map((t) => <span class="tag">#{t}</span>)}
+            </div>
+          </div>
+        )}
+        <div class="aside-block">
+          <div class="aside-lbl">// Get a number on your build</div>
+          <p class="aside-text">The fastest way to a real estimate is a 30-minute working session. We scope the first phase and quote it directly.</p>
+          <a href="/contact/" class="mk-btn mk-btn--primary">
+            Start a Project Conversation <Icon name="arrow-right" size={16} />
+          </a>
+        </div>
+      </aside>
+    </div>
+
+    <section class="cta-band">
+      <div class="cta-band-inner">
+        <h2 class="mk-h2">More guides,<br>same straight answers.</h2>
+        <a href="/guides/" class="mk-btn mk-btn--yellow mk-btn--lg">
+          All guides <Icon name="arrow-right" size={18} />
+        </a>
+      </div>
+    </section>
+
+  </article>
+</Base>

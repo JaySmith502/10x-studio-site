@@ -41,4 +41,29 @@ const caseStudies = defineCollection({
   }),
 });
 
-export const collections = { blog, 'case-studies': caseStudies };
+// Evergreen pillar guides (AEO cornerstone content). Q&A-structured: the template
+// renders the answer block + each FAQ as a standalone H2 section, and emits
+// Article + FAQPage + BreadcrumbList schema from this same frontmatter (single
+// source of truth, so visible content and structured data never drift).
+const guides = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    author: z.string().default('Jay Smith'),
+    tags: z.array(z.string()).default([]),
+    heroSet: z.enum(['web', 'ecom', 'ops', 'ai', 'auto']).default('ops'),
+    /** The 100–150 word direct-answer block that opens the page (AEO answer block). */
+    answer: z.string(),
+    /** Each becomes a standalone H2 section AND a FAQPage entry. H2s should map to real PAA questions. */
+    faqs: z.array(z.object({
+      q: z.string(),
+      a: z.string(),
+    })).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, 'case-studies': caseStudies, guides };

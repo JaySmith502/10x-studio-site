@@ -254,9 +254,9 @@ voice is right — but every post must be a standalone answer to a real question
 
 **Suggested 90-day sequence:**
 
-- *Weeks 1–2:* Ship the pending AEO changes (commit + push to `main` so the new
-  schema and Services FAQ go live), verify indexing, set up Search Console + Bing
-  Webmaster + Google Business Profile. Ship the pricing pillar.
+- *Weeks 1–2:* (AEO foundation is live — schema + Services FAQ shipped to
+  Cloudflare.) Verify indexing, set up Search Console + Bing Webmaster + Google
+  Business Profile. Ship the pricing pillar.
 - *Weeks 3–6:* Ship the two remaining pillars. Add per-service FAQs. Promote one
   case study.
 - *Weeks 7–12:* Two to three answer posts from the Tier 3 list. First measurement
@@ -291,7 +291,8 @@ remember them each time.
 
 ## 8. Technical foundation — done and remaining
 
-**Implemented in this pass** (built and ready to deploy):
+**Implemented in this pass** (built, shipped, and verified live on Cloudflare at
+`10xstudio.dev`):
 
 - **Richer site identity schema** on the home page: `Organization` upgraded to
   `ProfessionalService` with Louisville/KY address, `areaServed`, an
@@ -309,15 +310,14 @@ remember them each time.
 - **A reusable `jsonLd` mechanism** in the base layout, so any future page can
   emit structured data cleanly.
 
+**Hosting note:** the site is live at `10xstudio.dev`, deployed via GitHub `main`
+→ a **Cloudflare Workers** build (builds `site/`, serves `site/dist`). It was
+briefly double-deployed on Vercel and Cloudflare during a DNS cutover; it is now
+Cloudflare-only with the domain pointed correctly. (`CLAUDE.md` still says
+"Netlify / never deployed" — stale; see the cleanup note there.)
+
 **Remaining technical work** (mostly already tracked as deferrals in `CLAUDE.md`):
 
-- **Ship the pending changes — this is now the gating item.** The site is live at
-  `10xstudio.dev` (deployed via GitHub `main` → a Cloudflare Workers build; note
-  `CLAUDE.md` still says "Netlify / never deployed" and is out of date). But the
-  *live* site is the pre-change version: the home page still carries the old bare
-  `Organization` schema and the Services page has no FAQ and no `Service`/`FAQPage`
-  markup. All the work in this pass is sitting uncommitted in the local working
-  tree. None of it ranks or gets cited until it is committed and pushed to `main`.
 - **Per-page `og:image`** at the correct 1200×630 aspect ratio (current
   illustrations are square).
 - **Google Business Profile** for Louisville + NAP consistency across directories
@@ -351,7 +351,7 @@ build for a new domain and the competitors under-invest in structured local data
 Track a small set of signals that actually map to a high-ticket B2B funnel:
 
 - **Indexing & coverage** — Search Console + Bing Webmaster Tools (submit the
-  sitemap day one post-deploy).
+  sitemap now that the site is live).
 - **Query impressions/positions** for the Tier 1/2 targets — the leading
   indicator of whether the content is landing.
 - **AEO presence** — periodically prompt ChatGPT, Perplexity, Google AI Overviews,
@@ -370,12 +370,12 @@ targets, plan next content block).
 
 ## 11. What to do next (this week)
 
-1. **Ship the pending AEO changes** (commit + push to `main`). The site is live,
-   but these improvements aren't — everything else is blocked on shipping them.
-2. Stand up Search Console, Bing Webmaster, and Google Business Profile.
-3. Write the **pricing pillar page** using the brief template — it's the single
-   highest-leverage asset and the clearest competitive gap.
-4. Set a recurring monthly AEO probe so you can see the strategy working.
+1. **Write the pricing pillar page** using the brief template — the AEO foundation
+   is already live, so this is the highest-leverage next asset and the clearest
+   competitive gap (no competitor publishes pricing).
+2. Stand up Search Console, Bing Webmaster, and Google Business Profile, and submit
+   the sitemap.
+3. Set a recurring monthly AEO probe so you can see the strategy working.
 
 The thread that ties it together: you can't out-age the incumbents, so don't try.
 Out-answer them. Be the page that completely, specifically, and freshly answers

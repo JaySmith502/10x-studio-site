@@ -13,7 +13,7 @@ custom web platforms, ecommerce, internal tools, AI-enabled workflows, and
 integrations to mid-market clients. The site is positioned as a **senior
 build partner** — AI-native, opinionated, no vaporware.
 
-Domain: **`10xstudio.dev`** (secured but not yet pointed at the deploy).
+Domain: **`10xstudio.dev`** — live, pointed at the Cloudflare deploy.
 Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 **not** visually coupled — different domains, different positioning.
 
@@ -24,8 +24,17 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 - **Framework:** Astro 5 (static-first, zero JS shipped per page by default)
 - **Content:** Astro content collections (`blog`, `case-studies`)
 - **Styling:** plain CSS, design tokens imported from the `/10x-design` skill
-- **Hosting target:** Netlify, with `netlify.toml` at `site/netlify.toml`
-- **Forms:** Netlify Forms (the contact form has `data-netlify="true"`)
+- **Hosting:** **Cloudflare Workers** (live at `10xstudio.dev`). Config is
+  `wrangler.jsonc` at the **repo root** — it builds `site/` (`npm ci && npm run
+  build`) and serves `site/dist`. Deploys on push to GitHub `main`. (A stale
+  `site/netlify.toml` and a `cloudflare/workers-autoconfig` branch that points
+  assets at `prototype/` both still exist in the repo — ignore them; neither is
+  the production path. The site was briefly double-deployed on Vercel + Cloudflare
+  during a DNS cutover and is now Cloudflare-only.)
+- **Forms:** The contact form is **working** — submissions are delivered to the
+  operator's inbox via Cloudflare email routing (tested June 2026). The leftover
+  `data-netlify="true"` attribute is inert (a Netlify holdover) and can be removed
+  on the next `contact.astro` edit, but it does no harm.
 - **Icons:** inline-SVG `<Icon>` component (6 icons). **Do not** add the Lucide
   CDN script back — it was removed for Lighthouse perf. Add new icons by
   pasting Lucide path data into `site/src/components/Icon.astro`.
@@ -216,18 +225,25 @@ Lower cadence, simpler than case studies.
 
 ## Workflow: deploy
 
-The site has never been deployed. First-time setup:
+The site is **live** at `10xstudio.dev` on **Cloudflare Workers**, deployed
+continuously from GitHub `main`.
 
-1. Push the repo to GitHub.
-2. Connect repo to Netlify with **base directory = `site`**. This is
-   critical — `netlify.toml` lives at `site/netlify.toml`, not at repo
-   root. Without the base directory set, Netlify won't find the build
-   config and the deploy will fail (this exact failure mode has bitten
-   before).
-3. Point `10xstudio.dev` DNS at Netlify (Add custom domain → DNS records).
-   Netlify provisions TLS automatically.
-4. Form notifications: Site configuration → Forms → Form notifications →
-   add `hello@10xstudio.dev`.
+- **To ship a change:** commit to `main` and push to GitHub. Cloudflare Workers
+  Builds runs `npm ci && npm run build` in `site/` and serves `site/dist` (per
+  `wrangler.jsonc` at the repo root). No dashboard step needed for routine pushes.
+- **To verify a deploy:** fetch a page with a cache-busting query string (e.g.
+  `/services/?v=check`) to bypass Cloudflare's edge cache; if the origin build is
+  fresh the new content shows immediately. A changed `/_astro/*.css` hash confirms
+  a rebuild (vs. a cached page).
+- **If a push doesn't go live:** check the project's **Deployments** tab in the
+  Cloudflare dashboard for a failed/queued build. The production branch must be
+  `main` (not `cloudflare/workers-autoconfig`, whose `wrangler.jsonc` wrongly
+  points assets at `prototype/`).
+- **Manual fallback:** `npx wrangler deploy` from the built `site/`.
+- **Build verifies in CI cleanly**, but local sandboxes that share a Windows
+  checkout can choke on platform-specific `node_modules` binaries (rollup/esbuild)
+  and an immutable `.vite` cache — do a clean `npm ci` if a local build fails for
+  those reasons.
 
 ---
 
@@ -318,8 +334,8 @@ to ink, CTA button to solid ink. Visual review confirmed on-brand.
 - **Icons:** inline SVG only. If a new icon is needed, paste the Lucide path
   data into `Icon.astro`'s `ICONS` map and add it to the `name` union.
 - **No client-side JavaScript** unless it earns its weight. The site is
-  intentionally JS-free outside of the Netlify Forms POST and any future
-  `<script type="application/ld+json">` blocks.
+  intentionally JS-free outside of the contact-form POST and the
+  `<script type="application/ld+json">` structured-data blocks.
 - **No fabricated metrics on the index card** — the index uses the case
   study's `metrics[]` only if present; missing arrays are fine.
 
@@ -333,8 +349,8 @@ to ink, CTA button to solid ink. Visual review confirmed on-brand.
 - **Don't remove `width`/`height` attrs from `<img>` tags.** They prevent CLS.
 - **Don't restructure `public/` paths without updating every `heroImage`
   reference in `src/content/case-studies/*.md`.**
-- **Don't change the Netlify Forms `name="form-name"` hidden field or the
-  `data-netlify="true"` attr** — Netlify needs these to detect the form.
+- **Contact form works via Cloudflare email routing** (tested). The leftover
+  `data-netlify="true"` attr is inert — safe to remove but don't rely on it.
 - **Don't overwrite the existing case studies' `data.color`** to "balance"
   the index palette. The card grid cycles colors by index independently.
 - **Don't fix typos in the upstream Mac source referenced by ClickyWin**
@@ -352,12 +368,14 @@ These are intentional gaps the operator is aware of. Don't surprise-fix them.
   `src/assets/` and switching to Astro's `<Image>` component.
 - **`og:image` per page** is not set. Needs proper 1200×630 PNG/JPEG assets;
   the existing 1254×1254 illustrations are wrong aspect ratio.
-- **Per-case-study `Article` JSON-LD** is not added (only Organization on home).
-  Low effort, useful for Google rich results.
-- **Privacy / Terms** footer links go nowhere — write before launch.
+- **Structured data — DONE (June 2026).** Home now emits `ProfessionalService`
+  (with Louisville/KY address + `OfferCatalog`) and `WebSite`; Services emits
+  `Service` `ItemList` + `FAQPage` (with a visible buyer-intent FAQ incl. pricing);
+  every case study and blog post emits `Article`/`BlogPosting` + `BreadcrumbList`
+  with publish/modified dates. Rendered via a reusable `jsonLd` prop on
+  `Base.astro`. See `seo/SEO-AEO-Strategy.md` for the full plan.
+- **Privacy / Terms** footer links go nowhere — the site is live, so write these soon.
 - **`hello@10xstudio.dev`** has no mail forwarding configured yet.
-- **Site has never been deployed.** Build is green locally; the deploy
-  wiring (base directory, DNS) is documented above but unexecuted.
 - **About page principle quote** (*"If you can't explain why the software did
   something, you don't have a product — you have a liability."*) is borrowed
   from the 10x Web Development brand voice guide. Swap for an original when

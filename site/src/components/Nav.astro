@@ -1,6 +1,6 @@
 ---
 interface Props {
-  active?: 'home' | 'services' | 'about' | 'case-studies' | 'blog' | 'contact';
+  active?: 'home' | 'services' | 'about' | 'case-studies' | 'blog' | 'guides' | 'contact';
 }
 const { active = 'home' } = Astro.props;
 import Icon from './Icon.astro';
@@ -18,6 +18,7 @@ import Icon from './Icon.astro';
       <a href="/" class={active === 'home' ? 'active' : ''}>Home</a>
       <a href="/services/" class={active === 'services' ? 'active' : ''}>Services</a>
       <a href="/case-studies/" class={active === 'case-studies' ? 'active' : ''}>Work</a>
+      <a href="/guides/" class={active === 'guides' ? 'active' : ''}>Guides</a>
       <a href="/about/" class={active === 'about' ? 'active' : ''}>About</a>
       <a href="/blog/" class={active === 'blog' ? 'active' : ''}>Journal</a>
       <a href="/contact/" class={active === 'contact' ? 'active' : ''}>Contact</a>

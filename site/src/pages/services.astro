@@ -103,6 +103,7 @@ const faqs = [
   {
     q: 'How much does a custom web platform or software build cost?',
     a: 'Most custom builds land between $25,000 and $250,000, and the number is driven by scope, not by page count. A focused internal tool or marketing platform with real workflows usually starts around $25K–$50K. A full ecommerce or multi-role platform with integrations typically runs $50K–$150K. Enterprise-grade systems with AI, complex data, and security requirements reach $150K–$250K and up. We scope in phases so you fund the riskiest, highest-value part first and see working software before committing the full budget. If your need is smaller than $25K, a custom build is usually the wrong tool — we will tell you that directly.',
+    more: { href: '/guides/what-custom-software-costs/', label: 'Read the full pricing guide' },
   },
   {
     q: 'How long does a custom software project take?',
@@ -211,6 +212,9 @@ const faqSchema = {
           <details class="svc-faq-item">
             <summary><h3 class="mk-h3">{f.q}</h3><span class="svc-faq-mark" aria-hidden="true"></span></summary>
             <p>{f.a}</p>
+            {'more' in f && f.more && (
+              <p class="svc-faq-more"><a href={f.more.href}>{f.more.label} <Icon name="arrow-right" size={13} /></a></p>
+            )}
           </details>
         ))}
       </div>
