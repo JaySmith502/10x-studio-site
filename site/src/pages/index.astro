@@ -7,14 +7,51 @@ import Icon from '../components/Icon.astro';
 
   <script type="application/ld+json" is:inline set:html={JSON.stringify({
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "ProfessionalService",
+    "@id": "https://10xstudio.dev/#org",
     "name": "10x Studio",
     "url": "https://10xstudio.dev",
     "logo": "https://10xstudio.dev/assets/logo-mark.svg",
-    "description": "AI-native web platforms, ecommerce systems and custom software for businesses with real operational complexity.",
+    "image": "https://10xstudio.dev/assets/og-image.png",
+    "description": "AI-native web platforms, ecommerce systems and custom software for businesses with real operational complexity. A senior build partner — engineering, not vaporware.",
     "email": "hello@10xstudio.dev",
-    "areaServed": "US",
-    "knowsAbout": ["AI engineering", "Custom web platforms", "Ecommerce", "Internal tools", "Workflow automation", "Cybersecurity"]
+    "slogan": "Software that does the work your business needs.",
+    "founder": { "@type": "Person", "name": "Jay Smith" },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Louisville",
+      "addressRegion": "KY",
+      "addressCountry": "US"
+    },
+    "areaServed": [
+      { "@type": "State", "name": "Kentucky" },
+      { "@type": "Country", "name": "United States" }
+    ],
+    "knowsAbout": [
+      "AI engineering", "Custom web platforms", "Ecommerce development",
+      "Internal business tools", "Workflow automation", "RAG systems",
+      "CRM and API integrations", "Cybersecurity"
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Build services",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Custom Web Platforms" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Ecommerce & Product Platforms" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Internal Business Tools" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI-Enabled Workflow Tools" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Integrations & Automation" } }
+      ]
+    }
+  })} />
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://10xstudio.dev/#website",
+    "url": "https://10xstudio.dev",
+    "name": "10x Studio",
+    "publisher": { "@id": "https://10xstudio.dev/#org" }
   })} />
 
   <!-- HERO -->

@@ -13,9 +13,16 @@ interface Props {
   ogType?: 'website' | 'article';
   /** Optional absolute or root-relative URL of a preview image (1200x630 ideal). */
   ogImage?: string;
+  /** Optional JSON-LD structured data block(s). Rendered into <head> as application/ld+json.
+      Pass one object or an array; arrays emit one script tag per object. Drives AEO / rich results. */
+  jsonLd?: Record<string, any> | Record<string, any>[];
+  /** ISO date strings for article OG meta (only emitted when ogType="article"). */
+  datePublished?: string;
+  dateModified?: string;
 }
 
-const { title, description, active = 'home', ogType = 'website', ogImage } = Astro.props;
+const { title, description, active = 'home', ogType = 'website', ogImage, jsonLd, datePublished, dateModified } = Astro.props;
+const jsonLdBlocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const defaultDesc = 'AI-native web platforms, ecommerce systems and custom software for businesses with real operational complexity.';
 const desc = description ?? defaultDesc;
 
@@ -46,6 +53,12 @@ const ogImageAbs = new URL(ogImage ?? '/assets/og-image.png', Astro.site ?? 'htt
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="10x Studio — software that does the work your business needs." />
+  {ogType === 'article' && datePublished && (
+    <meta property="article:published_time" content={datePublished} />
+  )}
+  {ogType === 'article' && dateModified && (
+    <meta property="article:modified_time" content={dateModified} />
+  )}
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -60,6 +73,11 @@ const ogImageAbs = new URL(ogImage ?? '/assets/og-image.png', Astro.site ?? 'htt
 
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <link rel="sitemap" href="/sitemap-index.xml" />
+
+  {/* Per-page structured data (Article, Service, FAQPage, BreadcrumbList, …) */}
+  {jsonLdBlocks.map((block) => (
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(block)} />
+  ))}
 </head>
 <body class="mk">
   <Nav active={active} />

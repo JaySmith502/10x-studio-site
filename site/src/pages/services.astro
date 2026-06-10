@@ -95,8 +95,70 @@ const services = [
   },
 ] as const;
 import Icon from '../components/Icon.astro';
+
+// --- Buyer-intent FAQ -----------------------------------------------------
+// Direct-answer blocks (100–150 words each) written to be lifted verbatim by
+// AI answer engines and Google's "People also ask". Each answer stands alone.
+const faqs = [
+  {
+    q: 'How much does a custom web platform or software build cost?',
+    a: 'Most custom builds land between $25,000 and $250,000, and the number is driven by scope, not by page count. A focused internal tool or marketing platform with real workflows usually starts around $25K–$50K. A full ecommerce or multi-role platform with integrations typically runs $50K–$150K. Enterprise-grade systems with AI, complex data, and security requirements reach $150K–$250K and up. We scope in phases so you fund the riskiest, highest-value part first and see working software before committing the full budget. If your need is smaller than $25K, a custom build is usually the wrong tool — we will tell you that directly.',
+  },
+  {
+    q: 'How long does a custom software project take?',
+    a: 'A focused first release typically ships in 6 to 12 weeks. We work in phases rather than one long build: discovery and scope take 1–2 weeks, the first usable version lands in 4–8 weeks, and we iterate from there based on real usage. Timeline is driven by decision speed and integration complexity more than by raw engineering hours — projects stall when feedback is slow or a third-party system is undocumented, not because the code is hard. We size the first phase deliberately small so you have something to react to early, instead of waiting months to discover the spec was wrong.',
+  },
+  {
+    q: 'What is the difference between a custom platform and a template website?',
+    a: 'A template site arranges marketing content; a custom platform runs part of your business. Templates are fast and cheap and fine when all you need is pages — hours, services, a contact form. You outgrow them the moment you need accounts, role-based access, an admin dashboard, intake that routes itself, inventory logic, or a tool that talks to your CRM and payment processor. At that point a template becomes a pile of plugins that break on update. A custom platform is built around your actual workflow, owns its data, and changes when your operation changes. The rule of thumb: if the website is supposed to do work, not just display information, it is a platform.',
+  },
+  {
+    q: 'What does "AI-native" actually mean — and is it just a chatbot?',
+    a: 'AI-native means we ask which steps should not exist before we build them, instead of bolting a chatbot onto a finished product. In practice that is intake triage that routes requests automatically, document summarization, retrieval over your own knowledge base (RAG), and lead qualification — AI placed where it removes friction and earns its keep. It is not decoration. Recent builds cut email triage time by about 70% and sped deal evaluation by 50%. Every AI feature ships with guardrails an enterprise security team would approve, because the same engineer who builds your platform has a cybersecurity and Fortune 500 background.',
+  },
+  {
+    q: 'Do you only work with businesses in Louisville and Kentucky?',
+    a: 'No. We are based in Louisville, Kentucky and work with clients across the United States. Local clients sometimes value in-person discovery sessions, but the build process is remote-first and the same wherever you are — most collaboration happens over working calls and shared environments. We have delivered systems for clients well outside Kentucky. If you are local, we are happy to meet; if you are not, distance changes nothing about how the work gets done.',
+  },
+  {
+    q: 'Can you take over a stalled, inherited, or half-finished project?',
+    a: 'Yes — rescuing stuck builds is a common starting point. We begin with a short audit of the existing code, data, and integrations to separate what is salvageable from what is costing you more to keep than to replace. You get an honest assessment, not a reflexive "rewrite everything" pitch. Often the fastest path is stabilizing what works, retiring what does not, and shipping the missing piece that was blocking launch. Because the work is led by a senior engineer rather than handed to junior staff, we can read an unfamiliar codebase quickly and tell you where the real risk is.',
+  },
+  {
+    q: 'How do you price projects — fixed bid or hourly?',
+    a: 'We price by phase. Fixed-bid-the-whole-thing pricing forces everyone to pretend the spec is perfect on day one, and custom software never works that way. Instead we scope and quote one phase at a time: a defined deliverable, a clear price, and working software at the end of it. You decide whether to fund the next phase based on what you have seen, not on a guess made before anything existed. This keeps you in control of spend and means the budget follows value instead of a contract written in the dark.',
+  },
+];
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "10x Studio services",
+  "itemListElement": services.map((s, i) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "item": {
+      "@type": "Service",
+      "name": s.title,
+      "serviceType": s.cat,
+      "description": s.who,
+      "provider": { "@id": "https://10xstudio.dev/#org" },
+      "areaServed": { "@type": "Country", "name": "United States" },
+    },
+  })),
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a },
+  })),
+};
 ---
-<Base title="Services - 10x Studio" description="Custom web platforms, ecommerce systems, internal tools, AI-enabled workflows and integrations - engineered by a senior partner." active="services">
+<Base title="Custom Software & Web Development Services - 10x Studio" description="What a custom web platform costs, how long it takes, and what AI-native really means. Custom software, ecommerce, internal tools, AI workflows and integrations from a senior build partner." active="services" jsonLd={[serviceSchema, faqSchema]}>
 
   <section class="svc-hero">
     <div class="svc-hero-inner">
@@ -136,6 +198,21 @@ import Icon from '../components/Icon.astro';
       <div class="svc-also-items">
         <span><b>SEO-Ready Architecture</b> - site structure built so search engines (and AI agents) can read it.</span>
         <span><b>Support &amp; Optimization</b> - post-launch retainers for monitoring, iteration and feature work.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="svc-faq">
+    <div class="mk-wrap">
+      <div class="mk-eyebrow" style="margin-bottom:14px;"><b>//</b> Straight answers</div>
+      <h2 class="mk-h2">What clients ask before<br>they start a build.</h2>
+      <div class="svc-faq-list">
+        {faqs.map((f) => (
+          <details class="svc-faq-item">
+            <summary><h3 class="mk-h3">{f.q}</h3><span class="svc-faq-mark" aria-hidden="true"></span></summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
       </div>
     </div>
   </section>

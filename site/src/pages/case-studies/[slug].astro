@@ -32,11 +32,46 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month:
 // Pick a well-tile set roughly matched to the colorway for the hero motif
 const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' : 'auto';
 import Icon from '../../components/Icon.astro';
+
+// --- AEO structured data -------------------------------------------------
+const pageUrl = new URL(`/case-studies/${study.slug}/`, Astro.site ?? 'https://10xstudio.dev').toString();
+const heroAbs = data.heroImage
+  ? new URL(data.heroImage, Astro.site ?? 'https://10xstudio.dev').toString()
+  : undefined;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": data.title,
+  "description": data.description,
+  "datePublished": data.pubDate.toISOString(),
+  "author": { "@type": "Organization", "name": "10x Studio", "@id": "https://10xstudio.dev/#org" },
+  "publisher": { "@id": "https://10xstudio.dev/#org" },
+  "isPartOf": { "@id": "https://10xstudio.dev/#website" },
+  "mainEntityOfPage": pageUrl,
+  "about": data.industry,
+  "keywords": (data.tags ?? []).join(", "),
+  ...(heroAbs ? { "image": heroAbs } : {}),
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://10xstudio.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "Case studies", "item": "https://10xstudio.dev/case-studies/" },
+    { "@type": "ListItem", "position": 3, "name": data.title, "item": pageUrl },
+  ],
+};
 ---
 <Base
   title={`${data.title} — 10x Studio`}
   description={data.description}
   active="home"
+  ogType="article"
+  ogImage={data.heroImage}
+  datePublished={data.pubDate.toISOString()}
+  jsonLd={[articleSchema, breadcrumbSchema]}
 >
   <article class={`cs cs--variant-${data.variant} cs--${data.color}`}>
 
