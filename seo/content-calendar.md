@@ -34,8 +34,10 @@ day. To publish early, set `draft: false` in the post's frontmatter and push.
 | Target date | Post | Status |
 |---|---|---|
 | Live now | `freelancer-agency-or-build-partner` | **Published** |
+| 2026-06-23 | `do-you-need-custom-software` (Guide, backlog #1) | **Published** |
 | 2026-06-24 | `inheriting-a-half-built-system` | Draft (flip `draft: false` to ship) |
 | 2026-07-08 | `when-a-website-stops-being-a-website` | Draft (flip `draft: false` to ship) |
+| 2026-07-15 | `what-is-rag-and-when-you-need-it` (Guide, backlog #2) | Draft (flip `draft: false` to ship) |
 
 > Guides (`what-custom-software-costs`, `custom-vs-off-the-shelf-software`,
 > `what-ai-native-means`) are evergreen pillars and intentionally launched
@@ -50,8 +52,8 @@ Adjust order once the probe shows what's gaining traction.
 
 | # | Working title | Core question | Format | Intent | Why it earns a slot | Internal links | Target |
 |---|---|---|---|---|---|---|---|
-| 1 | Do you actually need custom software? | "How do I know if my business needs custom software?" | **Guide** | High | Top-of-funnel decision query; fits the hub; sends qualified readers into the pricing & vs-off-the-shelf guides. | ↔ pricing guide, vs-off-the-shelf guide, Services | Jul |
-| 2 | RAG, plainly: when search-over-your-docs is worth building | "What is RAG and when does a business need it?" | Guide or essay | Med (niche) | Low-competition national/niche query; complements the AI-native guide; demonstrates depth competitors don't show. | ↔ AI-native guide, Services #ai | Jul |
+| 1 | ~~Do you actually need custom software?~~ | "How do I know if my business needs custom software?" | **Guide** | High | Top-of-funnel decision query; fits the hub; sends qualified readers into the pricing & vs-off-the-shelf guides. | ↔ pricing guide, vs-off-the-shelf guide, Services | **DONE — published 2026-06-23 (`do-you-need-custom-software`)** |
+| 2 | ~~RAG, plainly: when search-over-your-docs is worth building~~ | "What is RAG and when does a business need it?" | **Guide** | Med (niche) | Low-competition national/niche query; complements the AI-native guide; demonstrates depth competitors don't show. | ↔ AI-native guide, Services #ai | **WRITTEN — staged draft for 2026-07-15 (`what-is-rag-and-when-you-need-it`)** |
 | 3 | Hiring a software developer in Louisville | "software developer / web development Louisville" | Essay | High (local) | Local-intent piece for the one geo where you're most winnable; thin local competition on *advice* content. | ↔ Services, About, pricing guide | Aug |
 | 4 | Why fixed-bid software projects go wrong | "fixed bid vs time and materials software" | Essay | Med | Reinforces the phase-pricing differentiator; supports the pricing guide with a deeper argument. | ↔ pricing guide (#how-priced) | Aug |
 | 5 | AI workflow automation: three real examples | "AI workflow automation examples for business" | Essay | Med | Concrete proof for the AI services line using the real 70% / 50% / 65% metrics; pairs with case studies. | ↔ AI-native guide, case studies, Services #ai | Sep |
