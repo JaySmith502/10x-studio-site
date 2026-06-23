@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PiiI — Mask your data before it reaches the AI</title>
+<meta name="description" content="PiiI — open-source Chrome extension that masks PII in your prompts before sending to AI chatbots. 100% local, no telemetry. A 10x Studio project." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   PiiI landing page — 10x Web Development design system
+   Single-file, framework-free. Drop into your site.
+   ============================================================ */
+:root{
+  --blue-500:#1B81CE; --blue-600:#1467AA; --blue-100:#D6EAF8;
+  --red-500:#ED3B2F; --red-600:#CF2B20; --red-100:#FBD8D5;
+  --yellow-500:#FFC400; --yellow-600:#E0A800; --yellow-100:#FFF1C2; --yellow-50:#FFF9E6;
+  --ink-900:#141414; --ink-800:#232323; --ink-700:#353535; --ink-600:#525252;
+  --ink-500:#6E6E6E; --ink-200:#DDDCD7; --ink-100:#EFEEE8;
+  --paper:#FAF9F4; --paper-2:#F2F1EA; --white:#fff;
+  --font-display:'Jost','Futura','Century Gothic',system-ui,sans-serif;
+  --font-body:'Archivo',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono','SFMono-Regular',ui-monospace,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--font-body);color:var(--ink-700);background:var(--paper);-webkit-font-smoothing:antialiased;}
+img{display:block;max-width:100%;}
+a{color:inherit;text-decoration:none;}
+ul{margin:0;}
+h1,h2,h3{margin:0;}
+
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+.eyebrow{font-family:var(--font-mono);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-500);}
+.eyebrow b{color:var(--blue-600);}
+.section{padding:96px 0;}
+.h2{font-family:var(--font-display);font-weight:900;font-size:clamp(32px,5vw,50px);letter-spacing:-.03em;line-height:.98;color:var(--ink-900);}
+.lead{font-size:18px;line-height:1.6;color:var(--ink-600);}
+
+/* ---- icons ---- */
+.ic{stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none;}
+
+/* ---- buttons ---- */
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:800;font-size:18px;line-height:1;height:58px;padding:0 28px;border:2px solid var(--ink-900);border-radius:8px;background:transparent;color:var(--ink-900);cursor:pointer;transition:transform .12s var(--ease),box-shadow .12s var(--ease);white-space:nowrap;}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink-900);}
+.btn:active{transform:none;box-shadow:none;}
+.btn--primary{background:var(--blue-500);color:#fff;}
+.btn--ink{background:var(--ink-900);color:#fff;}
+.btn--yellow{background:var(--yellow-500);color:var(--ink-900);}
+.btn--sm{height:44px;font-size:14px;padding:0 16px;gap:8px;}
+.btn--lg{height:62px;font-size:19px;padding:0 30px;}
+
+/* ---- nav ---- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(250,249,244,.92);backdrop-filter:blur(8px);border-bottom:2px solid var(--ink-900);}
+.nav__in{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand__mark{width:34px;height:34px;border:2px solid var(--ink-900);border-radius:6px;}
+.brand__name{display:flex;flex-direction:column;line-height:1;}
+.brand__name b{font-family:var(--font-display);font-weight:900;font-size:22px;letter-spacing:-.03em;color:var(--ink-900);}
+.brand__name span{font-family:var(--font-mono);font-weight:700;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-500);margin-top:3px;}
+.nav__links{display:flex;align-items:center;gap:30px;}
+.nav__link{font-family:var(--font-mono);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-800);position:relative;}
+.nav__link::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:2px;background:var(--ink-900);transition:width .2s var(--ease);}
+.nav__link:hover::after{width:100%;}
+
+/* ---- hero ---- */
+.hero{border-bottom:2px solid var(--ink-900);}
+.hero__grid{display:grid;grid-template-columns:1.08fr .92fr;gap:56px;align-items:center;padding-block:76px 84px;}
+.hero__badges{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-mono);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-600);margin-bottom:26px;}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border:1.5px solid var(--ink-900);border-radius:3px;background:var(--blue-500);color:#fff;}
+.hero h1{font-family:var(--font-display);font-weight:900;font-size:clamp(46px,8vw,84px);letter-spacing:-.04em;line-height:.92;color:var(--ink-900);}
+.hero h1 em{font-style:normal;color:var(--blue-500);}
+.hero__sub{font-size:20px;line-height:1.55;color:var(--ink-700);max-width:480px;margin:26px 0 0;}
+.hero__cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+.hero__art{position:relative;}
+.hero__motif{position:absolute;right:-44px;top:-44px;width:128px;height:128px;opacity:.9;z-index:0;}
+.hero__card{position:relative;z-index:1;}
+
+/* ---- redact box (the floating component) ---- */
+.box{width:100%;font-family:var(--font-body);background:var(--white);border:2px solid var(--ink-900);border-radius:10px;box-shadow:7px 7px 0 var(--ink-900);overflow:hidden;}
+.box__bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;border-bottom:2px solid var(--ink-900);background:var(--paper-2);}
+.box__brand{display:flex;align-items:center;gap:10px;}
+.box__mark{width:22px;height:22px;border:1.5px solid var(--ink-900);border-radius:4px;}
+.box__title{font-family:var(--font-mono);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-900);}
+.box__status{width:9px;height:9px;border-radius:99px;background:var(--red-500);flex:none;}
+.box__body{padding:18px 16px 16px;}
+.box__label{font-family:var(--font-mono);font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-500);margin:0 0 9px;}
+.box__prompt{border:1.5px solid var(--ink-200);border-radius:8px;padding:14px;font-size:14.5px;line-height:1.85;color:var(--ink-800);}
+.pii{padding:1px 3px;border-radius:2px;font-weight:600;border-bottom:2px solid var(--ink-900);}
+.pii--red{background:var(--red-100);border-bottom-color:var(--red-500);}
+.pii--blue{background:var(--blue-100);border-bottom-color:var(--blue-500);}
+.pii--yellow{background:var(--yellow-100);border-bottom-color:var(--yellow-600);}
+.box__aliases-label{margin-top:16px;}
+.box__aliases{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-weight:700;font-size:11px;letter-spacing:.04em;padding:5px 9px;border:1.5px solid var(--ink-900);border-radius:3px;}
+.chip::before{content:'';width:7px;height:7px;border-radius:99px;background:currentColor;flex:none;}
+.chip--red{background:var(--red-500);color:#fff;}
+.chip--blue{background:var(--blue-500);color:#fff;}
+.chip--yellow{background:var(--yellow-500);color:var(--ink-900);}
+.box__foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;border-top:2px solid var(--ink-900);background:var(--white);}
+.box__meta{font-family:var(--font-mono);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-500);}
+.box__actions{display:flex;align-items:center;gap:9px;}
+.box__btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-display);font-weight:800;font-size:13px;letter-spacing:-.01em;height:38px;padding:0 16px;border:2px solid var(--ink-900);border-radius:7px;background:transparent;color:var(--ink-900);cursor:pointer;}
+.box__btn--primary{background:var(--blue-500);color:#fff;}
+
+/* ---- trust band ---- */
+.trust{background:var(--ink-900);color:#fff;}
+.trust__grid{display:grid;grid-template-columns:repeat(4,1fr);}
+.stat{padding:38px 24px;border-left:1px solid rgba(255,255,255,.16);}
+.stat:first-child{border-left:none;}
+.stat__n{font-family:var(--font-display);font-weight:900;font-size:50px;letter-spacing:-.03em;line-height:1;}
+.stat__n.alt{color:var(--yellow-500);}
+.stat__l{font-family:var(--font-mono);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:8px;}
+
+/* ---- how ---- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);border:2px solid var(--ink-900);border-radius:10px;overflow:hidden;background:var(--white);margin-top:48px;}
+.step{padding:30px 26px;border-left:2px solid var(--ink-900);}
+.step:first-child{border-left:none;}
+.step__n{font-family:var(--font-display);font-weight:900;font-size:58px;line-height:1;letter-spacing:-.04em;}
+.step h3{font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:-.02em;color:var(--ink-900);margin:18px 0 10px;}
+.step p{font-size:15px;line-height:1.6;color:var(--ink-600);}
+
+/* ---- privacy ---- */
+.privacy{background:var(--paper-2);border-top:2px solid var(--ink-900);border-bottom:2px solid var(--ink-900);padding:80px 0;}
+.privacy__head{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;margin-bottom:44px;}
+.privacy__head p{font-size:18px;line-height:1.6;color:var(--ink-700);}
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.card{background:var(--white);border:2px solid var(--ink-900);border-radius:10px;padding:28px;box-shadow:4px 4px 0 var(--ink-900);transition:transform .14s var(--ease),box-shadow .14s var(--ease);}
+.card:hover{transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--ink-900);}
+.card__ic{width:50px;height:50px;display:flex;align-items:center;justify-content:center;border:2px solid var(--ink-900);border-radius:8px;margin-bottom:20px;}
+.card h3{font-family:var(--font-display);font-weight:800;font-size:21px;letter-spacing:-.02em;color:var(--ink-900);margin-bottom:10px;}
+.card p{font-size:15px;line-height:1.6;color:var(--ink-600);}
+
+/* ---- detect ---- */
+.detect__head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;margin-bottom:44px;}
+.pill{font-family:var(--font-mono);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-500);border:2px solid var(--ink-900);border-radius:8px;padding:10px 14px;}
+.detect__grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.dtile{display:flex;align-items:center;gap:11px;background:var(--white);border:2px solid var(--ink-900);border-radius:8px;padding:16px;transition:transform .14s var(--ease),box-shadow .14s var(--ease);}
+.dtile:hover{transform:translate(-3px,-3px);box-shadow:4px 4px 0 var(--ink-900);}
+.dot{width:12px;height:12px;border-radius:99px;border:1.5px solid var(--ink-900);flex:none;}
+.dtile span:last-child{font-family:var(--font-mono);font-weight:700;font-size:13px;letter-spacing:.04em;color:var(--ink-900);}
+
+/* ---- platforms ---- */
+.platforms{background:var(--ink-900);color:#fff;padding:80px 0;}
+.plat__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px;}
+.ptile{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.18);border-radius:10px;padding:22px 24px;}
+.pglyph{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-family:var(--font-display);font-weight:900;font-size:20px;flex:none;}
+.ptile b{font-family:var(--font-display);font-weight:800;font-size:19px;letter-spacing:-.02em;color:#fff;}
+.ptile span{font-family:var(--font-mono);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:3px;display:block;}
+
+/* ---- in action ---- */
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px;}
+.shot__frame{border:2px solid var(--ink-900);border-radius:10px;overflow:hidden;box-shadow:4px 4px 0 var(--ink-900);background:var(--white);}
+.shot__frame img{width:100%;height:240px;object-fit:cover;background:var(--paper-2);}
+.shot figcaption{font-family:var(--font-mono);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-600);margin-top:14px;}
+.shot figcaption b{color:var(--ink-900);}
+
+/* ---- cta ---- */
+.cta{background:var(--blue-500);border-top:2px solid var(--ink-900);border-bottom:2px solid var(--ink-900);position:relative;overflow:hidden;}
+.cta__motif{position:absolute;right:0;top:0;height:100%;width:auto;opacity:.16;mix-blend-mode:luminosity;}
+.cta__in{display:flex;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;padding-block:80px;position:relative;}
+.cta h2{font-family:var(--font-display);font-weight:900;font-size:clamp(40px,6vw,62px);letter-spacing:-.03em;line-height:.94;color:#fff;}
+
+/* ---- footer ---- */
+.footer{background:var(--paper);padding:56px 0 48px;}
+.footer__top{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap;padding-bottom:36px;border-bottom:2px solid var(--ink-900);}
+.footer__brand{max-width:380px;}
+.footer__lockup{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.footer__lockup img{width:38px;height:38px;border:2px solid var(--ink-900);border-radius:6px;}
+.footer__lockup b{font-family:var(--font-display);font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--ink-900);display:block;line-height:1.05;}
+.footer__lockup span{font-family:var(--font-mono);font-weight:600;font-size:11px;letter-spacing:.04em;color:var(--ink-500);}
+.footer__brand p{font-size:14.5px;line-height:1.6;color:var(--ink-600);}
+.footer__cols{display:flex;gap:64px;flex-wrap:wrap;}
+.footer__col h4{font-family:var(--font-mono);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-500);margin:0 0 14px;}
+.footer__col a{display:block;font-size:14.5px;color:var(--ink-800);margin-bottom:10px;}
+.footer__col a:hover{color:var(--blue-600);}
+.footer__bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-top:22px;}
+.footer__bottom .lic{font-family:var(--font-mono);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-500);}
+.footer__bottom .dis{font-size:12.5px;color:var(--ink-600);max-width:560px;text-align:right;}
+
+/* ---- responsive ---- */
+@media (max-width:980px){
+  .hero__grid{grid-template-columns:1fr;gap:44px;}
+  .hero__art{max-width:440px;}
+  .privacy__head{grid-template-columns:1fr;gap:18px;}
+  .detect__grid{grid-template-columns:repeat(3,1fr);}
+  .plat__grid{grid-template-columns:repeat(2,1fr);}
+  .shots{grid-template-columns:repeat(2,1fr);}
+  .cards3{grid-template-columns:1fr;}
+  .trust__grid{grid-template-columns:repeat(2,1fr);}
+  .stat:nth-child(3){border-left:none;}
+  .stat:nth-child(n+3){border-top:1px solid rgba(255,255,255,.16);}
+  .steps{grid-template-columns:1fr 1fr;}
+  .step:nth-child(odd){border-left:none;}
+  .step:nth-child(n+3){border-top:2px solid var(--ink-900);}
+}
+@media (max-width:680px){
+  .wrap{padding:0 20px;}
+  .section{padding:64px 0;}
+  .nav__links{gap:16px;}
+  .nav__link{display:none;}
+  .detect__grid{grid-template-columns:repeat(2,1fr);}
+  .plat__grid{grid-template-columns:1fr;}
+  .shots{grid-template-columns:1fr;}
+  .steps{grid-template-columns:1fr;}
+  .step{border-left:none;border-top:2px solid var(--ink-900);}
+  .step:first-child{border-top:none;}
+  .trust__grid{grid-template-columns:1fr 1fr;}
+  .footer__bottom .dis{text-align:left;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top" aria-label="PiiI home">
+      <svg class="brand__mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="0" width="50" height="50" fill="#1B81CE"/><rect x="50" y="0" width="50" height="50" fill="#ED3B2F"/><rect x="0" y="50" width="50" height="50" fill="#FFC400"/><rect x="50" y="50" width="50" height="50" fill="#141414"/><circle cx="25" cy="25" r="9" fill="#FFC400"/><circle cx="75" cy="25" r="9" fill="#1B81CE"/><circle cx="25" cy="75" r="9" fill="#ED3B2F"/><circle cx="75" cy="75" r="9" fill="#FFC400"/></svg>
+      <span class="brand__name"><b>PiiI</b><span>A 10x Studio project</span></span>
+    </a>
+    <nav class="nav__links">
+      <a class="nav__link" href="#how">How it works</a>
+      <a class="nav__link" href="#privacy">Privacy</a>
+      <a class="nav__link" href="#platforms">Platforms</a>
+      <a class="btn btn--ink btn--sm" href="https://github.com/JaySmith502/piii">
+        <svg class="ic" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero__grid">
+    <div>
+      <div class="hero__badges"><span class="tag">Local-only</span><span>Open source &middot; MIT</span></div>
+      <h1>Mask it.<br/>Then <em>ship it.</em></h1>
+      <p class="hero__sub">PiiI strips the personal data out of your prompt <em>before</em> it ever reaches the model. Regex plus a local NER model run entirely in your browser. No server. No API. No telemetry.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="https://github.com/JaySmith502/piii">Install from GitHub
+          <svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a class="btn" href="#how">How it works</a>
+      </div>
+    </div>
+    <div class="hero__art">
+      <svg class="hero__motif" viewBox="0 0 240 240" aria-hidden="true"><defs><g id="cbl"><rect width="60" height="60" fill="#1B81CE"/><circle cx="30" cy="30" r="16" fill="#FFC400"/></g><g id="cyr"><rect width="60" height="60" fill="#FFC400"/><circle cx="30" cy="30" r="16" fill="#ED3B2F"/></g><g id="crb"><rect width="60" height="60" fill="#ED3B2F"/><circle cx="30" cy="30" r="16" fill="#1B81CE"/></g><g id="cky"><rect width="60" height="60" fill="#141414"/><circle cx="30" cy="30" r="16" fill="#FFC400"/></g></defs><use href="#cbl" x="0" y="0"/><use href="#cyr" x="60" y="0"/><use href="#crb" x="120" y="0"/><use href="#cky" x="180" y="0"/><use href="#cyr" x="0" y="60"/><use href="#cky" x="60" y="60"/><use href="#cbl" x="120" y="60"/><use href="#crb" x="180" y="60"/><use href="#crb" x="0" y="120"/><use href="#cbl" x="60" y="120"/><use href="#cky" x="120" y="120"/><use href="#cyr" x="180" y="120"/><use href="#cky" x="0" y="180"/><use href="#crb" x="60" y="180"/><use href="#cyr" x="120" y="180"/><use href="#cbl" x="180" y="180"/></svg>
+      <div class="hero__card">
+        <div class="box">
+          <div class="box__bar">
+            <div class="box__brand">
+              <svg class="box__mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="0" width="50" height="50" fill="#1B81CE"/><rect x="50" y="0" width="50" height="50" fill="#ED3B2F"/><rect x="0" y="50" width="50" height="50" fill="#FFC400"/><rect x="50" y="50" width="50" height="50" fill="#141414"/><circle cx="25" cy="25" r="9" fill="#FFC400"/><circle cx="75" cy="25" r="9" fill="#1B81CE"/><circle cx="25" cy="75" r="9" fill="#ED3B2F"/><circle cx="75" cy="75" r="9" fill="#FFC400"/></svg>
+              <span class="box__title">PiiI &middot; Review before send</span>
+            </div>
+            <span class="box__status"></span>
+          </div>
+          <div class="box__body">
+            <p class="box__label">// Outgoing prompt</p>
+            <div class="box__prompt">Hi, I'm <span class="pii pii--red">John Smalley</span>. Please update my contact info: email is <span class="pii pii--blue">john@acme.com</span> and phone is <span class="pii pii--yellow">555-123-4567</span>.</div>
+            <p class="box__label box__aliases-label">// Aliases applied</p>
+            <div class="box__aliases">
+              <span class="chip chip--red">NAME_1</span>
+              <span class="chip chip--blue">EMAIL_1</span>
+              <span class="chip chip--yellow">PHONE_1</span>
+            </div>
+          </div>
+          <div class="box__foot">
+            <span class="box__meta">100% local</span>
+            <div class="box__actions">
+              <button class="box__btn" type="button">Cancel</button>
+              <button class="box__btn box__btn--primary" type="button">Redact &amp; send
+                <svg class="ic" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST BAND ============ -->
+<section class="trust">
+  <div class="wrap trust__grid">
+    <div class="stat"><div class="stat__n">100%</div><div class="stat__l">Local inference</div></div>
+    <div class="stat"><div class="stat__n alt">0</div><div class="stat__l">Network calls</div></div>
+    <div class="stat"><div class="stat__n">10</div><div class="stat__l">PII categories</div></div>
+    <div class="stat"><div class="stat__n alt">MIT</div><div class="stat__l">Open licensed</div></div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:14px;"><b>//</b> How it works</div>
+    <h2 class="h2" style="margin-bottom:14px;">Four steps. Zero leaks.</h2>
+    <p class="lead" style="max-width:560px;">Everything between typing and sending happens inside your browser tab.</p>
+    <div class="steps">
+      <div class="step"><div class="step__n" style="color:var(--blue-500)">01</div><h3>Intercept</h3><p>When you hit send, PiiI catches the message before it leaves the page.</p></div>
+      <div class="step"><div class="step__n" style="color:var(--red-500)">02</div><h3>Detect</h3><p>Regex catches structured data; a local ONNX NER model finds names and addresses.</p></div>
+      <div class="step"><div class="step__n" style="color:var(--yellow-600)">03</div><h3>Review</h3><p>See what was found, check confidence scores, and approve the alias swaps.</p></div>
+      <div class="step"><div class="step__n" style="color:var(--ink-900)">04</div><h3>Send redacted</h3><p>The clean prompt goes to the AI. Your originals stay in a local map.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRIVACY ============ -->
+<section class="privacy" id="privacy">
+  <div class="wrap">
+    <div class="privacy__head">
+      <div>
+        <div class="eyebrow" style="margin-bottom:14px;"><b style="color:var(--red-600)">//</b> Privacy model</div>
+        <h2 class="h2">Your data never<br/>leaves the tab.</h2>
+      </div>
+      <p>No accounts, no cloud calls, no opaque pipeline. If you can't see where your data goes, you don't have privacy — you have a promise. PiiI gives you the former.</p>
+    </div>
+    <div class="cards3">
+      <div class="card">
+        <div class="card__ic" style="background:var(--blue-500);color:#fff;"><svg class="ic" width="24" height="24" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div>
+        <h3>Local-only inference</h3><p>Regex and the NER model run in your browser via onnxruntime-web (WASM). No request is made during detection.</p>
+      </div>
+      <div class="card">
+        <div class="card__ic" style="background:var(--yellow-500);color:var(--ink-900);"><svg class="ic" width="24" height="24" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+        <h3>One-time model download</h3><p>The NER weights download once from the Hugging Face CDN. After that, everything works offline.</p>
+      </div>
+      <div class="card">
+        <div class="card__ic" style="background:var(--red-500);color:#fff;"><svg class="ic" width="24" height="24" viewBox="0 0 24 24"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" y1="16" x2="6.01" y2="16"/><line x1="10" y1="16" x2="10.01" y2="16"/></svg></div>
+        <h3>Local storage only</h3><p>The alias map — what NAME_1 really means — lives in chrome.storage.local. Nothing is sent anywhere.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT IT DETECTS ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="detect__head">
+      <div>
+        <div class="eyebrow" style="margin-bottom:14px;"><b style="color:var(--yellow-600)">//</b> What it detects</div>
+        <h2 class="h2">Ten kinds of PII.<br/>One pass.</h2>
+      </div>
+      <div class="pill">Regex + local NER</div>
+    </div>
+    <div class="detect__grid">
+      <div class="dtile"><span class="dot" style="background:var(--blue-500)"></span><span>Email</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--yellow-500)"></span><span>Phone</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--red-500)"></span><span>Address</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--ink-900)"></span><span>API Key</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--blue-500)"></span><span>Date</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--yellow-500)"></span><span>Account ID</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--red-500)"></span><span>URL</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--ink-900)"></span><span>Name</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--blue-500)"></span><span>SSN</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--red-500)"></span><span>Credit Card</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLATFORMS ============ -->
+<section class="platforms" id="platforms">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:14px;color:rgba(255,255,255,.55);"><b style="color:var(--yellow-500)">//</b> Supported platforms</div>
+    <h2 class="h2" style="color:#fff;">Works where you<br/>already prompt.</h2>
+    <div class="plat__grid">
+      <div class="ptile"><span class="pglyph" style="background:var(--blue-500);color:#fff;">C</span><div><b>ChatGPT</b><span>Supported</span></div></div>
+      <div class="ptile"><span class="pglyph" style="background:var(--red-500);color:#fff;">C</span><div><b>Claude</b><span>Supported</span></div></div>
+      <div class="ptile"><span class="pglyph" style="background:var(--yellow-500);color:var(--ink-900);">G</span><div><b>Gemini</b><span>Supported</span></div></div>
+      <div class="ptile"><span class="pglyph" style="background:var(--ink-900);color:#fff;border:1.5px solid rgba(255,255,255,.3);">C</span><div><b>Copilot</b><span>Supported</span></div></div>
+      <div class="ptile"><span class="pglyph" style="background:var(--blue-500);color:#fff;">P</span><div><b>Perplexity</b><span>Supported</span></div></div>
+      <div class="ptile"><span class="pglyph" style="background:var(--red-500);color:#fff;">D</span><div><b>DeepSeek</b><span>Supported</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IN ACTION ============ -->
+<!-- Drop your screenshots into an /images folder next to this file (filenames below) -->
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:14px;"><b>//</b> In action</div>
+    <h2 class="h2">PiiI, on the job.</h2>
+    <div class="shots">
+      <figure class="shot"><div class="shot__frame"><img src="/assets/chatgpt_redact_message.png" alt="ChatGPT redaction popup showing detected PII with alias suggestions" loading="lazy"/></div><figcaption><b>ChatGPT</b> — Review &amp; redact before sending</figcaption></figure>
+      <figure class="shot"><div class="shot__frame"><img src="/assets/claude_docx.png" alt="Claude file upload dialog warning about PII in a .docx file" loading="lazy"/></div><figcaption><b>Claude</b> — PII found in an uploaded .docx</figcaption></figure>
+      <figure class="shot"><div class="shot__frame"><img src="/assets/copilot_paste.png" alt="Copilot chat with redacted prompt using alias placeholders" loading="lazy"/></div><figcaption><b>Copilot</b> — Redacted prompt with aliases</figcaption></figure>
+      <figure class="shot"><div class="shot__frame"><img src="/assets/gemini_paste_overlays.png" alt="Gemini interface with colored highlights over detected PII" loading="lazy"/></div><figcaption><b>Gemini</b> — In-page highlight overlays</figcaption></figure>
+      <figure class="shot"><div class="shot__frame"><img src="/assets/perplexity_overlay.png" alt="Perplexity search with PII highlighted in the query box" loading="lazy"/></div><figcaption><b>Perplexity</b> — PII detected in a query</figcaption></figure>
+      <figure class="shot"><div class="shot__frame"><img src="/assets/deepseek_docx.png" alt="DeepSeek file upload warning showing PII types found" loading="lazy"/></div><figcaption><b>DeepSeek</b> — File scan before upload</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta">
+  <svg class="cta__motif" viewBox="0 0 240 240" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><defs><g id="dbl"><rect width="60" height="60" fill="#1B81CE"/><circle cx="30" cy="30" r="16" fill="#FFC400"/></g><g id="dyr"><rect width="60" height="60" fill="#FFC400"/><circle cx="30" cy="30" r="16" fill="#ED3B2F"/></g><g id="drb"><rect width="60" height="60" fill="#ED3B2F"/><circle cx="30" cy="30" r="16" fill="#1B81CE"/></g><g id="dky"><rect width="60" height="60" fill="#141414"/><circle cx="30" cy="30" r="16" fill="#FFC400"/></g></defs><use href="#dbl" x="0" y="0"/><use href="#dyr" x="60" y="0"/><use href="#drb" x="120" y="0"/><use href="#dky" x="180" y="0"/><use href="#dyr" x="0" y="60"/><use href="#dky" x="60" y="60"/><use href="#dbl" x="120" y="60"/><use href="#drb" x="180" y="60"/><use href="#drb" x="0" y="120"/><use href="#dbl" x="60" y="120"/><use href="#dky" x="120" y="120"/><use href="#dyr" x="180" y="120"/><use href="#dky" x="0" y="180"/><use href="#drb" x="60" y="180"/><use href="#dyr" x="120" y="180"/><use href="#dbl" x="180" y="180"/></svg>
+  <div class="wrap cta__in">
+    <div>
+      <div class="eyebrow" style="margin-bottom:16px;color:rgba(255,255,255,.8);">// About two minutes</div>
+      <h2>Build it. Load it.<br/>Trust nothing else.</h2>
+    </div>
+    <a class="btn btn--yellow btn--lg" href="https://github.com/JaySmith502/piii">
+      <svg class="ic" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      Get PiiI on GitHub
+    </a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__lockup">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="0" width="50" height="50" fill="#1B81CE"/><rect x="50" y="0" width="50" height="50" fill="#ED3B2F"/><rect x="0" y="50" width="50" height="50" fill="#FFC400"/><rect x="50" y="50" width="50" height="50" fill="#141414"/><circle cx="25" cy="25" r="9" fill="#FFC400"/><circle cx="75" cy="25" r="9" fill="#1B81CE"/><circle cx="25" cy="75" r="9" fill="#ED3B2F"/><circle cx="75" cy="75" r="9" fill="#FFC400"/></svg>
+          <span><b>10x Studio</b><span>PiiI &middot; open-source project</span></span>
+        </div>
+        <p>Local-only PII redaction for AI chatbots. Built and maintained in the open by the team at 10x Studio.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Product</h4>
+          <a href="#how">How it works</a>
+          <a href="#privacy">Privacy model</a>
+          <a href="#platforms">Platforms</a>
+        </div>
+        <div class="footer__col">
+          <h4>Source</h4>
+          <a href="https://github.com/JaySmith502/piii">GitHub repo</a>
+          <a href="https://github.com/JaySmith502/piii">MIT License</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="lic">MIT License &middot; &copy; 2026 10x Studio</span>
+      <span class="dis">Not affiliated with OpenAI, Anthropic, Google, Microsoft, Perplexity, or DeepSeek.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
