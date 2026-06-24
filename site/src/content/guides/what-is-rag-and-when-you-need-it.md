@@ -1,8 +1,8 @@
 ---
 title: "RAG, Plainly: When Search-Over-Your-Docs Is Worth Building"
 description: "What retrieval-augmented generation (RAG) is in plain terms, when a business actually needs it, when it doesn't, and what it takes to build one well."
-pubDate: 2026-07-15
-updatedDate: 2026-07-15
+pubDate: 2026-06-24
+updatedDate: 2026-06-24
 author: "Jay Smith"
 tags: ["ai-native", "rag", "buying-guide"]
 heroSet: "ai"
@@ -22,7 +22,7 @@ faqs:
     a: "Three ingredients: clean source documents, a place to index them, and a careful retrieval-and-answer layer with guardrails. The build itself is not the hard part - the work is in preparing the content (deciding what is authoritative, removing the contradictory and the stale), tuning retrieval so it returns the right passages, and constraining the model so it answers only from what was retrieved and admits when it does not know. Cost tracks scope: a focused first version over one well-defined document set is a modest phase, not a six-figure platform, which is why we build it as a slice you can evaluate before expanding. The ongoing cost is real but predictable - keeping the index fresh as documents change, and watching answer quality over time."
   - q: "How accurate is RAG, and can it still make things up?"
     a: "RAG is far more accurate than an ungrounded assistant because it answers from retrieved text, but it is not infallible, and treating it as magic is the common failure. Two things go wrong: retrieval can surface the wrong passage, so the model answers correctly from the wrong source, and the model can still over-reach beyond what was retrieved if it is not constrained. Both are manageable. The fixes are engineering, not luck: tuning retrieval, instructing the model to answer only from provided context and to say 'not found' otherwise, and showing the cited source so a human can verify in one click. A well-built RAG system is judged not only on when it answers, but on whether it reliably refuses to guess when the answer is not in your documents."
-draft: true
+draft: false
 ---
 
 ## A worked example
