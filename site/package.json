@@ -13,7 +13,8 @@
     "@astrojs/mdx": "^4.0.0",
     "@astrojs/sitemap": "^3.2.0",
     "astro": "^5.0.0",
-    "mimetext": "^3.0.28"
+    "mimetext": "^3.0.28",
+    "vanilla-cookieconsent": "^3.1.0"
   },
   "devDependencies": {
     "wrangler": "^4.99.0"
