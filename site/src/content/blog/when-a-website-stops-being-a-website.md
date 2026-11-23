@@ -6,7 +6,7 @@ author: "Jay Smith"
 tags: ["web-platforms", "custom-software"]
 kind: "essay"
 heroSet: "web"
-draft: true
+draft: false
 ---
 
 There's a moment most growing businesses hit without noticing: the website stops being a website and quietly becomes a platform. Nobody decides this. It happens because the site is asked to do more than display information - it starts capturing leads that need routing, gating content behind logins, tracking things, talking to other tools - and the template that was perfect for a brochure starts cracking under the weight. The useful distinction isn't how a site looks or what it's built on. It's whether the thing displays information or does work. A website shows; a platform runs part of the business. Knowing which one you have tells you whether your next move is a plugin or a rebuild.

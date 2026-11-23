@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PiiI Desktop — Redact client files locally, then put the real values back</title>
+<meta name="description" content="PiiI Desktop redacts personal data from Excel, Word, PDF and CSV files on your own machine, keeps every placeholder in an encrypted local vault, and restores the real values into AI-drafted documents. A paid edition from 10x Studio." />
+<link rel="canonical" href="https://10xstudio.dev/piii/desktop/" />
+<link rel="stylesheet" href="/piii/piii.css" />
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top" aria-label="PiiI Desktop">
+      <svg class="brand__mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="0" width="50" height="50" class="f-blue"/><rect x="50" y="0" width="50" height="50" class="f-red"/><rect x="0" y="50" width="50" height="50" class="f-yellow"/><rect x="50" y="50" width="50" height="50" class="f-ink"/><circle cx="25" cy="25" r="9" class="f-yellow"/><circle cx="75" cy="25" r="9" class="f-blue"/><circle cx="25" cy="75" r="9" class="f-red"/><circle cx="75" cy="75" r="9" class="f-yellow"/></svg>
+      <span class="brand__name"><strong>Pii<svg class="brand-serif-i" viewBox="0 0 50 70" aria-hidden="true"><path d="M0 0h50v12H33v46h17v12H0V58h17V12H0z"/></svg> Desktop</strong><span>A 10x Studio product</span></span>
+    </a>
+    <nav class="nav__links">
+      <a class="nav__link" href="#how">How it works</a>
+      <a class="nav__link" href="#vault">Vault</a>
+      <a class="nav__link" href="#compare">Compare</a>
+      <a class="btn btn--primary btn--sm" href="/contact/">Request a demo</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero__grid">
+    <div>
+      <div class="hero__badges"><span class="tag tag--local">Runs locally</span><span>Paid &middot; Set up for your team</span></div>
+      <h1>Scrub the file.<br/><em>Bring it back.</em></h1>
+      <p class="hero__sub">PiiI Desktop finds the personal data in your Excel, Word, PDF and CSV files and swaps each value for a placeholder, on your own machine. An encrypted vault puts the real values back into whatever the AI writes.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="/contact/">Request a demo
+          <svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a class="btn" href="#compare">Desktop or Chrome?</a>
+      </div>
+    </div>
+    <div class="hero__art">
+      <svg class="hero__motif" viewBox="0 0 240 240" aria-hidden="true"><defs><g id="cbl"><rect width="60" height="60" class="f-blue"/><circle cx="30" cy="30" r="16" class="f-yellow"/></g><g id="cyr"><rect width="60" height="60" class="f-yellow"/><circle cx="30" cy="30" r="16" class="f-red"/></g><g id="crb"><rect width="60" height="60" class="f-red"/><circle cx="30" cy="30" r="16" class="f-blue"/></g><g id="cky"><rect width="60" height="60" class="f-ink"/><circle cx="30" cy="30" r="16" class="f-yellow"/></g></defs><use href="#cbl" x="0" y="0"/><use href="#cyr" x="60" y="0"/><use href="#crb" x="120" y="0"/><use href="#cky" x="180" y="0"/><use href="#cyr" x="0" y="60"/><use href="#cky" x="60" y="60"/><use href="#cbl" x="120" y="60"/><use href="#crb" x="180" y="60"/><use href="#crb" x="0" y="120"/><use href="#cbl" x="60" y="120"/><use href="#cky" x="120" y="120"/><use href="#cyr" x="180" y="120"/><use href="#cky" x="0" y="180"/><use href="#crb" x="60" y="180"/><use href="#cyr" x="120" y="180"/><use href="#cbl" x="180" y="180"/></svg>
+      <div class="hero__card">
+        <div class="box">
+          <div class="box__bar">
+            <div class="box__brand">
+              <svg class="box__mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="0" width="50" height="50" class="f-blue"/><rect x="50" y="0" width="50" height="50" class="f-red"/><rect x="0" y="50" width="50" height="50" class="f-yellow"/><rect x="50" y="50" width="50" height="50" class="f-ink"/><circle cx="25" cy="25" r="9" class="f-yellow"/><circle cx="75" cy="25" r="9" class="f-blue"/><circle cx="25" cy="75" r="9" class="f-red"/><circle cx="75" cy="75" r="9" class="f-yellow"/></svg>
+              <span class="box__title">claim-notes.docx</span>
+            </div>
+          </div>
+          <div class="box__body">
+            <p class="box__label">Found in this file</p>
+            <div class="box__prompt"><span class="pii pii--ink">Grace Okafor</span> called on Monday about her claim. SSN <span class="pii pii--blue">123-45-6789</span>, cell <span class="pii pii--yellow">(212) 555-1234</span>.</div>
+            <p class="box__label box__aliases-label">Placeholders from the vault</p>
+            <div class="box__aliases">
+              <span class="chip chip--ink">[NAME-K7QX2M9PDA]</span>
+              <span class="chip chip--blue">[SSN-R4WD8NVT2H]</span>
+              <span class="chip chip--yellow">[PHONE-M2C9XQ7LBE]</span>
+            </div>
+          </div>
+          <div class="box__foot">
+            <span class="box__meta">100% local</span>
+            <div class="box__actions">
+              <button class="box__btn box__btn--primary" type="button">Scrub file
+                <svg class="ic" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST BAND ============ -->
+<section class="trust">
+  <div class="wrap trust__grid">
+    <div class="stat"><div class="stat__n">6</div><div class="stat__l">File types</div></div>
+    <div class="stat"><div class="stat__n alt">2,000</div><div class="stat__l">Files per batch</div></div>
+    <div class="stat"><div class="stat__n">0</div><div class="stat__l">Cloud services</div></div>
+    <div class="stat"><div class="stat__n alt">1</div><div class="stat__l">Placeholder per value, for good</div></div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section" id="how">
+  <div class="wrap">
+    <h2 class="h2" style="margin-bottom:14px;">Redact, use the AI,<br/>rehydrate.</h2>
+    <p class="lead" style="max-width:600px;">Scrub a client spreadsheet, have a model draft the letters, and get the letters back with real names filled in. The real values never leave your machine.</p>
+    <div class="steps">
+      <div class="step"><div class="step__n" style="color:var(--blue-500)">01</div><h3>Redact</h3><p>Drop up to 2,000 files. Review what it found, untick anything you want to keep, add extra values to hide, and scrub.</p></div>
+      <div class="step"><div class="step__n" style="color:var(--red-500)">02</div><h3>Use any AI</h3><p>The scrubbed file carries placeholders like <span class="ph">[NAME-K7QX2M9PDA]</span> instead of names, SSNs and phone numbers. Hand it to whichever model you use.</p></div>
+      <div class="step"><div class="step__n" style="color:var(--yellow-600)">03</div><h3>Rehydrate</h3><p>Drop what the AI wrote on the Rehydrate tab. The real values go back in, even when the file type changed from CSV to a Word letter.</p></div>
+      <div class="step"><div class="step__n" style="color:var(--ink-900)">04</div><h3>Stay consistent</h3><p>One value keeps one placeholder. &ldquo;Smith, John&rdquo; and &ldquo;John Smith&rdquo; share it, and a client redacted once is caught in every later file.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VAULT ============ -->
+<section class="privacy" id="vault">
+  <div class="wrap">
+    <div class="privacy__head">
+      <h2 class="h2">Reversible,<br/>without a cloud.</h2>
+      <p>The vault is an encrypted file on your machine. It is what lets redacted files go out and real values come back. An install with no settings sends nothing anywhere.</p>
+    </div>
+    <div class="cards3">
+      <div class="card">
+        <div class="card__ic" style="background:var(--blue-500);color:var(--white);"><svg class="ic" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <h3>Encrypted at rest</h3><p>Each value and its placeholder are encrypted together with AES-GCM. The vault file holds nothing readable, and only its owner can open it.</p>
+      </div>
+      <div class="card">
+        <div class="card__ic" style="background:var(--yellow-500);color:var(--ink-900);"><svg class="ic" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+        <h3>Placeholders work like keys</h3><p>Each suffix is 10 random characters, about 50 bits. Nobody can guess one, so only someone holding a placeholder can rehydrate its value.</p>
+      </div>
+      <div class="card">
+        <div class="card__ic" style="background:var(--red-500);color:var(--white);"><svg class="ic" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+        <h3>True redaction in PDFs</h3><p>Values are removed from the document, not covered with a black box. Scanned pages are read with OCR, and Excel keeps its formulas, styles and pivots.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT IT READS ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="detect__head">
+      <h2 class="h2">Six file types.<br/>Nine kinds of PII.</h2>
+      <div class="pill">Rules + local NER + the vault</div>
+    </div>
+    <div class="detect__grid detect__grid--files">
+      <div class="dtile"><span>Excel</span></div>
+      <div class="dtile"><span>Word</span></div>
+      <div class="dtile"><span>PDF, with OCR</span></div>
+      <div class="dtile"><span>CSV</span></div>
+      <div class="dtile"><span>Text</span></div>
+      <div class="dtile"><span>Markdown</span></div>
+    </div>
+    <div class="detect__grid">
+      <div class="dtile"><span class="dot" style="background:var(--ink-900)"></span><span>Name</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--blue-500)"></span><span>SSN</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--blue-500)"></span><span>ITIN</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--red-500)"></span><span>EIN</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--yellow-500)"></span><span>Phone</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--blue-500)"></span><span>Email</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--blue-500)"></span><span>Date of birth</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--red-500)"></span><span>Address</span></div>
+      <div class="dtile"><span class="dot" style="background:var(--yellow-500)"></span><span>Account number</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPARE ============ -->
+<section class="section privacy" id="compare">
+  <div class="wrap">
+    <h2 class="h2" style="margin-bottom:14px;">Two editions.<br/>Different jobs.</h2>
+    <p class="lead" style="max-width:600px;">The free Chrome extension protects what you type into an AI chat. PiiI Desktop protects the files your team works from, and gets the real values back.</p>
+    <div class="compare__wrap">
+      <table class="compare">
+        <thead>
+          <tr><th scope="col"><span>&nbsp;</span></th><th scope="col">PiiI for Chrome<span>Free, open source</span></th><th scope="col">PiiI Desktop<span>Paid, for teams</span></th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Protects</th><td>Prompts and attachments on ChatGPT, Claude, Gemini, Copilot, Perplexity and DeepSeek</td><td>Excel, Word, PDF, CSV, text and Markdown files</td></tr>
+          <tr><th scope="row">Runs</th><td>Inside your browser tab</td><td>On your own computer, Windows, Mac or Linux</td></tr>
+          <tr><th scope="row">Placeholders</th><td>Short aliases like <span class="ph">NAME_1</span>, per conversation</td><td>Stable placeholders like <span class="ph">[NAME-K7QX2M9PDA]</span>, the same for a value every time</td></tr>
+          <tr><th scope="row">Reversible</th><td>No</td><td>Yes. Rehydrate restores real values in any supported file, including AI-drafted ones</td></tr>
+          <tr><th scope="row">Volume</th><td>One message at a time</td><td>Up to 2,000 files per batch, with a report</td></tr>
+          <tr><th scope="row">Price</th><td>Free, MIT licence</td><td>Paid. We set it up and support it for your team</td></tr>
+          <tr><th scope="row">Get it</th><td><a href="/piii/">PiiI for Chrome</a></td><td><a href="/contact/">Request a demo</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta">
+  <svg class="cta__motif" viewBox="0 0 240 240" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><defs><g id="dbl"><rect width="60" height="60" class="f-blue"/><circle cx="30" cy="30" r="16" class="f-yellow"/></g><g id="dyr"><rect width="60" height="60" class="f-yellow"/><circle cx="30" cy="30" r="16" class="f-red"/></g><g id="drb"><rect width="60" height="60" class="f-red"/><circle cx="30" cy="30" r="16" class="f-blue"/></g><g id="dky"><rect width="60" height="60" class="f-ink"/><circle cx="30" cy="30" r="16" class="f-yellow"/></g></defs><use href="#dbl" x="0" y="0"/><use href="#dyr" x="60" y="0"/><use href="#drb" x="120" y="0"/><use href="#dky" x="180" y="0"/><use href="#dyr" x="0" y="60"/><use href="#dky" x="60" y="60"/><use href="#dbl" x="120" y="60"/><use href="#drb" x="180" y="60"/><use href="#drb" x="0" y="120"/><use href="#dbl" x="60" y="120"/><use href="#dky" x="120" y="120"/><use href="#dyr" x="180" y="120"/><use href="#dky" x="0" y="180"/><use href="#drb" x="60" y="180"/><use href="#dyr" x="120" y="180"/><use href="#dbl" x="180" y="180"/></svg>
+  <div class="wrap cta__in">
+    <h2>See it on<br/>your own files.</h2>
+    <a class="btn btn--yellow btn--lg" href="/contact/">Request a demo
+      <svg class="ic" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__lockup">
+          <svg class="footer__mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="0" width="50" height="50" class="f-blue"/><rect x="50" y="0" width="50" height="50" class="f-red"/><rect x="0" y="50" width="50" height="50" class="f-yellow"/><rect x="50" y="50" width="50" height="50" class="f-ink"/><circle cx="25" cy="25" r="9" class="f-yellow"/><circle cx="75" cy="25" r="9" class="f-blue"/><circle cx="25" cy="75" r="9" class="f-red"/><circle cx="75" cy="75" r="9" class="f-yellow"/></svg>
+          <span><b>10x Studio</b><span><strong role="img" aria-label="PiiI">Pii<svg class="brand-serif-i" viewBox="0 0 50 70" aria-hidden="true"><path d="M0 0h50v12H33v46h17v12H0V58h17V12H0z"/></svg></strong> Desktop &middot; paid edition</span></span>
+        </div>
+        <p>Local-only redaction and rehydration for client files. Built, installed and supported by the team at 10x Studio.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>PiiI Desktop</h4>
+          <a href="#how">How it works</a>
+          <a href="#vault">The vault</a>
+          <a href="#compare">Compare editions</a>
+          <a href="/contact/">Request a demo</a>
+        </div>
+        <div class="footer__col">
+          <h4>PiiI for Chrome</h4>
+          <a href="/piii/">Extension</a>
+          <a href="https://github.com/JaySmith502/PiiI">GitHub repo</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="lic">&copy; 2026 10x Studio</span>
+      <span class="dis">PiiI Desktop reduces the personal data in your files; no detector is perfect, so review the findings before you share a file.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
