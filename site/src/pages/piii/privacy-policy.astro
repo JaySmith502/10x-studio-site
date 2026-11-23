@@ -1,0 +1,148 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base
+  title="PiiI Privacy Policy - 10x Studio"
+  description="Privacy policy for the PiiI browser extension. No data collected, no analytics, no telemetry - PII detection runs entirely on your device."
+>
+  <section class="hero" style="background:var(--paper-2); padding-block: 56px 32px;">
+    <div class="mk-wrap" style="max-width: 760px;">
+      <div class="mk-eyebrow" style="margin-bottom:20px;">
+        <span class="mk-badge mk-badge--blue">PiiI</span>
+        <span><b>//</b> No data collected</span>
+      </div>
+      <h1 class="mk-h1">Privacy <span class="accent">Policy</span></h1>
+      <p style="margin-top:14px; color:var(--ink-700); font-family:var(--font-mono); font-size:14px;">
+        Last updated: 30 June 2026 · Applies to the PiiI browser extension
+      </p>
+    </div>
+  </section>
+
+  <div class="mk-wrap" style="max-width: 760px;">
+    <div class="article-body pp-body" style="padding: 40px 0 80px; max-width: 760px;">
+
+      <p>PiiI detects personally identifiable information (PII) in text you type into AI chat assistants and helps you mask it locally, inside your browser, before anything is sent. PiiI does not collect, store on our servers, sell, or transmit your data. There is no account, no analytics, and no telemetry.</p>
+
+      <h2>Who we are</h2>
+      <p>PiiI is an open-source extension published by 10x Studio. This policy explains exactly what the extension accesses, why, and where it goes. If anything here is unclear, contact us at <a href="mailto:privacy@10xstudio.dev">privacy@10xstudio.dev</a>.</p>
+
+      <h2>What the extension accesses</h2>
+      <p>To do its job, PiiI reads the following on your device only:</p>
+      <ul>
+        <li>Text you type or paste into the message box on the supported AI chat sites (listed below), so it can scan that text for PII before you send it.</li>
+        <li>The contents of files you attach on those sites (e.g. .txt, .csv, .md, .json, .pdf, .docx), which are read locally to warn you if a file contains PII before it is uploaded.</li>
+        <li>The text you select on the page when you trigger the "always allow this term" shortcut, so the selected term can be added to your local allow-list.</li>
+      </ul>
+      <p>This content is processed entirely within your browser and is never sent to us or to any third party. It is read, scanned, and (when you choose to mask) rewritten in place - then it is gone.</p>
+
+      <h2>How detection works (and why it stays local)</h2>
+      <p>PiiI finds PII two ways, both running on your device: pattern rules (regular expressions) for structured data like emails, phone numbers, and card numbers; and a small named-entity-recognition (NER) model for names and addresses. The model runs in your browser through onnxruntime-web (WebAssembly). No part of your message is sent anywhere during detection.</p>
+
+      <h2>The one network request - and what it does not contain</h2>
+      <p>The first time the extension runs, it downloads the NER model's weights once from the Hugging Face content-delivery network (a third-party host), then caches them in your browser. After that, detection works fully offline.</p>
+      <p>This request is a one-way download of the model to your device. It contains none of your prompts, none of your files, and none of your personal data. We do not receive anything from it; we do not operate any server that your content is sent to, at any point.</p>
+
+      <h2>What is stored, and where</h2>
+      <table class="pp-table">
+        <thead>
+          <tr><th>Item</th><th>Where</th><th>Contains your PII?</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Alias map (what NAME_1 stands for, to keep a conversation coherent)</td>
+            <td><code>chrome.storage.local</code> - on your device only</td>
+            <td>Yes - stored locally so masked replies can be un-masked for you. Never transmitted.</td>
+          </tr>
+          <tr>
+            <td>Allow-list of terms you've exempted from redaction</td>
+            <td><code>chrome.storage.local</code> - on your device only</td>
+            <td>Only terms you explicitly chose to allow.</td>
+          </tr>
+          <tr>
+            <td>Redaction audit log (so you can see what was masked)</td>
+            <td><code>chrome.storage.local</code> - on your device only</td>
+            <td>No. Records only metadata: which categories were detected, the action taken, counts, and timestamps. It does not store the detected values themselves.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>All of this is local browser storage. None of it syncs to us or to any external service.</p>
+
+      <h2>Data we collect, sell, or share</h2>
+      <p>None. PiiI does not collect personal or sensitive user data on any server, does not sell or transfer user data to third parties, does not use your data for advertising or creditworthiness, and does not use it for any purpose unrelated to the single purpose described here. There are no analytics, trackers, or telemetry of any kind.</p>
+
+      <h2>Permissions and why they are needed</h2>
+      <table class="pp-table">
+        <thead>
+          <tr><th>Permission</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>storage</code></td><td>Save your allow-list, alias map, and the local audit log on your device.</td></tr>
+          <tr><td>Host access to the supported sites</td><td>Read and rewrite the message box on those specific sites to detect and mask PII before sending. PiiI requests access only to the named sites below - not all websites.</td></tr>
+          <tr><td><code>offscreen</code></td><td>Run the local NER model in an offscreen document (service workers cannot run the WebAssembly runtime).</td></tr>
+          <tr><td><code>contextMenus</code></td><td>Provide the right-click "always allow this term" action.</td></tr>
+          <tr><td><code>commands</code></td><td>Provide the keyboard shortcut for allow-listing the selected term.</td></tr>
+          <tr><td><code>activeTab</code></td><td>Read your current selection when you trigger the allow-term shortcut.</td></tr>
+          <tr><td><code>alarms</code></td><td>Keep the background service worker alive while the model is loaded so detection is not interrupted.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Supported sites</h2>
+      <p>PiiI runs only on the AI chat assistants it is built for:</p>
+      <ul>
+        <li>ChatGPT (chatgpt.com, chat.openai.com)</li>
+        <li>Claude (claude.ai)</li>
+        <li>Gemini (gemini.google.com)</li>
+        <li>Microsoft Copilot (copilot.microsoft.com)</li>
+        <li>Perplexity (www.perplexity.ai)</li>
+        <li>DeepSeek (chat.deepseek.com)</li>
+      </ul>
+      <p>It does not run on, read, or affect any other website.</p>
+
+      <h2>Retention and deletion</h2>
+      <p>Everything PiiI stores lives in your browser. You can clear it at any time by removing the extension, clearing the extension's storage, or deleting individual allow-list entries and the audit log from the extension. Uninstalling PiiI removes all of its local data.</p>
+
+      <h2>An honest note on accuracy</h2>
+      <p>PiiI substantially reduces the PII in your prompts, but no automated detector is perfect - some values, especially uncommon names, can be missed. When PiiI flags something it cannot place precisely, it warns you before sending rather than failing silently. Please review what PiiI shows you and treat it as a strong safeguard, not a guarantee.</p>
+
+      <h2>Children</h2>
+      <p>PiiI is a general-purpose tool and is not directed to children under 13.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>If our data practices change, we will update this page and revise the "last updated" date above. Material changes will be reflected here before they take effect in a released version of the extension.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about privacy: <a href="mailto:privacy@10xstudio.dev">privacy@10xstudio.dev</a>. Source code and issues: <a href="https://github.com/JaySmith502/PiiI">github.com/JaySmith502/PiiI</a>.</p>
+
+      <p style="margin-top:36px; font-family:var(--font-mono); font-size:13px; color:var(--ink-600);">MIT License · © 2026 10x Studio · Not affiliated with OpenAI, Anthropic, Google, Microsoft, Perplexity, or DeepSeek. PII detection uses the third-party onnx-community/multilang-pii-ner-ONNX model, trained on the ai4privacy dataset (CC BY 4.0).</p>
+
+    </div>
+  </div>
+
+  <style>
+    /* ponytail: scoped tables — .article-body styles everything except <table> */
+    .pp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 28px;
+      font-size: 15px;
+      line-height: 1.55;
+      border: 2px solid var(--ink-900);
+    }
+    .pp-table th,
+    .pp-table td {
+      border: 1px solid var(--ink-900);
+      padding: 10px 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .pp-table thead th {
+      background: var(--ink-900);
+      color: var(--paper);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: .02em;
+    }
+    .pp-table code { font-size: 0.88em; }
+    .pp-body a { color: var(--blue-500); text-decoration: underline; }
+  </style>
+</Base>

@@ -18,7 +18,7 @@ metrics:
     label: "pip dependencies in the optimization loop"
 stack: [Python, Anthropic Claude, Supabase, TheRacingAPI, ElevenLabs]
 heroImage: "/case-studies/race-o-bot.png"
-draft: false
+draft: true
 ---
 
 ## The brief
