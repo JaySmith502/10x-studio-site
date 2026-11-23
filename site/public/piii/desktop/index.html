@@ -7,6 +7,25 @@
 <meta name="description" content="PiiI Desktop redacts personal data from Excel, Word, PDF and CSV files on your own machine, keeps every placeholder in an encrypted local vault, and restores the real values into AI-drafted documents. A paid edition from 10x Studio." />
 <link rel="canonical" href="https://10xstudio.dev/piii/desktop/" />
 <link rel="stylesheet" href="/piii/piii.css" />
+<style>
+/* Hero redaction game. Inactive without JS or with reduced motion: the static card stays. */
+.game{--reticle:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'><g fill='none'><g stroke='%23141414' stroke-width='4'><circle cx='18' cy='18' r='11'/><path d='M18 1v9M18 26v9M1 18h9M26 18h9'/></g><g stroke='%23ED3B2F' stroke-width='2'><circle cx='18' cy='18' r='11'/><path d='M18 2v8M18 26v8M2 18h8M26 18h8'/></g></g><circle cx='18' cy='18' r='3.2' fill='%23ED3B2F' stroke='%23141414' stroke-width='1.2'/></svg>") 18 18, crosshair;cursor:var(--reticle);}
+.game .box__aliases-label,.game .box__aliases{display:none;}
+.game .box__bar{transition:background-color .5s var(--ease);}
+.game .box__prompt{transition:opacity .3s var(--ease);}
+.slot{display:inline-block;vertical-align:baseline;height:1.5em;border-bottom:2px dashed var(--ink-200);font-family:var(--font-mono);font-size:13.5px;}
+.slot:not(:empty){border-bottom-color:transparent;}
+.slot .chip{padding:1px 6px;}
+.leak{background:var(--red-100);border-bottom-color:var(--red-500);outline:1.5px solid var(--red-500);}
+.target{position:absolute;left:0;top:0;z-index:5;border:0;border-bottom:2px solid var(--ink-900);box-shadow:3px 3px 0 var(--ink-900);cursor:var(--reticle);will-change:transform;}
+.target:hover,.target:focus-visible{outline:2px solid var(--red-500);outline-offset:3px;}
+.target.pii{color:var(--ink-900);}
+.target.chip{box-shadow:none;}
+.stamp{font-family:var(--font-display);font-weight:900;font-size:15px;letter-spacing:.08em;padding:3px 10px;background:var(--red-500);color:var(--white);border:2px solid var(--ink-900);border-radius:3px;box-shadow:3px 3px 0 var(--ink-900);}
+.stamp::after{content:'';position:absolute;inset:-4px;border:3px solid var(--red-500);border-radius:4px;animation:burst .4s ease-out forwards;pointer-events:none;}
+@keyframes burst{to{inset:-26px;opacity:0;}}
+.box__meta.is-leak{color:var(--red-600);background:var(--red-100);border-color:var(--red-500);}
+</style>
 </head>
 <body>
 
@@ -219,5 +238,120 @@
   </div>
 </footer>
 
+<script>
+// Hero mini-game: PII flies in from the corner; shoot it and it turns into a vault placeholder.
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const art = document.querySelector('.hero__art');
+  const bar = art.querySelector('.box__bar');
+  const title = art.querySelector('.box__title');
+  const prompt = art.querySelector('.box__prompt');
+  const meta = art.querySelector('.box__meta');
+  const scrub = art.querySelector('.box__btn--primary');
+  const COLOR = { NAME: 'ink', SSN: 'blue', EIN: 'red', PHONE: 'yellow', EMAIL: 'blue', DOB: 'blue', ADDRESS: 'red', ACCOUNT: 'yellow' };
+  const TINT = ['var(--blue-100)', 'var(--yellow-100)', 'var(--red-100)'];
+  // Obviously fake values only.
+  const FILES = [
+    ['claim-notes.docx', [['NAME', 'Grace Okafor'], ' called on Monday about her claim. SSN ', ['SSN', '123-45-6789'], ', cell ', ['PHONE', '(212) 555-1234'], '.']],
+    ['payroll-q3.xlsx', ['Row 14: ', ['NAME', 'Daniel Reyes'], ', EIN ', ['EIN', '12-3456789'], ', direct deposit to ', ['ACCOUNT', '000123456789'], '.']],
+    ['intake-form.pdf', [['NAME', 'Priya Natarajan'], ', born ', ['DOB', '04/17/1986'], '. Email ', ['EMAIL', 'priya@example.com'], ', mail to ', ['ADDRESS', '42 Elm St, Springfield'], '.']],
+  ];
+  const ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const placeholder = type => `[${type}-${Array.from(crypto.getRandomValues(new Uint8Array(10)), b => ABC[b % 32]).join('')}]`;
+  const span = (className, textContent) => Object.assign(document.createElement('span'), { className, textContent });
+
+  let live = [], hits = 0, leaks = 0, left = 0, round = 0, visible = false, started = false;
+  // Start only once the card is on screen (it sits below the fold on phones).
+  new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    if (visible && !started) { started = true; art.classList.add('game'); play(0); }
+  }, { threshold: .5 }).observe(art);
+  const setMeta = (text, leak) => { meta.textContent = text; meta.classList.toggle('is-leak', !!leak); };
+
+  function play(n) {
+    const [name, parts] = FILES[n % FILES.length];
+    title.textContent = name;
+    bar.style.backgroundColor = TINT[n % TINT.length];
+    hits = leaks = 0;
+    prompt.replaceChildren();
+    const items = [];
+    for (const p of parts) {
+      if (typeof p === 'string') { prompt.append(p); continue; }
+      const [type, value] = p, ph = placeholder(type), slot = span('slot', '');
+      // ponytail: reserve the final width up front so later slots never move while targets are in flight
+      slot.style.width = Math.max(value.length, ph.length) + 1 + 'ch';
+      prompt.append(slot);
+      items.push({ type, value, ph, slot });
+    }
+    left = items.length;
+    setMeta('Shoot the PII before it lands');
+    prompt.style.opacity = 1;
+    items.forEach((it, k) => setTimeout(() => launch(it), 500 + k * 750));
+  }
+
+  function launch(it) {
+    // ponytail: path is fixed at launch; a resize mid-flight lands slightly off until the next file
+    const a = art.getBoundingClientRect(), s = it.slot.getBoundingClientRect();
+    const t = it.t = document.createElement('button');
+    t.type = 'button';
+    t.className = `target pii pii--${COLOR[it.type]}`;
+    t.textContent = it.value;
+    t.setAttribute('aria-label', `Redact ${it.value}`);
+    art.append(t);
+    const x0 = a.width - t.offsetWidth, y0 = a.height, x1 = s.left - a.left, y1 = s.top - a.top + 2;
+    it.end = `translate(${x1}px,${y1}px)`;
+    it.anim = t.animate([
+      { transform: `translate(${x0}px,${y0}px) scale(.5)`, opacity: 0 },
+      { transform: `translate(${(x0 + x1) / 2}px,${(y0 + y1) / 2 - 70}px) scale(1.1)`, opacity: 1, offset: .5 },
+      { transform: `${it.end} scale(1)`, opacity: 1 },
+    ], { duration: 2800, easing: 'cubic-bezier(.3,.1,.4,1)', fill: 'forwards' });
+    it.anim.onfinish = () => land(it, false);
+    t.addEventListener('pointerdown', () => hit(it));
+    t.addEventListener('click', () => hit(it)); // keyboard
+    live.push(it);
+  }
+
+  function hit(it) {
+    if (it.done) return;
+    it.done = true;
+    const from = getComputedStyle(it.t).transform;
+    it.anim.onfinish = null;
+    it.anim.cancel();
+    // Stamp it REDACTED where it was hit (centered on the old value), then snap the placeholder into its blank.
+    const t = it.t, w0 = t.offsetWidth;
+    t.className = 'target stamp';
+    t.textContent = 'REDACTED';
+    const at = `${from} translate(${(w0 - t.offsetWidth) / 2}px,-4px)`;
+    t.animate([
+      { transform: `${at} scale(.6)` },
+      { transform: `${at} scale(1.3) rotate(-8deg)`, offset: .45 },
+      { transform: `${at} scale(1.1) rotate(-5deg)` },
+    ], { duration: 280, easing: 'ease-out', fill: 'forwards' }).onfinish = () => setTimeout(() => {
+      t.getAnimations().forEach(a => a.cancel());
+      t.className = `target chip chip--${COLOR[it.type]}`;
+      t.textContent = it.ph;
+      t.animate([{ transform: `${at} scale(1.1) rotate(-5deg)` }, { transform: it.end }], { duration: 320, easing: 'cubic-bezier(.2,.7,.2,1)' })
+        .onfinish = () => land(it, true);
+    }, 160);
+  }
+
+  function land(it, ok) {
+    it.done = true;
+    it.t.remove();
+    live = live.filter(x => x !== it);
+    it.slot.replaceChildren(ok ? span(`chip chip--${COLOR[it.type]}`, it.ph) : span('pii leak', it.value));
+    ok ? hits++ : leaks++;
+    if (--left) return;
+    prompt.querySelectorAll('.slot').forEach(s => { s.style.width = 'auto'; });
+    setMeta(leaks ? `${leaks} leaked · ${hits} scrubbed` : `All ${hits} scrubbed`, leaks);
+    const next = () => visible && !document.hidden ? play(++round) : setTimeout(next, 500);
+    setTimeout(() => { prompt.style.opacity = 0; setTimeout(next, 300); }, 2400);
+  }
+
+  // The product button does what the player is doing by hand.
+  scrub.addEventListener('click', () => live.forEach(hit));
+  meta.setAttribute('aria-live', 'polite');
+})();
+</script>
 </body>
 </html>
