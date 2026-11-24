@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>og-image source (1200x630)</title>
+<!-- Source for site/public/assets/og-image.png. Render: headless Chrome, 1200x630 window, screenshot. -->
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;600;800&family=Funnel+Sans:wght@500;600&family=Martian+Mono:wght@400&display=block" rel="stylesheet" />
+<style>
+:root{
+  --bone:oklch(96% .01 85); --graphite:oklch(23% .012 250); --graphite-soft:oklch(42% .012 250);
+  --grid:oklch(23% .012 250 / .07); --mark:oklch(90% .17 115);
+}
+*{box-sizing:border-box;margin:0;}
+html,body{width:1200px;height:630px;overflow:hidden;}
+body{background:var(--bone);color:var(--graphite);font-family:'Funnel Sans',sans-serif;
+  background-image:repeating-linear-gradient(to right,var(--grid) 0 1px,transparent 1px 100px);}
+.frame{position:absolute;inset:40px 48px;display:grid;grid-template-rows:auto 1fr auto;}
+.top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:18px;border-bottom:1px solid var(--graphite);}
+.logo{font-family:'Funnel Display';font-weight:800;font-size:34px;letter-spacing:-.03em;}
+.logo span{font-weight:400;}
+.dim{font-family:'Martian Mono',monospace;font-size:15px;color:var(--graphite-soft);}
+.mid{display:grid;grid-template-columns:600px 1fr;gap:40px;align-items:center;}
+h1{font-family:'Funnel Display';font-weight:800;font-size:64px;line-height:1.1;letter-spacing:-.04em;}
+mark{background:var(--mark);color:inherit;padding:0 .1em;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+svg{width:100%;height:auto;overflow:visible;}
+.node rect{fill:var(--bone);stroke:var(--graphite);stroke-width:1.4;}
+.node.hot rect{fill:var(--mark);}
+text{font-family:'Funnel Sans';font-size:14px;font-weight:600;fill:var(--graphite);}
+.lbl{font-family:'Martian Mono';font-size:10px;font-weight:400;fill:var(--graphite-soft);}
+.wire{fill:none;stroke:var(--graphite);stroke-width:1.4;}
+.messy{stroke-dasharray:3 4;stroke:var(--graphite-soft);}
+.pkt{fill:var(--graphite);}
+.block{display:grid;grid-template-columns:2fr 1fr 1fr;border:1px solid var(--graphite);}
+.block div{padding:12px 16px;border-left:1px solid var(--graphite);}
+.block div:first-child{border-left:0;}
+.block b{display:block;font-family:'Funnel Sans',sans-serif;font-weight:600;font-size:19px;color:var(--graphite);margin-top:4px;}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="top"><div class="logo">10x <span>Studio</span></div><div class="dim">10xstudio.dev</div></div>
+  <div class="mid">
+    <h1>Build the system your business keeps <mark>faking with spreadsheets.</mark></h1>
+    <svg viewBox="0 0 560 430" aria-hidden="true">
+      <path class="wire messy" d="M110 60 C 190 60, 190 200, 238 200"/>
+      <path class="wire messy" d="M110 200 L 238 200"/>
+      <path class="wire messy" d="M110 340 C 190 340, 190 200, 238 200"/>
+      <path class="wire" d="M330 200 C 390 200, 390 70, 438 70"/>
+      <path class="wire" d="M330 200 L 438 200"/>
+      <path class="wire" d="M330 200 C 390 200, 390 330, 438 330"/>
+      <rect class="pkt" x="176" y="130" width="8" height="8"/><rect class="pkt" x="170" y="196" width="8" height="8"/>
+      <rect class="pkt" x="392" y="122" width="8" height="8"/><rect class="pkt" x="380" y="196" width="8" height="8"/><rect class="pkt" x="398" y="280" width="8" height="8"/>
+      <g class="node"><rect x="0" y="38" width="110" height="44"/><text x="14" y="65">Web form</text></g>
+      <g class="node"><rect x="0" y="178" width="110" height="44"/><text x="14" y="205">Email inbox</text></g>
+      <g class="node"><rect x="0" y="318" width="110" height="44"/><text x="14" y="345">Spreadsheet</text></g>
+      <g class="node hot"><rect x="238" y="168" width="92" height="64"/><text x="252" y="196">Intake</text><text x="252" y="214" class="lbl">AI triage</text></g>
+      <g class="node"><rect x="438" y="48" width="122" height="44"/><text x="452" y="75">CRM</text></g>
+      <g class="node"><rect x="438" y="178" width="122" height="44"/><text x="452" y="205">Ops dashboard</text></g>
+      <g class="node"><rect x="438" y="308" width="122" height="44"/><text x="452" y="335">Invoicing</text></g>
+    </svg>
+  </div>
+  <div class="block dim">
+    <div>Builds<b>Web platforms, ecommerce, internal tools, AI workflows</b></div>
+    <div>Based<b>Louisville, KY</b></div>
+    <div>Owner<b>Veteran-owned</b></div>
+  </div>
+</div>
+</body>
+</html>
