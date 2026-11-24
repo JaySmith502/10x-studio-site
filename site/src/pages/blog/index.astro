@@ -1,50 +1,132 @@
 ---
 import Base from '../../layouts/Base.astro';
-import WellTile from '../../components/WellTile.astro';
 import { getCollection } from 'astro:content';
+import Icon from '../../components/Icon.astro';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const kindLabel: Record<string, string> = { essay: 'Essay', 'case-study': 'Case study', note: 'Note' };
-import Icon from '../../components/Icon.astro';
 ---
 <Base title="Journal — 10x Studio" description="Field notes on building software for businesses with real operational complexity. Engineering, AI, and the workflows underneath." active="blog">
 
-  <section class="svc-hero">
-    <div class="svc-hero-inner">
-      <div class="mk-eyebrow" style="margin-bottom:18px;"><b>//</b> The 10x Journal</div>
-      <h1 class="mk-h1">Field notes from the <span class="accent">build floor.</span></h1>
-      <p>Essays and case studies on engineering software for businesses with real operational complexity. Slow cadence, long form, no listicles.</p>
-    </div>
-  </section>
+  <div class="grid-bg">
+    <section class="mk-wrap blog-hero">
+      <h1 class="mk-h1">Field notes from the <mark class="accent">build floor.</mark></h1>
+      <p class="lede">Essays and case studies on engineering software for businesses with real operational complexity. Slow cadence, long form, no listicles.</p>
+    </section>
+  </div>
 
-  <section class="mk-section">
-    <div class="mk-wrap">
-      <div class="blog-list">
-        {posts.map((post) => (
-          <a href={`/blog/${post.slug}/`} class="blog-card">
-            <div class="blog-card-art">
-              <WellTile set={post.data.heroSet} size={96} />
-            </div>
-            <div class="blog-card-body">
-              <div class="blog-card-meta">
-                <span class="kind">{kindLabel[post.data.kind]}</span>
-                <span class="dot-sep">·</span>
-                <span>{fmt(post.data.pubDate)}</span>
-              </div>
-              <h2 class="mk-h3" style="font-size:28px; margin-top:10px;">{post.data.title}</h2>
-              <p class="blog-card-desc">{post.data.description}</p>
-              <div class="blog-card-tags">
-                {post.data.tags.map((t) => <span class="tag">#{t}</span>)}
-              </div>
-            </div>
-            <span class="blog-card-arrow"><Icon name="arrow-up-right" size={22} /></span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+  <div class="mk-wrap">
+    <section class="index-list">
+      {posts.map((post) => (
+        <a href={`/blog/${post.slug}/`} class="index-row">
+          <div class="index-row-meta">
+            <span class="dim">{kindLabel[post.data.kind]}</span>
+            <span class="dim">·</span>
+            <span class="dim">{fmt(post.data.pubDate)}</span>
+          </div>
+          <div class="index-row-body">
+            <h2 class="index-row-title">{post.data.title}</h2>
+            <p class="index-row-desc">{post.data.description}</p>
+          </div>
+          <span class="index-row-arrow" aria-hidden="true">
+            <Icon name="arrow-right" size={18} />
+          </span>
+        </a>
+      ))}
+    </section>
+  </div>
 
 </Base>
+
+<style>
+  .blog-hero {
+    padding-block: clamp(56px, 8vw, 110px);
+  }
+  .blog-hero .lede {
+    margin-top: 24px;
+  }
+
+  .index-list {
+    padding-block: 0 var(--section-y);
+  }
+  .index-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 32px;
+    gap: 24px 32px;
+    align-items: start;
+    padding-block: 24px;
+    border-top: var(--line);
+    text-decoration: none;
+    color: inherit;
+    transition: background-color var(--dur);
+  }
+  .index-list .index-row:last-child {
+    border-bottom: var(--line);
+  }
+  .index-row:hover {
+    background: var(--bone-deep);
+  }
+  .index-row-meta {
+    padding-top: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+  }
+  .index-row-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--graphite);
+    margin: 0 0 8px;
+  }
+  .index-row:hover .index-row-title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .index-row-desc {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--graphite-soft);
+  }
+  .index-row-arrow {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 5px;
+    color: var(--graphite-soft);
+    justify-content: flex-end;
+  }
+  .index-row:hover .index-row-arrow {
+    color: var(--graphite);
+  }
+  .index-row:focus-visible {
+    outline: 2px solid var(--graphite);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 980px) {
+    .index-row {
+      grid-template-columns: 1fr 32px;
+    }
+    .index-row-meta {
+      grid-column: 1 / -1;
+      padding-top: 0;
+    }
+    .index-row-body {
+      grid-column: 1 / 2;
+    }
+    .index-row-arrow {
+      grid-column: 2 / 3;
+      grid-row: 2 / 3;
+      align-items: flex-start;
+      padding-top: 5px;
+    }
+  }
+</style>

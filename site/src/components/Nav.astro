@@ -4,28 +4,32 @@ interface Props {
 }
 const { active = 'home' } = Astro.props;
 import Icon from './Icon.astro';
+const links = [
+  ['services', '/services/', 'Services'],
+  ['pricing', '/pricing/', 'Pricing'],
+  ['case-studies', '/case-studies/', 'Work'],
+  ['guides', '/guides/', 'Guides'],
+  ['blog', '/blog/', 'Journal'],
+  ['about', '/about/', 'About'],
+] as const;
 ---
 <header class="mk-nav">
   <div class="mk-wrap mk-nav-inner">
-    <a href="/" class="mk-logo">
-      <img src="/assets/logo-mark.svg" alt="10x Studio" width="36" height="36" />
-      <span class="mk-logo-text">
-        <span class="top">10x</span>
-        <span class="bottom">Studio</span>
-      </span>
-    </a>
-    <nav class="mk-nav-links">
-      <a href="/" class={active === 'home' ? 'active' : ''}>Home</a>
-      <a href="/services/" class={active === 'services' ? 'active' : ''}>Services</a>
-      <a href="/pricing/" class={active === 'pricing' ? 'active' : ''}>Pricing</a>
-      <a href="/case-studies/" class={active === 'case-studies' ? 'active' : ''}>Work</a>
-      <a href="/guides/" class={active === 'guides' ? 'active' : ''}>Guides</a>
-      <a href="/about/" class={active === 'about' ? 'active' : ''}>About</a>
-      <a href="/blog/" class={active === 'blog' ? 'active' : ''}>Journal</a>
-      <a href="/contact/" class={active === 'contact' ? 'active' : ''}>Contact</a>
+    <a href="/" class="mk-logo" aria-label="10x Studio home">10x <span>Studio</span></a>
+    <nav class="mk-nav-links" aria-label="Main">
+      {links.map(([key, href, label]) => (
+        <a href={href} class={active === key ? 'active' : ''} aria-current={active === key ? 'page' : undefined}>{label}</a>
+      ))}
     </nav>
-    <a href="/contact/" class="mk-btn mk-btn--solid mk-btn--sm">
-      Start a project <Icon name="arrow-right" size={16} />
-    </a>
+    <a href="/contact/" class="mk-btn mk-btn--sm">Start a project <Icon name="arrow-right" size={16} /></a>
+    <details class="mk-menu">
+      <summary>Menu</summary>
+      <nav aria-label="Main">
+        {links.map(([key, href, label]) => (
+          <a href={href} class={active === key ? 'active' : ''} aria-current={active === key ? 'page' : undefined}>{label}</a>
+        ))}
+        <a href="/contact/" class={active === 'contact' ? 'active' : ''}>Start a project</a>
+      </nav>
+    </details>
   </div>
 </header>

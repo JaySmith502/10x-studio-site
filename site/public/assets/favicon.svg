@@ -1,10 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="10x mark">
-  <rect x="0" y="0" width="50" height="50" fill="#1B81CE"></rect>
-  <rect x="50" y="0" width="50" height="50" fill="#ED3B2F"></rect>
-  <rect x="0" y="50" width="50" height="50" fill="#FFC400"></rect>
-  <rect x="50" y="50" width="50" height="50" fill="#141414"></rect>
-  <circle cx="25" cy="25" r="9" fill="#FFC400"></circle>
-  <circle cx="75" cy="25" r="9" fill="#1B81CE"></circle>
-  <circle cx="25" cy="75" r="9" fill="#ED3B2F"></circle>
-  <circle cx="75" cy="75" r="9" fill="#FFC400"></circle>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="10x Studio mark">
+  <rect width="100" height="100" fill="#191d22"/>
+  <rect x="50" y="24" width="26" height="26" fill="#dbeb56"/>
+  <circle cx="50" cy="50" r="26" fill="none" stroke="#f5f1ea" stroke-width="7"/>
+  <path d="M50 10v80M10 50h80" stroke="#f5f1ea" stroke-width="7"/>
 </svg>

@@ -24,7 +24,7 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 
 - **Framework:** Astro 5 (static-first, zero JS shipped per page by default)
 - **Content:** Astro content collections (`blog`, `case-studies`)
-- **Styling:** plain CSS, design tokens imported from the `/10x-design` skill
+- **Styling:** plain CSS; tokens in `site/src/styles/tokens/`, spec in `DESIGN.md`
 - **Hosting:** **Cloudflare Workers** (live at `10xstudio.dev`). Production config
   is **`site/wrangler.jsonc`**, with the Worker at `site/worker/index.js` (serves
   the static `dist/` build and handles `POST /api/contact`). Deploys on push to
@@ -66,16 +66,15 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 │   ├── netlify.toml                  ← legacy (Netlify deploy retired)
 │   ├── package.json                  ← deps: astro, @astrojs/mdx, @astrojs/sitemap, mimetext
 │   ├── public/                       ← static assets served at /
-│   │   ├── assets/                   ← logo-mark, logo-lockup, motif-grid, favicon
+│   │   ├── assets/                   ← favicon + logo-mark (registration mark), og-image; logo-lockup/motif-grid are retired Bauhaus files
 │   │   ├── case-studies/             ← case-study illustration PNGs
 │   │   ├── robots.txt
 │   │   └── _lab/                     ← (future) staging area for non-prod experiments
 │   └── src/
 │       ├── components/
 │       │   ├── Nav.astro             ← top nav, 5 links + Start a project CTA
-│       │   ├── Footer.astro          ← motif strip + 4 cols + meta line
+│       │   ├── Footer.astro          ← graphite footer: wordmark + 3 link cols + meta line
 │       │   ├── Icon.astro            ← inline SVG icons (replaces Lucide runtime)
-│       │   └── WellTile.astro        ← 2x2 brand motif tile (web/ecom/ops/ai/auto sets)
 │       ├── content/
 │       │   ├── config.ts             ← Zod schemas for blog + case-studies
 │       │   ├── blog/                 ← engineering/case-study journal essays
@@ -86,19 +85,19 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 │       │   ├── index.astro           ← Home (with Organization JSON-LD)
 │       │   ├── services.astro
 │       │   ├── about.astro
-│       │   ├── contact.astro         ← Netlify Forms wired
+│       │   ├── contact.astro         ← form POSTs to /api/contact (Worker)
 │       │   ├── contact/thanks.astro  ← post-submit confirmation
 │       │   ├── blog/
 │       │   │   ├── index.astro
 │       │   │   └── [...slug].astro
 │       │   └── case-studies/
-│       │       ├── index.astro       ← 2x2 grid of colored square cards
+│       │       ├── index.astro       ← ruled list of studies (drawing-set index)
 │       │       └── [slug].astro      ← detail page (renders Variant A or B)
 │       └── styles/
 │           ├── styles.css            ← imports tokens
 │           ├── tokens/               ← colors, typography, spacing, effects, fonts, base
-│           ├── site.css              ← marketing site styles (hero/sections/responsive)
-│           └── case-studies.css      ← index grid + Variant A/B detail page chrome
+│           ├── site.css              ← SHARED components only (nav, footer, buttons, type, .part, .spec, .titleblock, article)
+│           └── case-studies.css      ← case-study index + Variant A/B detail chrome
 └── .claude/
     └── skills/
         └── case-study-from-repo/     ← skill that turns a repo into a draft case study
@@ -113,24 +112,30 @@ Primary brand (separate site): `10xvelocity.ai`. The two are deliberately
 
 ## Design system
 
-The brand identity, color tokens, typography, components, and UI kits live in
-the `/10x-design` Claude Code skill (separate from this repo). When the user
-says "use the design system" or wants to add visual elements, **invoke that
-skill** — don't re-derive colors or type from memory.
+**"The Drawing Set"** (redesign, Nov 2026). The site reads like the technical
+drawings for a serious build. The full spec lives in **`DESIGN.md`** (tokens,
+components, do's and don'ts) and the strategy in **`PRODUCT.md`** (audience,
+personality, anti-references), both at the repo root. Read them before any
+visual work; the `/impeccable` skill loads them automatically. The old
+`/10x-design` skill describes the retired Bauhaus identity: don't use it for
+this site. (The PiiI pages under `site/public/piii/` keep their own Bauhaus
+look on purpose.)
 
-Key surface for quick reference (also re-exported into `site/src/styles/tokens/`):
+Quick reference (tokens in `site/src/styles/tokens/`):
 
-- **Palette (Bauhaus primaries on warm paper):**
-  - `--blue-500: #1B81CE` — primary action / brand accent
-  - `--red-500: #ED3B2F` — emphasis
-  - `--yellow-500: #FFC400` — highlight (always with ink text)
-  - `--ink-900: #141414` — type, borders
-  - `--paper: #FAF9F4` — warm off-white page surface
-- **Type:** Jost (display, weight 900, tight tracking), Archivo (body),
-  JetBrains Mono (eyebrows, code, metrics).
-- **Signatures:** hard ink borders (2–3px), square corners (radius 0–10px),
-  **hard offset block-shadows** (no blur, e.g. `4px 4px 0 ink`),
-  circle-in-square "well" grid motif. **No emoji, no soft glows, no gradients.**
+- **Palette:** graphite on bone, one accent. `--bone` page, `--bone-deep`
+  hover/sunken, `--sheet` form fields, `--graphite` type/rules/buttons,
+  `--graphite-soft` body text (lightest allowed text on bone), `--highlighter`
+  (yellow-green marker) for ONE phrase per screen via `<mark>` or `.accent`.
+- **Type:** Funnel Display (800 headlines), Funnel Sans (body), Martian Mono
+  only for dimension-style labels (dates, file types, table headers).
+- **Signatures:** visible 12-column drafting grid (`.grid-bg`), numbered
+  sections with the number in the margin (`.part`), spec tables (`.spec`),
+  the hero title block (`.titleblock`), live system diagrams. 1px rules,
+  square corners, **no shadows, no rounded corners, no eyebrow labels above
+  headings, no primary-color blocks.**
+- **Styles:** `site/src/styles/site.css` holds only shared components;
+  page-specific CSS lives in each page's scoped `<style>` block.
 - **Voice:** declarative, blunt, engineering-literate. Address client as
   "you", speak as "we" (one accountable team). Specific over fluffy.
   Never hedge with "we think" / "we might".
@@ -171,8 +176,8 @@ these separately and drops them in.
 - **Filename:** `<slug>.png` (kebab-case), e.g. `data-guardian.png`
 - **Destination:** `site/public/case-studies/<slug>.png`
 - **Format:** 1000–1500px square PNG, white background, brand-color flats.
-  The card renders this with CSS `mix-blend-mode: multiply` so the white
-  background drops out against the paper sub-tile.
+  Pages render it with CSS `mix-blend-mode: multiply` so the white
+  background drops out against the bone page.
 
 ### 3. Promote the draft
 
@@ -199,10 +204,9 @@ cd site && npm run build
 ```
 
 A successful build shows the new page at `dist/case-studies/<slug>/index.html`
-and the index now includes the new card. The 2x2 card grid cycles colors
-`[blue, red, yellow, white]` by collection index — adding a case study may
-shift card colors of existing entries (the detail-page colorway from
-`data.color` is unaffected and remains stable).
+and the index now includes the new row. The homepage "Shipped, not
+slideware" section features `data-guardian` and lists the next three by date
+(`FEATURED` in `site/src/pages/index.astro`).
 
 ---
 
@@ -219,7 +223,7 @@ Lower cadence, simpler than case studies.
    author: "Jay Smith"        # default
    tags: ["..."]
    kind: "essay"              # essay | case-study | note
-   heroSet: "ops"             # web | ecom | ops | ai | auto (WellTile preset)
+   heroSet: "ops"             # web | ecom | ops | ai | auto (schema field; no longer rendered)
    draft: false
    ---
    ```
@@ -301,24 +305,20 @@ draft = false
 
 ## Case-study variants
 
-Three variants exist conceptually (mocked by the operator from the
-`/10x-design` skill). Implementation status:
+Both built variants render in the drawing-set system (DESIGN.md); they differ
+only in hero arrangement. `data.color` is still in the schema but no longer
+affects rendering.
 
-- **Variant A — Story Arc** ✅ Built. Paper-bg hero with 2×2 motif art, dark
-  metrics band. Best for time-bounded transformations / before-after.
-- **Variant B — Thesis-as-hero** ✅ Built. Solid-color hero, colored metrics
-  band, optional principle-quote band. Best when the case study proves a
-  brand-level principle.
-- **Variant C — System/Scope** ⏳ Deferred. Multi-up motif row, breadth-of-
-  effect numbers, "X → Y" reduction callout. Build when first system/scope
-  case study lands. The route falls back to Variant B in the meantime.
+- **Variant A: illustration beside the title.** Grid-bg hero with the
+  illustration on a bordered sheet; `heroQuote` renders as a quote band between
+  graphite rules after the narrative. Best for before/after stories.
+- **Variant B: thesis first.** Full-width hero with `heroQuote` promoted above
+  the title. Best when the study proves a principle.
+- **Variant C: System/Scope.** Deferred; falls back to Variant B.
 
 The renderer at `site/src/pages/case-studies/[slug].astro` switches on
-`data.variant`. Both A and B share: meta strip, narrative + sticky aside,
-conditional quote band, CTA band.
-
-Yellow colorway has been exercised (CiteSight) — text correctly switches
-to ink, CTA button to solid ink. Visual review confirmed on-brand.
+`data.variant`. Both share: title block (client / industry / role /
+duration), ruled metrics band, narrative + sticky aside, CTA band.
 
 ---
 
@@ -329,10 +329,10 @@ to ink, CTA button to solid ink. Visual review confirmed on-brand.
 | `site/src/content/case-studies/<slug>.md` | Adding/editing a case study |
 | `site/src/content/blog/<slug>.md` | Adding/editing a blog post |
 | `site/public/case-studies/<slug>.png` | Case-study illustration |
-| `site/src/pages/case-studies/index.astro` | Card grid layout, palette cycle |
+| `site/src/pages/case-studies/index.astro` | Case-study index list |
 | `site/src/pages/case-studies/[slug].astro` | Variant A/B chrome |
-| `site/src/styles/case-studies.css` | Card + detail page styling |
-| `site/src/styles/site.css` | All other page styles |
+| `site/src/styles/case-studies.css` | Index + detail page styling |
+| `site/src/styles/site.css` | Shared components only; page styles live in each page's scoped `<style>` |
 | `site/src/components/Icon.astro` | Adding new icons (paste Lucide path data) |
 | `site/src/layouts/Base.astro` | Head meta, OG, canonical, JSON-LD |
 | `site/src/content/config.ts` | Content collection schemas (rare) |
@@ -375,8 +375,6 @@ to ink, CTA button to solid ink. Visual review confirmed on-brand.
   `name`s** — `site/worker/index.js` reads those exact names, and the hidden
   `bot-field` input is the spam honeypot. (The leftover `data-netlify="true"`
   attr is inert — safe to remove, but it's the field names that matter.)
-- **Don't overwrite the existing case studies' `data.color`** to "balance"
-  the index palette. The card grid cycles colors by index independently.
 - **Don't fix typos in the upstream Mac source referenced by ClickyWin**
   (e.g., `leanring-buddy/`). They're preserved on purpose to maintain lineage.
 

@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
-import WellTile from '../../components/WellTile.astro';
 import { getCollection } from 'astro:content';
+import Icon from '../../components/Icon.astro';
 
 export async function getStaticPaths() {
   const studies = await getCollection('case-studies', ({ data }) => !data.draft);
@@ -15,23 +15,11 @@ const { study } = Astro.props;
 const { Content } = await study.render();
 const { data } = study;
 
-// Colorway → CSS color var + on-color text
-const colorVar = {
-  blue:   'var(--blue-500)',
-  red:    'var(--red-500)',
-  yellow: 'var(--yellow-500)',
-}[data.color];
-const onColor = data.color === 'yellow' ? 'var(--ink-900)' : '#fff';
-
-// Variant A and B share the body+aside+CTA chrome; they diverge on hero + stats band.
-// Variant C falls through to B for now (TODO when first C case study lands).
+// Variant A: illustration beside title.
+// Variant B (and C fallback): title full-width, heroQuote promoted into hero.
 const isA = data.variant === 'A';
 
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-
-// Pick a well-tile set roughly matched to the colorway for the hero motif
-const tileSet = data.color === 'red' ? 'ai' : data.color === 'yellow' ? 'ecom' : 'auto';
-import Icon from '../../components/Icon.astro';
 
 // --- AEO structured data -------------------------------------------------
 const pageUrl = new URL(`/case-studies/${study.slug}/`, Astro.site ?? 'https://10xstudio.dev').toString();
@@ -73,111 +61,110 @@ const breadcrumbSchema = {
   datePublished={data.pubDate.toISOString()}
   jsonLd={[articleSchema, breadcrumbSchema]}
 >
-  <article class={`cs cs--variant-${data.variant} cs--${data.color}`}>
+  <article class={`cs cs--variant-${data.variant}`}>
 
     {isA ? (
-      <!-- VARIANT A — STORY ARC HERO (paper bg, motif art right) -->
-      <section class="cs-hero-a">
-        <div class="mk-wrap cs-hero-a-inner">
-          <div>
-            <div class="mk-eyebrow" style="margin-bottom:24px;">
-              <span class="mk-badge mk-badge--blue">Case study</span>
+      <!-- VARIANT A — illustration beside the title on grid-bg -->
+      <div class="grid-bg">
+        <section class="mk-wrap cs-hero-a">
+          <div class="cs-hero-a-text">
+            <div class="article-meta">
+              <span class="kind-badge">Case study</span>
               {data.duration && <span>{data.duration}</span>}
             </div>
-            <h1 class="mk-h1 cs-hero-a-title">{data.title}</h1>
-            <p class="cs-hero-a-lede">{data.description}</p>
+            <h1 class="mk-h1">{data.title}</h1>
+            <p class="article-lede">{data.description}</p>
           </div>
-          <!-- 2x2 color-block hero composition, tinted by colorway -->
-          <div class="hero-art">
-            <div class="cell" style={`background:${colorVar}; align-items:flex-end; justify-content:flex-start;`}>
-              <span class="cell-label" style={`color:${onColor};`}>Before</span>
-            </div>
-            <div class="cell" style="background:var(--yellow-500);">
-              <span class="circle" style={`background:${colorVar};`}></span>
-            </div>
-            <div class="cell" style="background:var(--ink-900);">
-              <span class="circle" style="background:var(--yellow-500);"></span>
-            </div>
-            <div class="cell" style={`background:${colorVar}; align-items:flex-end; justify-content:flex-end;`}>
-              <span class="cell-label" style={`color:${onColor}; text-align:right;`}>After</span>
-            </div>
-          </div>
-        </div>
-      </section>
+          {data.heroImage && (
+            <figure class="cs-hero-a-fig" aria-hidden="true">
+              <img src={data.heroImage} alt="" width="1254" height="1254" loading="eager" />
+            </figure>
+          )}
+        </section>
+      </div>
     ) : (
-      <!-- VARIANT B — THESIS-AS-HERO (solid color band) -->
-      <section class="cs-hero" style={`background:${colorVar}; color:${onColor};`}>
-        <div class="mk-wrap cs-hero-inner">
-          <div class="cs-hero-eyebrow" style={`color:${onColor}; opacity:.78;`}>
-            // Case study
+      <!-- VARIANT B — title full-width; heroQuote promoted above the title -->
+      <div class="grid-bg">
+        <section class="mk-wrap cs-hero-b">
+          {data.heroQuote && (
+            <p class="cs-hero-b-quote">"{data.heroQuote}"</p>
+          )}
+          <div class="article-meta">
+            <span class="kind-badge">Case study</span>
+            {data.duration && <span>{data.duration}</span>}
           </div>
-          <h1 class="mk-h1 cs-hero-title" style={`color:${onColor};`}>{data.title}</h1>
-          <p class="cs-hero-lede" style={`color:${onColor}; opacity:.92;`}>{data.description}</p>
+          <h1 class="mk-h1">{data.title}</h1>
+          <p class="article-lede">{data.description}</p>
+        </section>
+      </div>
+    )}
+
+    <!-- TITLE BLOCK — shared: client / industry / role / duration or shipped date -->
+    <div class="mk-wrap">
+      <div class="titleblock cs-titleblock">
+        <div>
+          Client
+          <b>
+            {data.clientUrl
+              ? <a href={data.clientUrl} target="_blank" rel="noopener">{data.client}</a>
+              : data.client}
+          </b>
+        </div>
+        <div>Industry<b>{data.industry}</b></div>
+        <div>Role<b>{data.role}</b></div>
+        {data.duration
+          ? <div>Duration<b>{data.duration}</b></div>
+          : <div>Shipped<b>{fmt(data.pubDate)}</b></div>
+        }
+      </div>
+    </div>
+
+    <!-- METRICS BAND — shared, conditional; numbers on bone between hairline rules -->
+    {data.metrics && data.metrics.length > 0 && (
+      <section class="cs-metrics" aria-label="Project metrics">
+        <div class="mk-wrap cs-metrics-inner">
+          {data.metrics.map((m) => (
+            <div class="cs-metric">
+              <div class="cs-metric-n">{m.value}</div>
+              <div class="cs-metric-l">{m.label}</div>
+            </div>
+          ))}
         </div>
       </section>
     )}
 
-    <!-- META STRIP — shared by both variants -->
-    <section class="cs-meta">
-      <div class="mk-wrap cs-meta-inner">
-        <div class="cs-meta-cell">
-          <div class="cs-meta-lbl">Client</div>
-          <div class="cs-meta-val">
-            {data.clientUrl
-              ? <a href={data.clientUrl} target="_blank" rel="noopener">{data.client}</a>
-              : data.client}
-          </div>
-        </div>
-        <div class="cs-meta-cell">
-          <div class="cs-meta-lbl">Industry</div>
-          <div class="cs-meta-val">{data.industry}</div>
-        </div>
-        <div class="cs-meta-cell">
-          <div class="cs-meta-lbl">Role</div>
-          <div class="cs-meta-val">{data.role}</div>
-        </div>
-        {data.duration && (
-          <div class="cs-meta-cell">
-            <div class="cs-meta-lbl">Duration</div>
-            <div class="cs-meta-val">{data.duration}</div>
-          </div>
-        )}
-        <div class="cs-meta-cell">
-          <div class="cs-meta-lbl">Shipped</div>
-          <div class="cs-meta-val">{fmt(data.pubDate)}</div>
-        </div>
-      </div>
-    </section>
-
     <!-- NARRATIVE + ASIDE — shared -->
     <section class="cs-narrative">
-      <div class="mk-wrap cs-narrative-inner">
-        <div class="cs-narrative-body">
+      <div class="mk-wrap article-body-wrap">
+        <div class="article-body">
           <Content />
         </div>
-        <aside class="cs-narrative-aside">
-          <div class="cs-aside-art">
-            <WellTile set={tileSet as any} size={160} />
-          </div>
+        <aside class="article-aside">
+          <!-- Illustration: shown in aside for Variant B (not in Variant A hero) -->
+          {!isA && data.heroImage && (
+            <div class="aside-block cs-aside-art">
+              <img src={data.heroImage} alt={`${data.client} illustration`} width="1254" height="1254" loading="lazy" />
+            </div>
+          )}
           {data.stack && data.stack.length > 0 && (
-            <div class="cs-aside-block">
-              <div class="cs-aside-lbl">// Stack</div>
-              <div class="cs-aside-stack">
-                {data.stack.map((s) => <span class="cs-stack-pill">{s}</span>)}
+            <div class="aside-block">
+              <div class="aside-lbl">Stack</div>
+              <div class="aside-tags">
+                {data.stack.map((s) => <span class="tag">{s}</span>)}
               </div>
             </div>
           )}
           {data.tags && data.tags.length > 0 && (
-            <div class="cs-aside-block">
-              <div class="cs-aside-lbl">// Tags</div>
-              <div class="cs-aside-tags">
+            <div class="aside-block">
+              <div class="aside-lbl">Tags</div>
+              <div class="aside-tags">
                 {data.tags.map((t) => <span class="tag">#{t}</span>)}
               </div>
             </div>
           )}
-          <div class="cs-aside-block">
-            <div class="cs-aside-lbl">// Start a build like this</div>
-            <p class="cs-aside-text">If this is your shape of problem, the next step is a 30-minute working session.</p>
+          <div class="aside-block">
+            <div class="aside-lbl">Start a build like this</div>
+            <p class="aside-text">If this is your shape of problem, the next step is a 30-minute working session.</p>
             <a href="/contact/" class="mk-btn mk-btn--primary">
               Start a Project Conversation <Icon name="arrow-right" size={16} />
             </a>
@@ -186,63 +173,27 @@ const breadcrumbSchema = {
       </div>
     </section>
 
-    <!-- METRICS BAND — Variant A: dark/ink. Variant B: colored. -->
-    {data.metrics && data.metrics.length > 0 && (
-      isA ? (
-        <section class="cs-metrics cs-metrics--dark">
-          <div class="mk-wrap cs-metrics-inner">
-            <div class="cs-metrics-eyebrow" style="color:var(--yellow-500);">// By the numbers</div>
-            <div class="cs-metrics-grid">
-              {data.metrics.map((m, i) => (
-                <div class="cs-metric">
-                  <div class="cs-metric-n" style={`color:${i % 2 === 1 ? 'var(--yellow-500)' : '#fff'};`}>{m.value}</div>
-                  <div class="cs-metric-l" style="color:rgba(255,255,255,.7);">{m.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : (
-        <section class="cs-metrics" style={`background:${colorVar}; color:${onColor};`}>
-          <div class="mk-wrap cs-metrics-inner">
-            <div class="cs-metrics-eyebrow" style={`color:${onColor}; opacity:.78;`}>// What it shipped</div>
-            <div class="cs-metrics-grid">
-              {data.metrics.map((m) => (
-                <div class="cs-metric">
-                  <div class="cs-metric-n" style={`color:${onColor};`}>{m.value}</div>
-                  <div class="cs-metric-l" style={`color:${onColor}; opacity:.82;`}>{m.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )
-    )}
-
-    <!-- PRINCIPLE QUOTE BAND — shared, conditional -->
-    {data.heroQuote && (
+    <!-- PRINCIPLE QUOTE BAND — Variant A only (Variant B has quote in hero) -->
+    {isA && data.heroQuote && (
       <section class="cs-quote-band">
         <div class="mk-wrap cs-quote-inner">
-          <div class="cs-quote-eyebrow">// Principle</div>
           <blockquote class="cs-quote">"{data.heroQuote}"</blockquote>
           {data.heroQuoteAttribution && (
-            <div class="cs-quote-attr">— {data.heroQuoteAttribution}</div>
+            <div class="cs-quote-attr">{data.heroQuoteAttribution}</div>
           )}
         </div>
       </section>
     )}
 
-    <!-- CTA BAND — shared, colored -->
-    <section class="cs-cta" style={`background:${colorVar}; color:${onColor};`}>
-      <div class="mk-wrap cs-cta-inner">
-        <h2 class="mk-h2 cs-cta-title" style={`color:${onColor};`}>
-          More like this?<br/>Tell us what you're building.
-        </h2>
+    <!-- CTA BAND — shared graphite field from site.css -->
+    <section class="cta-band">
+      <div class="cta-band-inner">
+        <h2>More like this? Tell us what you're <span class="accent">building.</span></h2>
         <div class="cs-cta-links">
-          <a href="/contact/" class={data.color === 'yellow' ? 'mk-btn mk-btn--solid mk-btn--lg' : 'mk-btn mk-btn--yellow mk-btn--lg'}>
+          <a href="/contact/" class="mk-btn mk-btn--yellow mk-btn--lg">
             Start a Project Conversation <Icon name="arrow-right" size={18} />
           </a>
-          <a href="/case-studies/" class="mk-btn mk-btn--outline mk-btn--lg" style={data.color !== 'yellow' ? 'color:#fff;border-color:#fff;' : ''}>
+          <a href="/case-studies/" class="mk-btn mk-btn--lg mk-btn--on-dark">
             All case studies
           </a>
         </div>

@@ -1,7 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import WellTile from '../components/WellTile.astro';
 import Icon from '../components/Icon.astro';
+import { getCollection } from 'astro:content';
+
+// Featured study first, then the rest by date.
+const FEATURED = 'data-guardian';
+const studies = (await getCollection('case-studies', ({ data }) => !data.draft))
+  .sort((a, b) => (a.slug === FEATURED ? -1 : b.slug === FEATURED ? 1 : b.data.pubDate.valueOf() - a.data.pubDate.valueOf()));
+const [feat, ...rest] = studies;
 ---
 <Base title="10x Studio - AI-native software for businesses with real complexity" active="home">
 
@@ -13,7 +19,7 @@ import Icon from '../components/Icon.astro';
     "url": "https://10xstudio.dev",
     "logo": "https://10xstudio.dev/assets/logo-mark.svg",
     "image": "https://10xstudio.dev/assets/og-image.png",
-    "description": "AI-native web platforms, ecommerce systems and custom software for businesses with real operational complexity. A senior build partner — engineering, not vaporware.",
+    "description": "AI-native web platforms, ecommerce systems and custom software for businesses with real operational complexity. A senior build partner: engineering, not vaporware.",
     "email": "hello@10xstudio.dev",
     "slogan": "Software that does the work your business needs.",
     "founder": { "@type": "Person", "name": "Jay Smith" },
@@ -55,131 +61,173 @@ import Icon from '../components/Icon.astro';
   })} />
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div>
-        <div class="mk-eyebrow" style="margin-bottom:24px;">
-          <span class="mk-badge mk-badge--blue">AI-native build partner</span>
-          <span>Proudly Veteran-Owned and Kentucky-based</span>
-        </div>
-        <h1 class="mk-h1">Software that does <span class="accent">the work</span><br>your business needs.</h1>
-        <p>We design and build web platforms, ecommerce systems, dashboards and custom software with AI and automation engineered in from day one.</p>
-        <div class="hero-ctas">
-          <a href="/contact/" class="mk-btn mk-btn--primary mk-btn--lg">
-            Start a Project Conversation <Icon name="arrow-right" size={18} />
-          </a>
-          <a href="/services/" class="mk-btn mk-btn--outline mk-btn--lg">See What We Build</a>
+  <div class="grid-bg">
+    <section class="mk-wrap home-hero">
+      <div class="copy">
+        <h1 class="mk-h1">Build the system your business keeps <mark>faking with spreadsheets.</mark></h1>
+        <p class="lede">Web platforms, ecommerce, internal tools and AI workflows, designed around how work actually moves through your company. One senior team from first sketch to Monday-morning use.</p>
+        <div class="ctas">
+          <a href="/contact/" class="mk-btn mk-btn--primary mk-btn--lg">Start a project conversation <Icon name="arrow-right" size={18} /></a>
+          <a href="/case-studies/" class="mk-btn mk-btn--lg">See the work</a>
         </div>
       </div>
 
-      <div class="hero-art">
-        <div class="cell" style="background:var(--blue-500); align-items:flex-end; justify-content:flex-start;">
-          <span class="cell-label">Build</span>
+      <figure class="system" aria-label="Diagram: a web form, an email inbox and a spreadsheet feed one intake step that routes work to the CRM, the operations dashboard and invoicing.">
+        <svg viewBox="0 0 560 430" id="sys" aria-hidden="true">
+          <path id="w1" class="wire messy" d="M110 60 C 190 60, 190 200, 238 200"/>
+          <path id="w2" class="wire messy" d="M110 200 L 238 200"/>
+          <path id="w3" class="wire messy" d="M110 340 C 190 340, 190 200, 238 200"/>
+          <path id="w4" class="wire" d="M330 200 C 390 200, 390 70, 438 70"/>
+          <path id="w5" class="wire" d="M330 200 L 438 200"/>
+          <path id="w6" class="wire" d="M330 200 C 390 200, 390 330, 438 330"/>
+          <g>
+            <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#w1"/></animateMotion></rect>
+            <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="2.6s" begin=".8s" repeatCount="indefinite"><mpath href="#w2"/></animateMotion></rect>
+            <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="3.6s" begin=".3s" repeatCount="indefinite"><mpath href="#w3"/></animateMotion></rect>
+            <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#w4"/></animateMotion></rect>
+            <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="2s" begin="1.6s" repeatCount="indefinite"><mpath href="#w5"/></animateMotion></rect>
+            <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="2.4s" begin="2s" repeatCount="indefinite"><mpath href="#w6"/></animateMotion></rect>
+          </g>
+          <g class="node"><rect x="0" y="38" width="110" height="44"/><text x="14" y="65">Web form</text></g>
+          <g class="node"><rect x="0" y="178" width="110" height="44"/><text x="14" y="205">Email inbox</text></g>
+          <g class="node"><rect x="0" y="318" width="110" height="44"/><text x="14" y="345">Spreadsheet</text></g>
+          <g class="node hot"><rect x="238" y="168" width="92" height="64"/><text x="252" y="196">Intake</text><text x="252" y="214" class="lbl">AI triage</text></g>
+          <g class="node"><rect x="438" y="48" width="122" height="44"/><text x="452" y="75">CRM</text></g>
+          <g class="node"><rect x="438" y="178" width="122" height="44"/><text x="452" y="205">Ops dashboard</text></g>
+          <g class="node"><rect x="438" y="308" width="122" height="44"/><text x="452" y="335">Invoicing</text></g>
+          <text class="lbl" x="0" y="20">Before: 3 sources, re-keyed by hand</text>
+          <text class="lbl" x="438" y="30">After: routed once</text>
+          <path class="wire" d="M238 260 v10 M330 260 v10 M238 265 H330" stroke-width=".8"/>
+          <text class="lbl" x="243" y="285">one rule set</text>
+        </svg>
+      </figure>
+
+      <div class="titleblock">
+        <div>Drawing<b>Intake to invoice, typical service business</b></div>
+        <div>Studio<b>10x Studio</b></div>
+        <div>Based<b>Louisville, KY</b></div>
+        <div>Owner<b>Veteran-owned</b></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="mk-wrap">
+    <section class="part">
+      <span class="part-no">01</span>
+      <div class="part-body">
+        <h2 class="mk-h2">What we build, and what it replaces.</h2>
+        <table class="spec builds">
+          <thead><tr><th scope="col">Build</th><th scope="col">Replaces</th><th scope="col">Ships with</th></tr></thead>
+          <tbody>
+            <tr><td><a href="/services/#web">Custom web platforms</a></td><td class="old">A brochure site and manual follow-up</td><td>Portals, intake flows, role-based access, CRM sync</td></tr>
+            <tr><td><a href="/services/#ecom">Ecommerce &amp; product platforms</a></td><td class="old">A cart bolted to a spreadsheet</td><td>Catalog, configurable products, checkout, fulfillment rules</td></tr>
+            <tr><td><a href="/services/#ops">Internal business tools</a></td><td class="old">Load-bearing spreadsheets and shared inboxes</td><td>Dashboards, approvals, job tracking, reporting</td></tr>
+            <tr><td><a href="/services/#ai">AI workflow tools</a></td><td class="old">Copy-pasting into a chatbot</td><td>Intake triage, document review, search over your own knowledge</td></tr>
+            <tr><td><a href="/services/#auto">Integrations &amp; automation</a></td><td class="old">Re-keying data between apps</td><td>API sync, notifications, payment workflows</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="part">
+      <span class="part-no">02</span>
+      <div class="part-body">
+        <div class="part-head">
+          <h2 class="mk-h2">Shipped, not slideware.</h2>
+          <a class="mk-btn" href="/case-studies/">All case studies <Icon name="arrow-right" size={16} /></a>
         </div>
-        <div class="cell" style="background:var(--yellow-500);">
-          <span class="circle" style="background:var(--red-500);"></span>
-        </div>
-        <div class="cell" style="background:var(--ink-900);">
-          <span class="circle" style="background:var(--yellow-500);"></span>
-        </div>
-        <div class="cell" style="background:var(--red-500); align-items:flex-end; justify-content:flex-end;">
-          <span class="cell-label" style="text-align:right;">Automate</span>
+        <div class="work">
+          {feat && (
+            <a class="feat" href={`/case-studies/${feat.slug}/`}>
+              {feat.data.heroImage && <img src={feat.data.heroImage} alt="" width="1254" height="1254" loading="lazy" />}
+              <div><span class="dim">{feat.data.industry}</span><h3>{feat.data.title}</h3></div>
+            </a>
+          )}
+          <div class="rows">
+            {rest.slice(0, 3).map((s) => (
+              <a class="row" href={`/case-studies/${s.slug}/`}>
+                {s.data.heroImage && <img src={s.data.heroImage} alt="" width="88" height="88" loading="lazy" />}
+                <div><span class="dim">{s.data.industry}</span><h3>{s.data.title}</h3></div>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- STATS BAND -->
-  <section class="stats-band">
-    <div class="stats-band-inner">
-      <div class="stats-eyebrow"><span>// Recent automation<br>builds</span></div>
-      <div class="stat"><div class="n">70%</div><div class="l">reduction in email triage</div></div>
-      <div class="stat alt"><div class="n">50%</div><div class="l">faster deal evaluation</div></div>
-      <div class="stat"><div class="n">65%</div><div class="l">lift in task completion</div></div>
-    </div>
-  </section>
-
-  <!-- SERVICES PREVIEW -->
-  <section class="mk-section">
-    <div class="mk-wrap">
-      <div class="section-head">
-        <div>
-          <div class="mk-eyebrow" style="margin-bottom:14px;"><b>//</b> What we build</div>
-          <h2 class="mk-h2">Platforms that move work,<br>not just pixels.</h2>
-        </div>
-        <a href="/services/" class="mk-btn mk-btn--outline">
-          All services <Icon name="arrow-up-right" size={16} />
-        </a>
+    <section class="part">
+      <span class="part-no">03</span>
+      <div class="part-body">
+        <h2 class="mk-h2">General notes.</h2>
+        <ol class="notes">
+          <li><h3>AI is designed in, not bolted on</h3><p>We ask which steps shouldn't exist before we build them. AI goes where it removes friction, from the first workshop.</p></li>
+          <li><h3>Enterprise rigor, studio speed</h3><p>Led by an engineer with cybersecurity, logistics and Fortune 500 software experience. One senior team, no hand-offs.</p></li>
+          <li><h3>Built for Monday morning</h3><p>Your team has to use it on day one. We design for the operator on the floor, not the slide in the boardroom.</p></li>
+        </ol>
       </div>
+    </section>
+  </div>
 
-      <div class="svc-grid svc-grid--3-2">
-        <a href="/services/#web" class="svc-card">
-          <WellTile set="web" />
-          <h3 class="mk-h3">Custom Web Platforms</h3>
-          <p>Marketing sites with real workflows behind them - portals, intake systems, dashboards, role-based access, the parts that actually run the business.</p>
-          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
-        </a>
-        <a href="/services/#ecom" class="svc-card">
-          <WellTile set="ecom" />
-          <h3 class="mk-h3">Ecommerce &amp; Product Platforms</h3>
-          <p>Catalogs, configurable products, checkout, customer accounts, fulfillment logic - selling online as an operating system, not just a cart.</p>
-          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
-        </a>
-        <a href="/services/#ops" class="svc-card">
-          <WellTile set="ops" />
-          <h3 class="mk-h3">Internal Business Tools</h3>
-          <p>When spreadsheets become load-bearing infrastructure. Admin dashboards, approval flows, job tracking, reporting - built for the people who use them daily.</p>
-          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
-        </a>
-        <a href="/services/#ai" class="svc-card">
-          <WellTile set="ai" />
-          <h3 class="mk-h3">AI-Enabled Workflow Tools</h3>
-          <p>Intake triage, document summarization, RAG over your knowledge, customer support copilots. AI where it actually reduces friction - never as decoration.</p>
-          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
-        </a>
-        <a href="/services/#auto" class="svc-card">
-          <WellTile set="auto" />
-          <h3 class="mk-h3">Integrations &amp; Automation</h3>
-          <p>CRM, payments, notifications, data sync. Your stack should feel like a team - not a group project where nobody read the instructions.</p>
-          <span class="arrow">Read more <Icon name="arrow-right" size={12} /></span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- WHY -->
-  <section class="why-section">
-    <div class="mk-wrap">
-      <div class="mk-eyebrow" style="margin-bottom:14px;"><b>//</b> Why 10x Studio</div>
-      <h2 class="mk-h2">Senior, not staffed.</h2>
-      <div class="why-grid">
-        <div class="why-1">
-          <div class="n">01</div>
-          <h3 class="mk-h3">AI-native from day one</h3>
-          <p>We ask which steps shouldn't exist before we build them. Most shops bolt AI on at the end - we design around it from discovery.</p>
-        </div>
-        <div class="why-2">
-          <div class="n">02</div>
-          <h3 class="mk-h3">Enterprise pedigree</h3>
-          <p>Led by an engineer with cybersecurity, logistics and Fortune 500 software experience. Your platform gets the same rigor as the systems that protect them.</p>
-        </div>
-        <div class="why-3">
-          <div class="n">03</div>
-          <h3 class="mk-h3">Built for adoption</h3>
-          <p>Your team has to use this on Monday. We design for the operator on the floor, not the slide in the boardroom.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA BAND -->
   <section class="cta-band">
     <div class="cta-band-inner">
-      <h2 class="mk-h2">Stop duct-taping.<br>Start building.</h2>
-      <a href="/contact/" class="mk-btn mk-btn--yellow mk-btn--lg">
-        Start a Project Conversation <Icon name="arrow-right" size={18} />
-      </a>
+      <h2>Bring us the <span class="accent">spreadsheet.</span></h2>
+      <a href="/contact/" class="mk-btn mk-btn--yellow mk-btn--lg">Start a project conversation <Icon name="arrow-right" size={18} /></a>
     </div>
   </section>
 
+  <script is:inline>
+    // SMIL packets ignore reduced motion on their own; stop them.
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.getElementById('sys')?.pauseAnimations();
+  </script>
 </Base>
+
+<style>
+  .home-hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); padding-block: clamp(56px, 8vw, 110px) 0; }
+  .home-hero .copy { grid-column: 1 / span 6; padding-right: 32px; }
+  .home-hero .lede { margin-top: 28px; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .system { grid-column: 7 / span 6; margin: 0; }
+  .system svg { width: 100%; height: auto; overflow: visible; }
+  .system .node rect { fill: var(--bone); stroke: var(--graphite); stroke-width: 1.2; }
+  .system .node.hot rect { fill: var(--highlighter); }
+  .system text { font-family: var(--font-body); font-size: 13px; font-weight: 600; fill: var(--graphite); }
+  .system .lbl { font-family: var(--font-mono); font-size: 9.5px; font-weight: 400; fill: var(--graphite-soft); }
+  .system .wire { fill: none; stroke: var(--graphite); stroke-width: 1.2; }
+  .system .messy { stroke-dasharray: 3 4; stroke: var(--graphite-soft); }
+  .system .pkt { fill: var(--graphite); }
+  .titleblock { grid-column: 1 / -1; margin-top: clamp(48px, 6vw, 80px); }
+
+  .builds { margin-top: 56px; }
+  .builds td:first-child { width: 30%; }
+  .builds td:first-child a { text-decoration: none; }
+  .builds tr:hover td:first-child a { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .builds .old { width: 32%; text-decoration: line-through; text-decoration-color: oklch(23% 0.012 250 / 0.45); text-decoration-thickness: 1px; }
+
+  .part-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; }
+  .work { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); margin-top: 56px; border: var(--line); }
+  .feat { display: grid; grid-template-rows: 1fr auto; gap: 20px; padding: 28px; border-right: var(--line); text-decoration: none; }
+  .feat img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; mix-blend-mode: multiply; }
+  .feat h3, .row h3 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.03em; color: var(--graphite); margin-top: 8px; }
+  .feat h3 { font-size: clamp(24px, 2.4vw, 30px); line-height: 1.08; }
+  .rows { display: grid; }
+  .row { display: grid; grid-template-columns: 88px 1fr; gap: 18px; align-items: center; padding: 22px 24px; border-bottom: var(--line); text-decoration: none; }
+  .row:last-child { border-bottom: 0; }
+  .row img { width: 88px; height: 88px; object-fit: contain; mix-blend-mode: multiply; }
+  .row h3 { font-size: 19px; line-height: 1.15; }
+  .feat:hover h3, .row:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+
+  .notes { list-style: none; padding: 0; margin: 48px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 32px; counter-reset: n; }
+  .notes li { counter-increment: n; border-top: var(--line); padding-top: 18px; }
+  .notes li::before { content: counter(n) '.'; font-family: var(--font-display); font-weight: 800; font-size: 15px; color: var(--graphite); }
+  .notes h3 { font-weight: 600; font-size: 22px; letter-spacing: -0.02em; margin: 8px 0 10px; }
+  .notes p { font-size: 16px; line-height: 1.6; color: var(--graphite-soft); }
+
+  @media (max-width: 980px) {
+    .home-hero .copy, .system { grid-column: 1 / -1; padding: 0; }
+    .system { margin-top: 48px; }
+    .builds .old, .builds td:first-child { width: auto; }
+    .work { grid-template-columns: 1fr; }
+    .feat { border-right: 0; border-bottom: var(--line); }
+    .notes { grid-template-columns: 1fr; row-gap: 32px; }
+  }
+</style>

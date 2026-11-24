@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Direction C: Warm operator | 10x Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* Direction C: we understand your floor before we touch your code. Real operations photography, evergreen and oat, the buyer's own words. */
+:root{
+  --oat:oklch(95.5% .02 80); --oat-2:oklch(91% .028 78);
+  --green:oklch(31% .055 165); --green-2:oklch(38% .06 165);
+  --ink:oklch(24% .02 165); --ink-2:oklch(44% .02 165);
+  --on:oklch(95.5% .02 80); --on-2:oklch(95.5% .02 80 / .74);
+  --ochre:oklch(80% .14 75);
+  --display:'Bricolage Grotesque',sans-serif; --body:'Figtree',sans-serif;
+  --out:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;}
+body{font-family:var(--body);color:var(--ink);background:var(--oat);-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+.wrap{width:min(1240px,100% - 48px);margin-inline:auto;}
+:focus-visible{outline:3px solid var(--ochre);outline-offset:3px;}
+.btn{display:inline-flex;align-items:center;gap:10px;font:700 16px var(--body);padding:16px 26px;border-radius:12px;text-decoration:none;background:var(--ochre);color:var(--ink);transition:transform .25s var(--out),background-color .2s;}
+.btn:hover{transform:translateY(-2px);background:oklch(84% .13 78);}
+.link{font-weight:700;text-underline-offset:5px;text-decoration-thickness:1.5px;}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:min(100svh,860px);}
+.hero .panel{background:var(--green);color:var(--on);display:grid;grid-template-rows:auto 1fr;padding:28px clamp(24px,5vw,72px) 64px;}
+.nav{display:flex;align-items:center;gap:36px;}
+.logo{font-family:var(--display);font-weight:800;font-size:23px;letter-spacing:-.03em;text-decoration:none;font-variation-settings:'opsz' 96;}
+.logo em{font-style:normal;color:var(--ochre);}
+.nav ul{display:flex;gap:24px;list-style:none;padding:0;font-weight:600;font-size:15px;}
+.nav ul a{text-decoration:none;color:var(--on-2);}
+.nav ul a:hover{color:var(--on);}
+.hero .copy{align-self:end;}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(42px,5vw,76px);line-height:.98;letter-spacing:-.035em;font-variation-settings:'opsz' 96;}
+.hero p{font-size:19px;line-height:1.6;color:var(--on-2);max-width:38ch;margin-top:26px;}
+.hero .ctas{display:flex;flex-wrap:wrap;align-items:center;gap:24px;margin-top:38px;}
+.hero .photo{position:relative;overflow:hidden;background:var(--green-2);}
+.hero .photo img{width:100%;height:100%;object-fit:cover;object-position:52% 50%;display:block;animation:settle 1.6s var(--out) both;}
+.hero figcaption{position:absolute;left:24px;bottom:24px;right:24px;font-size:14px;font-weight:600;color:var(--on);text-shadow:0 1px 12px oklch(15% .02 165 / .7);}
+@keyframes settle{from{transform:scale(1.06);}to{transform:none;}}
+
+/* ---------- sound familiar ---------- */
+.section{padding-block:clamp(84px,11vw,150px);}
+.intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:end;}
+.intro h2{font-family:var(--display);font-weight:700;font-size:clamp(36px,4.4vw,64px);line-height:1;letter-spacing:-.03em;}
+.intro p{font-size:18px;line-height:1.6;color:var(--ink-2);max-width:44ch;}
+.heard{list-style:none;padding:0;margin-top:64px;}
+.heard li{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:48px;padding-block:34px;border-top:1.5px solid oklch(24% .02 165 / .16);align-items:baseline;}
+.heard li:last-child{border-bottom:1.5px solid oklch(24% .02 165 / .16);}
+.heard q{font-family:var(--display);font-weight:500;font-size:clamp(24px,2.6vw,36px);line-height:1.15;letter-spacing:-.02em;quotes:'\201C' '\201D';}
+.heard q::before{color:var(--green-2);}
+.heard h3{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em;}
+.heard p{font-size:16.5px;line-height:1.6;color:var(--ink-2);margin-top:6px;max-width:46ch;}
+
+/* ---------- senior band ---------- */
+.band{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);background:var(--green);color:var(--on);}
+.band img{width:100%;height:100%;min-height:420px;object-fit:cover;display:block;}
+.band .txt{padding:clamp(48px,7vw,104px) clamp(24px,5vw,80px);align-self:center;}
+.band h2{font-family:var(--display);font-weight:700;font-size:clamp(38px,4.6vw,66px);line-height:.98;letter-spacing:-.035em;}
+.band dl{margin-top:40px;display:grid;gap:28px;}
+.band dt{font-family:var(--display);font-weight:700;font-size:21px;}
+.band dd{margin:6px 0 0;font-size:16.5px;line-height:1.6;color:var(--on-2);max-width:46ch;}
+
+/* ---------- work ---------- */
+.work-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:24px;}
+.work-head h2{font-family:var(--display);font-weight:700;font-size:clamp(36px,4.4vw,64px);line-height:1;letter-spacing:-.03em;}
+.ledger{margin-top:56px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;}
+.case{display:grid;text-decoration:none;background:var(--oat-2);border-radius:20px;padding:28px;gap:18px;transition:transform .35s var(--out);}
+.case:hover{transform:translateY(-4px);}
+.case img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;mix-blend-mode:multiply;}
+.case.big{grid-row:span 3;align-content:space-between;}
+.case.small{grid-template-columns:112px 1fr;align-items:center;}
+.case.small img{width:112px;}
+.case .what{font-size:14px;font-weight:600;color:var(--ink-2);}
+.case h3{font-family:var(--display);font-weight:700;font-size:22px;line-height:1.15;letter-spacing:-.02em;margin-top:6px;}
+.case.big h3{font-size:clamp(26px,2.6vw,36px);}
+
+.cta{background:var(--green);color:var(--on);}
+.cta .wrap{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:48px;align-items:end;}
+.cta h2{font-family:var(--display);font-weight:700;font-size:clamp(44px,6.4vw,96px);line-height:.94;letter-spacing:-.04em;}
+.cta p{font-size:18px;line-height:1.6;color:var(--on-2);margin-bottom:28px;}
+
+@media (max-width:980px){
+  .hero{grid-template-columns:1fr;}
+  .hero .photo{aspect-ratio:4/3;order:2;}
+  .nav ul{display:none;}
+  .hero .copy{margin-top:72px;}
+  .intro,.heard li,.band,.ledger,.cta .wrap{grid-template-columns:1fr;}
+  .heard li{gap:14px;}
+  .case.big{grid-row:auto;}
+}
+@media (prefers-reduced-motion:reduce){ .hero .photo img{animation:none;} .btn,.case{transition:none;} }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="panel">
+    <nav class="nav" aria-label="Main">
+      <a class="logo" href="#">10x<em>.</em>studio</a>
+      <ul><li><a href="#">Services</a></li><li><a href="#">Work</a></li><li><a href="#">Guides</a></li><li><a href="#">About</a></li></ul>
+    </nav>
+    <div class="copy">
+      <h1>We learn how your floor runs. Then we build the software for it.</h1>
+      <p>Web platforms, ecommerce, internal tools and AI workflows for operators who have outgrown templates and spreadsheets.</p>
+      <div class="ctas">
+        <a class="btn" href="#">Start a project conversation <span aria-hidden="true">&rarr;</span></a>
+        <a class="link" href="#">See the work</a>
+      </div>
+    </div>
+  </div>
+  <figure class="photo">
+    <img src="https://images.unsplash.com/photo-1741707042068-a0719a592037?auto=format&fit=crop&w=1600&q=80" alt="A stock supervisor checks a pick list in an aisle of blue parts bins" width="1600" height="1067" />
+    <figcaption>Software has to survive the aisle, not just the demo.</figcaption>
+  </figure>
+</header>
+
+<main>
+<section class="section">
+  <div class="wrap">
+    <div class="intro">
+      <h2>You don't need the technical words.</h2>
+      <p>Most projects start with a sentence like one of these. Our job is to turn it into a system your team will actually use.</p>
+    </div>
+    <ul class="heard">
+      <li><q>Spreadsheets are holding the whole business together.</q><div><h3>Internal business tools</h3><p>Dashboards, approval flows, job tracking and reporting, built for the people who use them every day.</p></div></li>
+      <li><q>We need a portal for our customers.</q><div><h3>Custom web platforms</h3><p>Intake, document upload, status tracking and role-based access, connected to the systems you already run.</p></div></li>
+      <li><q>We want to sell online, properly this time.</q><div><h3>Ecommerce &amp; product platforms</h3><p>Catalogs, configurable products, checkout and fulfillment logic. An operating system for selling, not just a cart.</p></div></li>
+      <li><q>We need AI, but we don't know where it fits.</q><div><h3>AI workflow tools</h3><p>Triage, document review and search over your own knowledge, placed only where it removes real work.</p></div></li>
+      <li><q>None of our tools talk to each other.</q><div><h3>Integrations &amp; automation</h3><p>CRM, payments, notifications and data sync, so nobody re-keys the same order three times.</p></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="band">
+  <img src="https://images.unsplash.com/photo-1748348077944-3d9be77b9940?auto=format&fit=crop&w=1400&q=80" alt="An operator works the control panel of production equipment" width="1400" height="933" loading="lazy" />
+  <div class="txt">
+    <h2>Senior, not staffed.</h2>
+    <dl>
+      <div><dt>An operator's eye</dt><dd>Led by an engineer who came up through logistics and operations. We start with the process and the people, then the code.</dd></div>
+      <div><dt>Enterprise rigor</dt><dd>Cybersecurity and Fortune 500 software experience, applied to a business your size. Veteran-owned, based in Louisville.</dd></div>
+      <div><dt>Built for Monday morning</dt><dd>If your team won't use it on day one, it isn't done. Adoption is part of the build.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="work-head"><h2>Work that's running today.</h2><a class="link" href="#">All case studies</a></div>
+    <div class="ledger">
+      <a class="case big" href="#"><img src="../site/public/case-studies/data-guardian.png" alt="" width="1254" height="1254" /><div><span class="what">Internal tool &middot; outdoor-goods distributor</span><h3>Catalog hygiene for one operator and 7,000 products</h3></div></a>
+      <a class="case small" href="#"><img src="../site/public/case-studies/citesight.png" alt="" /><div><span class="what">AI workflow tool</span><h3>The $49 answer to $1,000-a-month legal AI</h3></div></a>
+      <a class="case small" href="#"><img src="../site/public/case-studies/PiiI.png" alt="" /><div><span class="what">Privacy tooling</span><h3>The PII never leaves your browser</h3></div></a>
+      <a class="case small" href="#"><img src="../site/public/case-studies/clicky-win.png" alt="" /><div><span class="what">Desktop app</span><h3>A viral Mac AI tutor, ported to Windows solo</h3></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="section cta">
+  <div class="wrap">
+    <h2>Show us the workaround.</h2>
+    <div><p>Bring the spreadsheet, the inbox rule or the sticky note. We'll tell you what the system should be.</p><a class="btn" href="#">Start a project conversation <span aria-hidden="true">&rarr;</span></a></div>
+  </div>
+</section>
+</main>
+</body>
+</html>

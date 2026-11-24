@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Direction B: Engineering spec | 10x Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;600;800&family=Funnel+Sans:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* Direction B: the site is a drawing set. Visible grid, a live system diagram as the hero image, one highlighter color for the things that matter. */
+:root{
+  --bone:oklch(96% .01 85); --bone-2:oklch(92.5% .012 85);
+  --ink:oklch(23% .012 250); --ink-2:oklch(42% .012 250); --rule:oklch(23% .012 250 / .14); --grid:oklch(23% .012 250 / .06);
+  --mark:oklch(90% .17 115);
+  --display:'Funnel Display',sans-serif; --body:'Funnel Sans',sans-serif; --dim:'Martian Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;}
+body{font-family:var(--body);color:var(--ink);background:var(--bone);-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+.sheet{width:min(1280px,100% - 48px);margin-inline:auto;position:relative;}
+/* the drafting grid: 12 columns, drawn */
+.grid-bg{background-image:repeating-linear-gradient(to right,var(--grid) 0 1px,transparent 1px calc(100% / 12));background-size:100% 100%;}
+mark{background:var(--mark);color:inherit;padding:0 .12em;box-decoration-break:clone;-webkit-box-decoration-break:clone;}
+.dim{font-family:var(--dim);font-size:11.5px;letter-spacing:.02em;color:var(--ink-2);}
+:focus-visible{outline:2px solid var(--ink);outline-offset:4px;}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding-block:22px;border-bottom:1px solid var(--ink);}
+.logo{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.03em;text-decoration:none;display:flex;align-items:baseline;gap:8px;}
+.logo span{font-weight:400;}
+.nav ul{display:flex;gap:28px;list-style:none;padding:0;font-size:15px;font-weight:500;}
+.nav a{text-decoration:none;}
+.nav a:hover{text-decoration:underline;text-underline-offset:5px;}
+.btn{display:inline-flex;align-items:center;gap:12px;font:600 16px var(--body);padding:14px 22px;background:var(--ink);color:var(--bone);text-decoration:none;border:1px solid var(--ink);transition:background-color .2s,color .2s;}
+.btn:hover{background:var(--mark);color:var(--ink);}
+.btn--line{background:transparent;color:var(--ink);}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:0;padding-block:clamp(56px,8vw,110px) 0;}
+.hero .copy{grid-column:1 / span 6;padding-right:32px;}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(42px,5.4vw,82px);line-height:1.04;letter-spacing:-.04em;}
+.hero p{font-size:19px;line-height:1.55;color:var(--ink-2);max-width:40ch;margin-top:28px;}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px;}
+.figure{grid-column:7 / span 6;position:relative;}
+.figure svg{width:100%;height:auto;display:block;overflow:visible;}
+.figure .node rect{fill:var(--bone);stroke:var(--ink);stroke-width:1.2;}
+.figure .node.hot rect{fill:var(--mark);}
+.figure text{font-family:var(--body);font-size:13px;font-weight:600;fill:var(--ink);}
+.figure .lbl{font-family:var(--dim);font-size:9.5px;font-weight:400;fill:var(--ink-2);}
+.figure .wire{fill:none;stroke:var(--ink);stroke-width:1.2;}
+.figure .messy{stroke-dasharray:3 4;stroke:var(--ink-2);}
+.figure .pkt{fill:var(--ink);}
+.titleblock{grid-column:1 / -1;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border:1px solid var(--ink);margin-top:clamp(48px,6vw,80px);}
+.titleblock div{padding:12px 16px;border-left:1px solid var(--ink);}
+.titleblock div:first-child{border-left:0;}
+.titleblock b{display:block;font-family:var(--body);font-weight:600;font-size:15px;color:var(--ink);margin-top:4px;letter-spacing:0;}
+
+/* ---------- section scaffolding: number in the margin, content on the grid ---------- */
+.part{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));padding-block:clamp(80px,10vw,140px);border-top:1px solid var(--ink);}
+.part > .no{grid-column:1 / span 2;font-family:var(--display);font-weight:400;font-size:15px;color:var(--ink-2);padding-top:12px;}
+.part > .body{grid-column:3 / -1;}
+.part h2{font-family:var(--display);font-weight:800;font-size:clamp(34px,4vw,58px);line-height:.98;letter-spacing:-.035em;max-width:18ch;}
+
+/* spec table */
+.spec{width:100%;border-collapse:collapse;margin-top:56px;}
+.spec th{font-family:var(--dim);font-weight:400;font-size:11.5px;color:var(--ink-2);text-align:left;padding:0 20px 14px 0;border-bottom:1px solid var(--ink);}
+.spec td{padding:26px 20px 26px 0;border-bottom:1px solid var(--rule);vertical-align:top;font-size:16px;line-height:1.55;color:var(--ink-2);}
+.spec td:first-child{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.15;letter-spacing:-.02em;color:var(--ink);width:30%;}
+.spec td:nth-child(2){width:32%;text-decoration:line-through;text-decoration-color:oklch(23% .012 250 / .45);text-decoration-thickness:1px;}
+.spec tr{transition:background-color .2s;}
+.spec tbody tr:hover{background:var(--bone-2);}
+
+/* work: drawing sheets */
+.work{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:0;margin-top:56px;border:1px solid var(--ink);}
+.feat{padding:28px;border-right:1px solid var(--ink);display:grid;grid-template-rows:1fr auto;gap:20px;text-decoration:none;}
+.feat img{width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;mix-blend-mode:multiply;}
+.feat h3,.row h3{font-family:var(--display);font-weight:800;letter-spacing:-.03em;}
+.feat h3{font-size:30px;line-height:1.05;margin-top:8px;}
+.rows{display:grid;}
+.row{display:grid;grid-template-columns:88px 1fr;gap:18px;align-items:center;padding:22px 24px;border-bottom:1px solid var(--ink);text-decoration:none;}
+.row:last-child{border-bottom:0;}
+.row img{width:88px;height:88px;object-fit:contain;mix-blend-mode:multiply;}
+.row h3{font-size:19px;line-height:1.15;margin-top:4px;}
+.feat:hover h3,.row:hover h3{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;}
+
+/* general notes */
+.notes{list-style:none;padding:0;margin-top:48px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:32px;counter-reset:n;}
+.notes li{counter-increment:n;border-top:1px solid var(--ink);padding-top:18px;}
+.notes li::before{content:counter(n) '.';font-family:var(--display);font-weight:800;font-size:15px;}
+.notes h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em;margin:8px 0 10px;}
+.notes p{font-size:16px;line-height:1.6;color:var(--ink-2);}
+
+.cta{background:var(--ink);color:var(--bone);}
+.cta .sheet{padding-block:clamp(90px,12vw,170px);display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:40px;}
+.cta h2{font-family:var(--display);font-weight:800;font-size:clamp(46px,7vw,108px);line-height:.9;letter-spacing:-.045em;}
+.cta mark{color:var(--ink);}
+.cta .btn{background:var(--mark);color:var(--ink);border-color:var(--mark);}
+.cta .btn:hover{background:var(--bone);}
+
+@media (max-width:980px){
+  .nav ul{display:none;}
+  .hero .copy,.figure{grid-column:1 / -1;padding:0;}
+  .figure{margin-top:48px;}
+  .titleblock{grid-template-columns:1fr 1fr;}
+  .titleblock div:nth-child(3){border-left:0;}
+  .titleblock div:nth-child(n+3){border-top:1px solid var(--ink);}
+  .part > .no,.part > .body{grid-column:1 / -1;}
+  .spec thead{display:none;}
+  .spec td{display:block;width:auto!important;padding:4px 0;border:0;}
+  .spec tr{display:block;padding:22px 0;border-bottom:1px solid var(--rule);}
+  .work{grid-template-columns:1fr;}
+  .feat{border-right:0;border-bottom:1px solid var(--ink);}
+  .notes{grid-template-columns:1fr;row-gap:32px;}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg">
+<div class="sheet">
+  <header class="nav">
+    <a class="logo" href="#">10x <span>Studio</span></a>
+    <ul><li><a href="#">Services</a></li><li><a href="#">Work</a></li><li><a href="#">Guides</a></li><li><a href="#">Journal</a></li><li><a href="#">About</a></li></ul>
+    <a class="btn btn--line" href="#">Start a project</a>
+  </header>
+
+  <section class="hero">
+    <div class="copy">
+      <h1>Build the system your business keeps <mark>faking with spreadsheets.</mark></h1>
+      <p>Web platforms, ecommerce, internal tools and AI workflows, designed around how work actually moves through your company. One senior team from first sketch to Monday-morning use.</p>
+      <div class="ctas">
+        <a class="btn" href="#">Start a project conversation <span aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn--line" href="#">See the work</a>
+      </div>
+    </div>
+
+    <figure class="figure" aria-label="Diagram: a web form, an email inbox and a spreadsheet feed one intake step that routes work to the CRM, the operations dashboard and invoicing.">
+      <svg viewBox="0 0 560 430" id="sys">
+        <!-- wires -->
+        <path id="w1" class="wire messy" d="M110 60 C 190 60, 190 200, 238 200"/>
+        <path id="w2" class="wire messy" d="M110 200 L 238 200"/>
+        <path id="w3" class="wire messy" d="M110 340 C 190 340, 190 200, 238 200"/>
+        <path id="w4" class="wire" d="M330 200 C 390 200, 390 70, 438 70"/>
+        <path id="w5" class="wire" d="M330 200 L 438 200"/>
+        <path id="w6" class="wire" d="M330 200 C 390 200, 390 330, 438 330"/>
+        <!-- packets -->
+        <g class="pkts">
+          <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#w1"/></animateMotion></rect>
+          <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="2.6s" begin=".8s" repeatCount="indefinite"><mpath href="#w2"/></animateMotion></rect>
+          <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="3.6s" begin=".3s" repeatCount="indefinite"><mpath href="#w3"/></animateMotion></rect>
+          <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#w4"/></animateMotion></rect>
+          <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="2s" begin="1.6s" repeatCount="indefinite"><mpath href="#w5"/></animateMotion></rect>
+          <rect class="pkt" width="7" height="7" x="-3.5" y="-3.5"><animateMotion dur="2.4s" begin="2s" repeatCount="indefinite"><mpath href="#w6"/></animateMotion></rect>
+        </g>
+        <!-- nodes -->
+        <g class="node"><rect x="0" y="38" width="110" height="44"/><text x="14" y="65">Web form</text></g>
+        <g class="node"><rect x="0" y="178" width="110" height="44"/><text x="14" y="205">Email inbox</text></g>
+        <g class="node"><rect x="0" y="318" width="110" height="44"/><text x="14" y="345">Spreadsheet</text></g>
+        <g class="node hot"><rect x="238" y="168" width="92" height="64"/><text x="252" y="196">Intake</text><text x="252" y="214" class="lbl">AI triage</text></g>
+        <g class="node"><rect x="438" y="48" width="122" height="44"/><text x="452" y="75">CRM</text></g>
+        <g class="node"><rect x="438" y="178" width="122" height="44"/><text x="452" y="205">Ops dashboard</text></g>
+        <g class="node"><rect x="438" y="308" width="122" height="44"/><text x="452" y="335">Invoicing</text></g>
+        <!-- dimension annotations -->
+        <text class="lbl" x="0" y="20">BEFORE: 3 sources, re-keyed by hand</text>
+        <text class="lbl" x="438" y="30">AFTER: routed once</text>
+        <path class="wire" d="M238 260 v10 M330 260 v10 M238 265 H330" stroke-width=".8"/>
+        <text class="lbl" x="243" y="285">one rule set</text>
+      </svg>
+    </figure>
+
+    <div class="titleblock dim">
+      <div>Drawing<b>Intake to invoice, typical service business</b></div>
+      <div>Studio<b>10x Studio</b></div>
+      <div>Based<b>Louisville, KY</b></div>
+      <div>Owner<b>Veteran-owned</b></div>
+    </div>
+  </section>
+</div>
+</div>
+
+<main class="sheet">
+  <section class="part">
+    <span class="no">01</span>
+    <div class="body">
+      <h2>What we build, and what it replaces.</h2>
+      <table class="spec">
+        <thead><tr><th scope="col">Build</th><th scope="col">Replaces</th><th scope="col">Ships with</th></tr></thead>
+        <tbody>
+          <tr><td>Custom web platforms</td><td>A brochure site and manual follow-up</td><td>Portals, intake flows, role-based access, CRM sync</td></tr>
+          <tr><td>Ecommerce &amp; product platforms</td><td>A cart bolted to a spreadsheet</td><td>Catalog, configurable products, checkout, fulfillment rules</td></tr>
+          <tr><td>Internal business tools</td><td>Load-bearing spreadsheets and shared inboxes</td><td>Dashboards, approvals, job tracking, reporting</td></tr>
+          <tr><td>AI workflow tools</td><td>Copy-pasting into a chatbot</td><td>Intake triage, document review, search over your own knowledge</td></tr>
+          <tr><td>Integrations &amp; automation</td><td>Re-keying data between apps</td><td>API sync, notifications, payment workflows</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="part">
+    <span class="no">02</span>
+    <div class="body">
+      <h2>Shipped, not slideware.</h2>
+      <div class="work">
+        <a class="feat" href="#">
+          <img src="../site/public/case-studies/data-guardian.png" alt="Line drawing of a product catalog being checked" width="1254" height="1254" />
+          <div><span class="dim">Internal tool &middot; outdoor-goods distributor</span><h3>Data Guardian: catalog hygiene for one operator, 7,000 products</h3></div>
+        </a>
+        <div class="rows">
+          <a class="row" href="#"><img src="../site/public/case-studies/citesight.png" alt="" /><div><span class="dim">AI workflow tool</span><h3>CiteSight: the $49 answer to $1,000-a-month legal AI</h3></div></a>
+          <a class="row" href="#"><img src="../site/public/case-studies/PiiI.png" alt="" /><div><span class="dim">Privacy tooling</span><h3>PiiI: the PII never leaves your browser</h3></div></a>
+          <a class="row" href="#"><img src="../site/public/case-studies/clicky-win.png" alt="" /><div><span class="dim">Desktop app</span><h3>ClickyWin: a viral Mac AI tutor, ported to Windows solo</h3></div></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="part">
+    <span class="no">03</span>
+    <div class="body">
+      <h2>General notes.</h2>
+      <ol class="notes">
+        <li><h3>AI is designed in, not bolted on</h3><p>We ask which steps shouldn't exist before we build them. AI goes where it removes friction, from the first workshop.</p></li>
+        <li><h3>Enterprise rigor, studio speed</h3><p>Led by an engineer with cybersecurity, logistics and Fortune 500 software experience. One senior team, no hand-offs.</p></li>
+        <li><h3>Built for Monday morning</h3><p>Your team has to use it on day one. We design for the operator on the floor, not the slide in the boardroom.</p></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<section class="cta">
+  <div class="sheet">
+    <h2>Bring us the <mark>spreadsheet.</mark></h2>
+    <a class="btn" href="#">Start a project conversation <span aria-hidden="true">&rarr;</span></a>
+  </div>
+</section>
+
+<script>
+// SMIL packets ignore reduced motion on their own; stop them.
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.getElementById('sys').pauseAnimations();
+</script>
+</body>
+</html>

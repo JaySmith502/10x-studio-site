@@ -1,66 +1,61 @@
 ---
 import Base from '../../layouts/Base.astro';
-import WellTile from '../../components/WellTile.astro';
 import { getCollection } from 'astro:content';
+import Icon from '../../components/Icon.astro';
 
 const studies = (await getCollection('case-studies', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-const setForColor: Record<string, 'web' | 'ecom' | 'ops' | 'ai' | 'auto'> = {
-  blue: 'auto', red: 'ai', yellow: 'ecom',
-};
-import Icon from '../../components/Icon.astro';
 ---
 <Base title="Case studies - 10x Studio" description="Work we've shipped, written honestly." active="home">
 
-  <section class="svc-hero">
-    <div class="cs-strip" aria-hidden="true"></div>
-    <div class="svc-hero-inner">
-      <div class="mk-eyebrow" style="margin-bottom:18px;"><b>//</b> Case studies</div>
-      <h1 class="mk-h1">All we do is <span class="accent">ship.</span></h1>
-      <p>Honest write-ups of projects we built, what they actually changed, and what we'd still tell you about them.</p>
-    </div>
-  </section>
+  <!-- HERO -->
+  <div class="grid-bg">
+    <section class="mk-wrap cs-index-hero">
+      <h1 class="mk-h1">All we do is <mark>ship.</mark></h1>
+      <p class="lede">Honest write-ups of projects we built, what they actually changed, and what we'd still tell you about them.</p>
+      <div class="titleblock cs-index-titleblock">
+        <div>Collection<b>Case studies</b></div>
+        <div>Studio<b>10x Studio</b></div>
+        <div>Count<b>{studies.length}</b></div>
+        <div>Last updated<b>{studies.length > 0 ? fmt(studies[0].data.pubDate) : '—'}</b></div>
+      </div>
+    </section>
+  </div>
 
+  <!-- STUDY LIST -->
   <section class="mk-section">
     <div class="mk-wrap">
       {studies.length === 0 && (
         <div class="cs-empty">
-          <div class="mk-eyebrow" style="margin-bottom:14px;"><b>//</b> Empty for now</div>
           <h2 class="mk-h2" style="font-size:36px;">First case studies land soon.</h2>
-          <p style="margin-top:14px; max-width:520px; color:var(--ink-700);">In the meantime, the <a href="/blog/">Journal</a> has field notes on the kind of work we do.</p>
+          <p style="margin-top:14px; max-width:520px; color:var(--graphite-soft);">In the meantime, the <a href="/blog/">Journal</a> has field notes on the kind of work we do.</p>
         </div>
       )}
 
-      <div class="cs-grid">
-        {studies.map((s, i) => {
-          // Cycle through the four card looks: blue · red · yellow · white
-          const palette = ['blue', 'red', 'yellow', 'white'] as const;
-          const cardColor = palette[i % palette.length];
-          return (
-            <a href={`/case-studies/${s.slug}/`} class={`cs-card cs-card--${cardColor}`}>
-              <div class="cs-card-meta">
-                <span class="cs-card-client">{s.data.client.split('(')[0].trim()}</span>
-                <span class="dot-sep">·</span>
-                <span>{s.data.industry}</span>
-                <span class="dot-sep">·</span>
-                <span>{fmt(s.data.pubDate)}</span>
+      <div class="cs-list">
+        {studies.map((s) => (
+          <a href={`/case-studies/${s.slug}/`} class="cs-list-item">
+            <div class="cs-list-art">
+              {s.data.heroImage && (
+                <img src={s.data.heroImage} alt={`${s.data.client} illustration`} width="1254" height="1254" loading="lazy" />
+              )}
+            </div>
+            <div class="cs-list-body">
+              <div class="cs-list-meta">
+                <span class="dim">{s.data.industry}</span>
+                <span class="dim" aria-hidden="true">·</span>
+                <span class="dim">{fmt(s.data.pubDate)}</span>
               </div>
-              <h2 class="mk-h2 cs-card-title">{s.data.title}</h2>
-              <span class="cs-card-cta">
-                Read case study <Icon name="arrow-right" size={14} />
-              </span>
-              <div class="cs-card-art">
-                {s.data.heroImage ? (
-                  <img src={s.data.heroImage} alt={`${s.data.client} illustration`} width="1254" height="1254" loading="lazy" />
-                ) : (
-                  <WellTile set={setForColor[s.data.color]} size={120} />
-                )}
-              </div>
-            </a>
-          );
-        })}
+              <h2 class="mk-h3 cs-list-title">{s.data.title}</h2>
+              <p class="cs-list-desc">{s.data.description}</p>
+            </div>
+            <div class="cs-list-cta" aria-hidden="true">
+              <Icon name="arrow-right" size={18} />
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   </section>

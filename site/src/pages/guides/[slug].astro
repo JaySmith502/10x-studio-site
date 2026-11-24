@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import WellTile from '../../components/WellTile.astro';
 import Icon from '../../components/Icon.astro';
 import { getCollection } from 'astro:content';
 
@@ -76,23 +75,20 @@ const jsonLd = [articleSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [
         <h1 class="mk-h1 article-title">{data.title}</h1>
         <p class="article-lede">{data.description}</p>
       </div>
-      <div class="article-hero-art">
-        <WellTile set={data.heroSet} size={120} />
-      </div>
     </header>
 
     <div class="mk-wrap article-body-wrap">
       <div class="article-body">
         <!-- AEO answer block: lifted verbatim by answer engines. -->
         <div class="guide-answer">
-          <div class="guide-answer-lbl">// Short answer</div>
+          <div class="guide-answer-lbl">Short answer</div>
           <p>{data.answer}</p>
         </div>
 
         <!-- Each FAQ renders as a standalone H2 section (mirrors FAQPage schema). -->
         {data.faqs.map((f) => (
           <section class="guide-qa">
-            <h2 class="mk-h3" style="font-size:26px;">{f.q}</h2>
+            <h2>{f.q}</h2>
             <p>{f.a}</p>
           </section>
         ))}
@@ -104,14 +100,14 @@ const jsonLd = [articleSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [
       <aside class="article-aside">
         {data.tags && data.tags.length > 0 && (
           <div class="aside-block">
-            <div class="aside-lbl">// Tags</div>
+            <div class="aside-lbl">Tags</div>
             <div class="aside-tags">
               {data.tags.map((t) => <span class="tag">#{t}</span>)}
             </div>
           </div>
         )}
         <div class="aside-block">
-          <div class="aside-lbl">// Get a number on your build</div>
+          <div class="aside-lbl">Get a number on your build</div>
           <p class="aside-text">The fastest way to a real estimate is a 30-minute working session. We scope the first phase and quote it directly.</p>
           <a href="/contact/" class="mk-btn mk-btn--primary">
             Start a Project Conversation <Icon name="arrow-right" size={16} />
@@ -122,7 +118,7 @@ const jsonLd = [articleSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [
 
     <section class="cta-band">
       <div class="cta-band-inner">
-        <h2 class="mk-h2">More guides,<br>same straight answers.</h2>
+        <h2>More guides,<br>same straight answers.</h2>
         <a href="/guides/" class="mk-btn mk-btn--yellow mk-btn--lg">
           All guides <Icon name="arrow-right" size={18} />
         </a>
@@ -131,3 +127,42 @@ const jsonLd = [articleSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [
 
   </article>
 </Base>
+
+<style>
+  /* Guide answer box: bordered sheet on bone-deep, label-font label. */
+  .guide-answer {
+    border: var(--line);
+    background: var(--bone-deep);
+    padding: 22px 26px;
+    margin-bottom: 40px;
+  }
+  .guide-answer-lbl {
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    color: var(--graphite-soft);
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+  }
+  .guide-answer p {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--graphite);
+  }
+
+  /* FAQ Q&A: ruled rows */
+  .guide-qa {
+    padding-block: 28px;
+    border-top: var(--line-soft);
+    margin: 0;
+  }
+  .guide-qa h2 {
+    /* Scoped selector outranks .article-body h2 */
+    margin: 0 0 12px;
+    font-size: 22px;
+  }
+  .guide-qa p {
+    margin: 0;
+    max-width: 70ch;
+  }
+</style>
